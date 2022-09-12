@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
 class Participant implements UserInterface, PasswordAuthenticatedUserInterface
@@ -18,27 +19,50 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    #[Assert\Email]
+    #[Assert\Length(max: 180)]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+//    #[Assert\NotCompromisedPassword] //TODO : à activer en dehors de la phase de développement
     private ?string $password = null;
 
     #[ORM\Column(length: 60)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    #[Assert\Length(max: 60)]
+//    #[Assert\Regex('/^[a-zA-Z]+$/')]
     private ?string $nom = null;
 
     #[ORM\Column(length: 60)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    #[Assert\Length(max: 60)]
+//    #[Assert\Regex('/^[a-zA-Z]+$/')]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 10)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    #[Assert\Length(max: 10)]
+    #[Assert\Regex('/^[0-9]{10}$/')]
     private ?string $telephone = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private ?bool $administrateur = null;
 
     #[ORM\Column(nullable: true)]

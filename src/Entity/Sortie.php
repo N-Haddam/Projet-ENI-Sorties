@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 class Sortie
@@ -17,21 +18,41 @@ class Sortie
     private ?int $id = null;
 
     #[ORM\Column(length: 60)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    #[Assert\Length(max: 60)]
+//    #[Assert\Regex('/^[a-zA-Z]+$/')]
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    #[Assert\DateTime]
+    //TODO ajouter contrainte date supérieur à la date d'aujourd'hui (voire encore plus tard)
     private ?\DateTimeInterface $dateHeureDebut = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private ?int $duree = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    #[Assert\Date]
+    //TODO ajouter contrainte date supérieur à la date d'aujourd'hui et inférieur (avec minimum ?) à la date de début de l'activité
     private ?\DateTimeInterface $dateLimiteInscription = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    //TODO assert pour les nombres ? (regex pas forcément car c'est pour les chaines de caractères)
     private ?int $nbInscriptionMax = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+//    #[Assert\Regex('/^[a-zA-Z]+$/')]
     private ?string $infosSortie = null;
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
