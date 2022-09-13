@@ -1,0 +1,18 @@
+<nav>
+    <div >
+            {% if app.user %}
+
+            {% if is_granted("ROLE_ADMIN") %}
+
+                {#                <a href="{{ path('app_villes') }}" title="villes">Villes</a>#}
+                {#                <a href="{{ path('app_campus') }}" title="campus">Campus</a>#}
+
+            {% endif %}
+
+            <a href="{{ path('app_main') }}" title="Accueil">Accueil</a>
+            {#<li><a href="{{ path('app_profile') }}" title="Test">Mon profil</a></li>#}
+            <a href="{{ path('app_logout') }}" title="Logout">Se déconnecter</a>
+
+            {% endif %}
+    </div>
+</nav>

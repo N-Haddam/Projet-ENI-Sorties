@@ -18,6 +18,10 @@
         {% endblock %}
     </head>
     <body>
+        <header>
+            {% block header %} {%include "inc/_nav.html.twig"%} {% endblock %}
+            <h1><a href="{{ path('app_main') }}"><img src="{{ asset('img/logo.png') }}" alt="Eni-Sortie" class="img-fluid" class="rounded float-left" style="width: 20%" ></a></h1>
+        </header>
 
         {# read and display all flash messages #}
         {% for label, messages in app.flashes %}
@@ -28,7 +32,7 @@
             {% endfor %}
         {% endfor %}
 
-        {% block header %} {%include "inc/_nav.html.twig"%} {% endblock %}
+
         {% block body %}{% endblock %}
     </body>
 </html>

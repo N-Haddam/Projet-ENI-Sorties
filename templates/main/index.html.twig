@@ -1,20 +1,67 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MainController!{% endblock %}
+{% block title %} {{ parent() }} | Accueil{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+
 
 <div class="example-wrapper">
-    <h1>Hello! ✅</h1>
+    <p> Date du jour : {{ "now"|date("d/m/Y") }}</p>
+    <p> Participant : <b>{{ app.user.prenom }} {{ app.user.prenom | first }}.</b></p>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/thomas/Informatique/ENI/ProjetSorties/Projet-ENI-Sorties/src/Controller/MainController.php'|file_link(0) }}">src/Controller/MainController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/thomas/Informatique/ENI/ProjetSorties/Projet-ENI-Sorties/templates/main/index.html.twig'|file_link(0) }}">templates/main/index.html.twig</a></code></li>
-    </ul>
+    <di>
+        Filtrer les sorties :
+        <form>
+            Campus :
+            <select id="campus">
+                {% for campus in campus %}
+                    <option>{{ campus.nom }}</option>
+                {% endfor %}
+            </select>
+            Le nom de la sortie contient :
+            Entre <input type="datetime-local">
+            et <input type="datetime-local">
+        </form>
+    </di>
+
+
+    <div  class="table-responsive">
+        <table  class="table table-striped">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">Nom de la sortie</th>
+                <th scope="col">Date de la sortie</th>
+                <th scope="col">Clôture</th>
+                <th scope="col">inscrits/places</th>
+                <th scope="col">Etat</th>
+                <th scope="col">Inscrit</th>
+                <th scope="col">organisateur</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            {% if sorties %}
+                {%  for sortie in sorties %}
+                    <tbody>
+                    <tr>
+                        <td>{{ sortie.nom }}</td>
+                        <td>{{ sortie.dateHeureDebut |date }}</td>
+                        <td>{{ sortie.dateLimiteInscription |date }}</td>
+                        <td>{{ sortie.participants.count }}/{{ sortie.nbInscriptionMax }}</td>
+                        <td>{{ sortie.etat.libelle }}</td>
+                        <td>
+                            {% if sortie.participants.contains(app.user) %}
+                                X
+                            {% endif %}
+                        </td>
+                        <td>{{ sortie.organisateur.nom }}</td>
+                        <td>//todo ajouter action</td>
+                    </tr>
+                    </tbody>
+                {%  endfor %}
+            {% else %}
+                <p>Pas de sorties pour l'instant</p>
+            {%  endif %}
+        </table>
+    </div>
 </div>
 {% endblock %}
