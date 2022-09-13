@@ -20,9 +20,9 @@ class ParticipantType extends AbstractType
             ->add('nom')
             ->add('telephone')
             ->add('email')
-            ->add('newPassword', PasswordType::class, [ // TODO revoir la gestion des mots de passe et possibiltié changement
+            ->add('newPassword', PasswordType::class, [
                 'mapped' => false,
-                'required' => false
+                'required' => false,
             ])
             ->add('confirmation', PasswordType::class, [
                 'mapped' => false,
