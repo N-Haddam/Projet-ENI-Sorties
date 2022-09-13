@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil | {{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2 class="text-center">
+        {# TODO : si modifier profile, afficher Mon profil, sinon afficher le nom de l'utilisateur  #}
+        {% if (app.user.id is same as (participant.id)) %}
+            Mon profil
+        {% else %}
+            {{ participantName }}
+        {% endif %}
+    </h2>
+    {% if (app.user.id is same as (participant.id)) %}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button>Modifier</button>
+        <button type="button" ><a href="{{ path('app_main') }}">Annuler</a></button>
+        {{ form_end(form)}}
+    {% else %}
+
+    {% endif %}
+</div>
+{% endblock %}
