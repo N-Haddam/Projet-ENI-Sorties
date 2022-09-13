@@ -23,10 +23,10 @@ class Campus
 //    #[Assert\Regex('/^[a-zA-Z]+$/')]
     private ?string $nom = null;
 
-    #[ORM\OneToMany(mappedBy: 'siteOrganisateur', targetEntity: Sortie::class)]
+    #[ORM\OneToMany(mappedBy: 'siteOrganisateur', targetEntity: Sortie::class, orphanRemoval: true)]
     private Collection $sorties;
 
-    #[ORM\OneToMany(mappedBy: 'campus', targetEntity: Participant::class)]
+    #[ORM\OneToMany(mappedBy: 'campus', targetEntity: Participant::class, orphanRemoval: true)]
     private Collection $participants;
 
     public function __construct()

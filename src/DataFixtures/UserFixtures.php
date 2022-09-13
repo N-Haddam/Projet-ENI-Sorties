@@ -25,11 +25,13 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
             ->setPrenom('Admin')
             ->setTelephone('0000000000')
             ->setAdministrateur(true)
-            ->setCampus($this->campusRepository->find('1'));
+            ->setCampus($this->campusRepository->find('1'))
+            ->setActif(false);
         $admin->setPassword($this->hasher->hashPassword($admin,'admin'));
         $manager->persist($admin);
 
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $tab = [0 => false, 1 => true ];
         for ($i=1;$i<=50;$i++) {
             $nom = 'bot' . $i;
             $campus_id = rand(1,5);
@@ -40,7 +42,8 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
                 ->setPrenom($nom)
                 ->setTelephone('0000000000')
                 ->setAdministrateur(false)
-                ->setCampus($this->campusRepository->find($campus_id));
+                ->setCampus($this->campusRepository->find($campus_id))
+                ->setActif($tab[rand(0,1)]);
             $user->setPassword($this->hasher->hashPassword($user, 'test'));
             $manager->persist($user);
         }

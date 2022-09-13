@@ -40,7 +40,7 @@ class Lieu
     #[ORM\JoinColumn(nullable: false)]
     private ?Ville $ville = null;
 
-    #[ORM\OneToMany(mappedBy: 'lieu', targetEntity: Sortie::class)]
+    #[ORM\OneToMany(mappedBy: 'lieu', targetEntity: Sortie::class, orphanRemoval: true)]
     private Collection $sorties;
 
     public function __construct()

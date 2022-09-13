@@ -30,7 +30,7 @@ class Ville
     #[Assert\Regex('/^[0-9]{5}$/')]
     private ?string $codePostal = null;
 
-    #[ORM\OneToMany(mappedBy: 'ville', targetEntity: Lieu::class)]
+    #[ORM\OneToMany(mappedBy: 'ville', targetEntity: Lieu::class, orphanRemoval: true)]
     private Collection $lieus;
 
     public function __construct()
