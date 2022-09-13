@@ -56,6 +56,15 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
         $this->add($user, true);
     }
 
+    //fonction pour la fixture de sortie
+//    public function findParticipants($sortie): array
+//    {
+//        return  $this->createQueryBuilder('p')
+//            ->andWhere('p.sorties LIKE $sorite')
+//            ->getQuery()
+//            ->getResult();
+//    }
+
 //    /**
 //     * @return Participant[] Returns an array of Participant objects
 //     */
@@ -80,4 +89,5 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
 }
