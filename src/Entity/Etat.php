@@ -23,7 +23,7 @@ class Etat
 //    #[Assert\Regex('/^[a-zA-Z]+$/')]
     private ?string $libelle = null;
 
-    #[ORM\OneToMany(mappedBy: 'etat', targetEntity: Sortie::class)]
+    #[ORM\OneToMany(mappedBy: 'etat', targetEntity: Sortie::class, orphanRemoval: true)]
     private Collection $sorties;
 
     public function __construct()

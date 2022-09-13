@@ -65,13 +65,15 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotNull]
     private ?bool $administrateur = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private ?bool $actif = null;
 
-    #[ORM\OneToMany(mappedBy: 'organisateur', targetEntity: Sortie::class)]
+    #[ORM\OneToMany(mappedBy: 'organisateur', targetEntity: Sortie::class, orphanRemoval: true)]
     private Collection $sortiesOrganisees;
 
-    #[ORM\ManyToMany(targetEntity: Sortie::class, mappedBy: 'participants')]
+    #[ORM\ManyToMany(targetEntity: Sortie::class, mappedBy: 'participants', orphanRemoval: true)]
     private Collection $sorties;
 
     #[ORM\ManyToOne(inversedBy: 'participants')]
