@@ -34,8 +34,8 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
-    #[Assert\NotBlank]
-    #[Assert\NotNull]
+//    #[Assert\NotBlank]
+//    #[Assert\NotNull]
 //    #[Assert\NotCompromisedPassword] //TODO : à activer en dehors de la phase de développement
     private ?string $password = null;
 
@@ -61,13 +61,13 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $telephone = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank]
-    #[Assert\NotNull]
+//    #[Assert\NotBlank]
+//    #[Assert\NotNull]
     private ?bool $administrateur = null;
 
     #[ORM\Column(nullable: false)]
-    #[Assert\NotBlank]
-    #[Assert\NotNull]
+//    #[Assert\NotBlank]
+//    #[Assert\NotNull]
     private ?bool $actif = null;
 
     #[ORM\OneToMany(mappedBy: 'organisateur', targetEntity: Sortie::class, orphanRemoval: true)]
