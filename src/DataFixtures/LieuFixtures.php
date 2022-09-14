@@ -6,9 +6,10 @@ use App\Entity\Lieu;
 use App\Repository\VilleRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class DLieuFixtures extends Fixture implements FixtureGroupInterface
+class LieuFixtures extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface
 {
     public function __construct(
         private VilleRepository $villeRepository,
@@ -34,11 +35,25 @@ class DLieuFixtures extends Fixture implements FixtureGroupInterface
 
         $manager->persist($lieu2);
 
+        $lieu3 = (new Lieu())
+            ->setNom('Escape Game Paris Prizoners')
+            ->setRue('Rue de Quincampoix')
+            ->setLatitude(48.85963284325103)
+            ->setLongitude(2.3497858565072174)
+            ->setVille($this->villeRepository->find(3));
+
+        $manager->persist($lieu3);
+
         $manager->flush();
     }
 
     public static function getGroups(): array
     {
         return ['lieus'];
+    }
+
+    public function getOrder()
+    {
+       return 4;
     }
 }

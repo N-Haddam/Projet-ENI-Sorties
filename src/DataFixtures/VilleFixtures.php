@@ -7,9 +7,10 @@ use App\Entity\Ville;
 use App\Repository\LieuRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class CVilleFixtures extends Fixture implements FixtureGroupInterface
+class VilleFixtures extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface
 {
 //    public function __construct(
 //        private LieuRepository $lieuRepository,
@@ -25,10 +26,16 @@ class CVilleFixtures extends Fixture implements FixtureGroupInterface
         $manager->persist($poullanSurMer);
 
          $bayeux = (new Ville())
-             ->setNom('Bayeux')
-             ->setCodePostal(14400);
+        ->setNom('Bayeux')
+        ->setCodePostal(14400);
 
-         $manager->persist($bayeux);
+        $manager->persist($bayeux);
+
+        $Paris75001 = (new Ville())
+            ->setNom('Paris')
+            ->setCodePostal(75001);
+
+        $manager->persist($Paris75001);
 
         $manager->flush();
     }
@@ -36,5 +43,10 @@ class CVilleFixtures extends Fixture implements FixtureGroupInterface
     public static function getGroups(): array
     {
         return ['villes'];
+    }
+
+    public function getOrder()
+    {
+        return 3;
     }
 }
