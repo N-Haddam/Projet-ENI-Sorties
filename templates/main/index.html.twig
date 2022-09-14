@@ -7,22 +7,43 @@
 
 <div class="example-wrapper">
     <p> Date du jour : {{ "now"|date("d/m/Y") }}</p>
-    <p> Participant : <b>{{ app.user.prenom }} {{ app.user.prenom | first }}.</b></p>
+    <p> Participant : <b>{{ app.user.prenom }} {{ app.user.nom | first }}.</b></p>
 
-    <di>
+    <div>
         Filtrer les sorties :
-        <form>
+        <form name="filtre" method="get">
             Campus :
-            <select id="campus">
+            <select name="campus">
+                <option></option>
                 {% for campus in campus %}
                     <option>{{ campus.nom }}</option>
                 {% endfor %}
             </select>
+            <br>
             Le nom de la sortie contient :
-            Entre <input type="datetime-local">
-            et <input type="datetime-local">
+            <input type="text" name="nomSortieContient">
+            <br>
+            Entre <input type="datetime-local" name="dateMin" >
+            et <input type="datetime-local" name="dateMax" >
+            <br>
+
+                <input type="checkbox" value="1" id="organisateurTrue" name="organisateurTrue" checked>
+                <label for="organisateurTrue">Sorties dont je suis l'oganisateur.trice</label>
+
+                <input type="checkbox" name="inscritTrue" checked>
+                <label for="inscritTrue">Sorties auxquelles je suis inscrit.e</label>
+
+
+                <input type="checkbox" name="inscritFalse" checked>
+                <label for="inscritFalse">Sorties auxquelles je ne suis pas inscrit.e</label>
+
+                <input type="checkbox" name="sortiesPassees">
+                <label for="sortiesPassees">Sorties passées</label>
+            <br>
+            <input type="button" value="Rechercher">
         </form>
-    </di>
+
+    </div>
 
 
     <div  class="table-responsive">
@@ -65,3 +86,30 @@
     </div>
 </div>
 {% endblock %}
+
+{#{% block javascripts %}#}
+{#    {{ parent() }}#}
+{#    <script>#}
+{#        function initListCampus()#}
+{#        {#}
+{#            fetch("http://127.0.0.1:8000/main", {#}
+{#                method: 'GET',#}
+{#                headers: {'Accept' : 'application/json'}#}
+{#            })#}
+{#                .then(response => response.json())#}
+{#                .then(response => {#}
+{#                    let options="";#}
+{#                    response.map(campus => {#}
+{#                        options += <option  value="${campus.id}">${campus.nom}</option>;#}
+{#                    })#}
+{#                    document.querySelector("#campus").innerHTML = options;#}
+{#                })#}
+{#                .catch(e =>{#}
+{#                    alert(e)#}
+{#                })#}
+{#        }#}
+{#        window.onload = () => {#}
+{#            initListCampus();#}
+{#        }#}
+{#    </script>#}
+{#{% endblock %}#}
