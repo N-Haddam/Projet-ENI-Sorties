@@ -20,6 +20,8 @@ class EtatFixtures extends Fixture implements OrderedFixtureInterface
             ->setLibelle('Fermee');
         $manager->persist($etat2);
 
+        //TODO ajouter les autres
+
         $manager->flush();
     }
 
