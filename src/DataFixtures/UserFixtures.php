@@ -6,10 +6,11 @@ use App\Entity\Participant;
 use App\Repository\CampusRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class BUserFixtures extends Fixture implements FixtureGroupInterface
+class UserFixtures extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface
 {
     public function __construct(
         private CampusRepository $campusRepository,
@@ -54,5 +55,10 @@ class BUserFixtures extends Fixture implements FixtureGroupInterface
     public static function getGroups(): array
     {
         return ['users'];
+    }
+
+    public function getOrder()
+    {
+        return 2;
     }
 }
