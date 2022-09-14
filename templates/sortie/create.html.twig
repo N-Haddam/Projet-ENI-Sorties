@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle sortie | {{ parent()}} {% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2 class="text-center">Créer une sortie</h2>
+
+    <div class="row">
+        <section class="col-6">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+        </section>
+        <section class="col-6">
+            <label for="campus">Campus</label><input type="text" id="campus" name="campus" value="{{ app.user.campus }}" readonly><br>
+
+            {# TODO peut-être pas de ville par défaut #}
+            <label for="ville">Ville</label>
+            <select id="ville" name="ville">
+                {% for ville in villes %}
+                    <option value="{{ ville.id }}">{{ ville.nom }}</option>
+                {% endfor %}
+            </select><br>
+
+            {# TODO peut-être pas de lieu par défaut, et donc ni rue, cp, lati et longi #}
+            <label for="lieu">Lieu</label>
+            <select id="lieu" name="lieu">
+                {% for lieu in lieux %}
+                    <option value="{{ lieu.id }}">{{ lieu.nom }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="rue">Rue</label>
+            <input type="text" id="rue" name="rue" value="{{ attribute(lieux, 0).rue }}" readonly><br> {# TODO input ou p ? #}
+
+            <label for="cp">Code postal</label>
+            <input type="text" id="cp" name="cp" value="{{ attribute(villes, 0).codePostal }}" readonly><br> {# TODO input ou p ? #}
+
+            <label for="latitude">Latitude</label>
+            <input type="text" id="latitude" name="latitude" value="{{ attribute(lieux, 0).latitude }}" readonly><br> {# TODO input ou p ? #}
+
+            <label for="longitude">Longitude</label>
+            <input type="text" id="longitude" name="longitude" value="{{ attribute(lieux, 0).longitude }}" readonly><br> {# TODO input ou p ? #}
+        </section>
+        <button>Enregistrer</button>
+        <button>Publier la sortie</button>
+        <button type="button" ><a href="{{ path('app_main') }}">Annuler</a></button>
+        {{ form_end(form)}}
+    </div>
+</div>
+{% endblock %}
