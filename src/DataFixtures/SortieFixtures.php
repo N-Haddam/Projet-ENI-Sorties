@@ -10,9 +10,10 @@ use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class FSortieFixtures extends Fixture implements FixtureGroupInterface
+class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface
 {
     public function __construct(
         private LieuRepository $lieuRepository,
@@ -51,6 +52,22 @@ class FSortieFixtures extends Fixture implements FixtureGroupInterface
 
         $manager->persist($sortie2);
 
+        $sortie3 = (new Sortie())
+            ->setNom('Escape game')
+            ->setDateHeureDebut(new \DateTime('now +1 day'))
+            ->setDuree(3)
+            ->setDateLimiteInscription(new \DateTime('now -8 day'))
+            ->setNbInscriptionMax(25)
+            ->setInfosSortie('Escape game en équipe, venez découvrir les secret de Grigori Rasputin')
+            ->setLieu($this->lieuRepository->find('3'))
+            ->setEtat($this->etatRepository->find('2'))
+            ->setSiteOrganisateur($this->campusRepository->find('3'))
+            ->setOrganisateur($this->participantRepository->find('6'));
+
+        $manager->persist($sortie3);
+
+
+
         $manager->flush();
     }
 
@@ -59,4 +76,8 @@ class FSortieFixtures extends Fixture implements FixtureGroupInterface
         return ['sorties'];
     }
 
+    public function getOrder()
+    {
+        return 6;
+    }
 }
