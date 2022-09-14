@@ -45,7 +45,7 @@ class SortieController extends AbstractController
         return $this->renderForm('sortie/create.html.twig', [
             'form' => $form,
             'villes' => $villes,
-            'lieux' => $lieuRepository->findBy(['ville' => $villes[0]])
+//            'lieux' => $lieuRepository->findBy(['ville' => $villes[0]])
         ]);
     }
 }

@@ -6,6 +6,7 @@ use App\Repository\VilleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VilleRepository::class)]
@@ -21,6 +22,7 @@ class Ville
     #[Assert\NotNull]
     #[Assert\Length(max: 60)]
 //    #[Assert\Regex('/^[a-zA-Z]+$/')]
+    #[Groups(['liste_lieux_par_ville'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 5)]
@@ -28,6 +30,7 @@ class Ville
     #[Assert\NotNull]
     #[Assert\Length(max: 5)]
     #[Assert\Regex('/^[0-9]{5}$/')]
+    #[Groups(['liste_lieux_par_ville'])]
     private ?string $codePostal = null;
 
     #[ORM\OneToMany(mappedBy: 'ville', targetEntity: Lieu::class, orphanRemoval: true)]
