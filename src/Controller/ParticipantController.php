@@ -61,9 +61,9 @@ class ParticipantController extends AbstractController
                 ]);
             }
         } else {
-            // TODO afficher le profil d'un autre utilisateur
-            $this->addFlash('warning', 'Cette fonctionnalité n\'est pas encore disponible');
-            return $this->redirectToRoute('app_main');
+            return $this->render('participant/profil.html.twig', [
+                'participant' => $participant,
+            ]);
         }
     }
 }
