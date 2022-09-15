@@ -50,7 +50,7 @@ class SortieController extends AbstractController
 //            'lieux' => $lieuRepository->findBy(['ville' => $villes[0]])
         ]);
     }
-    #[Route('/{i}', name: 'sortie', methods: ['GET', 'POST'])] // TODO valider que i soit un entier
+    #[Route('/detail/{i}', name: 'detail', methods: ['GET', 'POST'])] // TODO valider que i soit un entier
     public function detail(
         int $i,
         EntityManagerInterface $entityManager,
