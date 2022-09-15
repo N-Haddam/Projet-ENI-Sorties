@@ -44,6 +44,9 @@ class MainController extends AbstractController
     {
         $listeCampus = $campusRepository->findAll();
         $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
         $campus = $user->getCampus();
         $listeSorties = $sortieRepository->findBy(['siteOrganisateur'=>$campus]);
         $parametrageTwig = [];

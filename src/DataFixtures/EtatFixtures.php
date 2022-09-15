@@ -12,15 +12,23 @@ class EtatFixtures extends Fixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager): void
     {
 
-         $etat1 = (new Etat())
-            ->setLibelle('Ouverte');
-         $manager->persist($etat1);
+        $etat1 = (new Etat())->setLibelle('Créée');
+        $manager->persist($etat1);
 
-        $etat2 = (new Etat())
-            ->setLibelle('Fermee');
+        $etat2 = (new Etat())->setLibelle('Ouverte');
         $manager->persist($etat2);
 
-        //TODO ajouter les autres
+        $etat3 = (new Etat())->setLibelle('Clôturée');
+        $manager->persist($etat3);
+
+        $etat4 = (new Etat())->setLibelle('Activité en cours');
+        $manager->persist($etat4);
+
+        $etat5 = (new Etat())->setLibelle('Passée');
+        $manager->persist($etat5);
+
+        $etat6 = (new Etat())->setLibelle('Annulée');
+        $manager->persist($etat6);
 
         $manager->flush();
     }

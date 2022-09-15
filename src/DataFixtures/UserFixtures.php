@@ -35,7 +35,7 @@ class UserFixtures extends Fixture implements FixtureGroupInterface, OrderedFixt
         $tab = [0 => false, 1 => true ];
         for ($i=1;$i<=50;$i++) {
             $nom = 'bot' . $i;
-            $campus_id = rand(1,5);
+            $campus_id = rand(1,4);
             $user = (new Participant())
                 ->setEmail($nom . '@campus-eni.fr')
                 ->setRoles(['ROLE_USER'])

@@ -12,9 +12,6 @@ class CampusFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
 {
     public function load(ObjectManager $manager): void
     {
-        $campus_admin = (new Campus())->setNom('Admin campus');
-        $manager->persist($campus_admin);
-
         $nantes = (new Campus())->setNom('Nantes');
         $manager->persist($nantes);
 

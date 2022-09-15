@@ -3,7 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Participant;
-use APP\Entity\Sortie;
+use App\Entity\Sortie;
 use App\Repository\CampusRepository;
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
@@ -35,7 +35,6 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             ->setEtat($this->etatRepository->find('1'))
             ->setSiteOrganisateur($this->campusRepository->find('1'))
             ->setOrganisateur($this->participantRepository->find('1'));
-
         $manager->persist($sortie1);
 
         $sortie2 = (new Sortie())
@@ -49,7 +48,6 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             ->setEtat($this->etatRepository->find('1'))
             ->setSiteOrganisateur($this->campusRepository->find('2'))
             ->setOrganisateur($this->participantRepository->find('3'));
-
         $manager->persist($sortie2);
 
         $sortie3 = (new Sortie())
@@ -63,10 +61,369 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             ->setEtat($this->etatRepository->find('2'))
             ->setSiteOrganisateur($this->campusRepository->find('3'))
             ->setOrganisateur($this->participantRepository->find('6'));
-
         $manager->persist($sortie3);
 
+        // sorties à venir non pleines
+        for ($i=1;$i<=30;$i++) {
+            $jour_debut = rand(1,40);
+            $nb_inscrit = rand(10,25);
+            $organisateur = $this->participantRepository->find(rand(1,49));
+            $sortie = (new Sortie())
+                ->setNom('Sortie ' . $i)
+                ->setDateHeureDebut(new \DateTime('now +' . $jour_debut . ' day'))
+                ->setDuree(rand(30,180))
+                ->setDateLimiteInscription(new \DateTime('now +' . $jour_debut-5 . ' day'))
+                ->setNbInscriptionMax($nb_inscrit)
+                ->setInfosSortie('Bla bla bla lorem ipsum etc.')
+                ->setLieu($this->lieuRepository->find(rand(1, 15)))
+                ->setEtat($this->etatRepository->find(2))
+                ->setSiteOrganisateur($this->campusRepository->find(rand(1,4)))
+                ->setOrganisateur($organisateur)
+                ->addParticipant($organisateur);
+            for ($j = 1; $j <= $nb_inscrit-(rand(1,9)); $j++) {
+                $id_participant = rand(1,5);
+                if ($id_participant !== $organisateur->getId()) {
+                    $sortie->addParticipant($this->participantRepository->find($j+$id_participant));
+                }
+            }
+            $manager->persist($sortie);
+        }
 
+        // sortie à venir pleines
+        for ($i=1;$i<=20;$i++) {
+            $jour_debut = rand(1,40);
+            $nb_inscrit = rand(10,25);
+            $organisateur = $this->participantRepository->find(rand(1,49));
+            $sortie = (new Sortie())
+                ->setNom('Sortie ' . $i)
+                ->setDateHeureDebut(new \DateTime('now +' . $jour_debut . ' day'))
+                ->setDuree(rand(30,180))
+                ->setDateLimiteInscription(new \DateTime('now +' . $jour_debut-5 . ' day'))
+                ->setNbInscriptionMax($nb_inscrit)
+                ->setInfosSortie('Bla bla bla lorem ipsum etc.')
+                ->setLieu($this->lieuRepository->find(rand(1, 15)))
+                ->setEtat($this->etatRepository->find(3))
+                ->setSiteOrganisateur($this->campusRepository->find(rand(1,4)))
+                ->setOrganisateur($organisateur)
+                ->addParticipant($organisateur);
+            for ($j = 1; $j <= $nb_inscrit; $j++) {
+                $id_participant = rand(1,5);
+                if ($id_participant !== $organisateur->getId()) {
+                    $sortie->addParticipant($this->participantRepository->find($j+$id_participant));
+                }
+            }
+            $manager->persist($sortie);
+        }
+
+        // sortie à venir annulée
+        for ($i=1;$i<=20;$i++) {
+            $jour_debut = rand(1,40);
+            $nb_inscrit = rand(10,25);
+            $organisateur = $this->participantRepository->find(rand(1,49));
+            $sortie = (new Sortie())
+                ->setNom('Sortie ' . $i)
+                ->setDateHeureDebut(new \DateTime('now +' . $jour_debut . ' day'))
+                ->setDuree(rand(30,180))
+                ->setDateLimiteInscription(new \DateTime('now +' . $jour_debut-5 . ' day'))
+                ->setNbInscriptionMax($nb_inscrit)
+                ->setInfosSortie('Bla bla bla lorem ipsum etc.')
+                ->setLieu($this->lieuRepository->find(rand(1, 15)))
+                ->setEtat($this->etatRepository->find(6))
+                ->setSiteOrganisateur($this->campusRepository->find(rand(1,4)))
+                ->setOrganisateur($organisateur)
+                ->addParticipant($organisateur);
+            for ($j = 1; $j <= $nb_inscrit-(rand(1,9)); $j++) {
+                $id_participant = rand(1,5);
+                if ($id_participant !== $organisateur->getId()) {
+                    $sortie->addParticipant($this->participantRepository->find($j+$id_participant));
+                }
+            }
+            $manager->persist($sortie);
+        }
+
+        // sorties passées - d'un mois
+            // sortie pleines
+        for ($i=1;$i<=20;$i++) {
+            $jour_debut = rand(1,28);
+            $nb_inscrit = rand(10,25);
+            $organisateur = $this->participantRepository->find(rand(1,49));
+            $sortie = (new Sortie())
+                ->setNom('Sortie ' . $i)
+                ->setDateHeureDebut(new \DateTime('now -' . $jour_debut . ' day'))
+                ->setDuree(rand(30,180))
+                ->setDateLimiteInscription(new \DateTime('now -' . $jour_debut+5 . ' day'))
+                ->setNbInscriptionMax($nb_inscrit)
+                ->setInfosSortie('Bla bla bla lorem ipsum etc.')
+                ->setLieu($this->lieuRepository->find(rand(1, 15)))
+                ->setEtat($this->etatRepository->find(5))
+                ->setSiteOrganisateur($this->campusRepository->find(rand(1,4)))
+                ->setOrganisateur($organisateur)
+                ->addParticipant($organisateur);
+            for ($j = 1; $j <= $nb_inscrit; $j++) {
+                $id_participant = rand(1,5);
+                if ($id_participant !== $organisateur->getId()) {
+                    $sortie->addParticipant($this->participantRepository->find($j+$id_participant));
+                }
+            }
+            $manager->persist($sortie);
+        }
+
+            // sorties non pleines
+        for ($i=1;$i<=20;$i++) {
+            $jour_debut = rand(1,28);
+            $nb_inscrit = rand(10,25);
+            $organisateur = $this->participantRepository->find(rand(1,49));
+            $sortie = (new Sortie())
+                ->setNom('Sortie ' . $i)
+                ->setDateHeureDebut(new \DateTime('now -' . $jour_debut . ' day'))
+                ->setDuree(rand(30,180))
+                ->setDateLimiteInscription(new \DateTime('now -' . $jour_debut+5 . ' day'))
+                ->setNbInscriptionMax($nb_inscrit)
+                ->setInfosSortie('Bla bla bla lorem ipsum etc.')
+                ->setLieu($this->lieuRepository->find(rand(1, 15)))
+                ->setEtat($this->etatRepository->find(5))
+                ->setSiteOrganisateur($this->campusRepository->find(rand(1,4)))
+                ->setOrganisateur($organisateur)
+                ->addParticipant($organisateur);
+            for ($j = 1; $j <= $nb_inscrit-(rand(1,9)); $j++) {
+                $id_participant = rand(1,5);
+                if ($id_participant !== $organisateur->getId()) {
+                    $sortie->addParticipant($this->participantRepository->find($j+$id_participant));
+                }
+            }
+            $manager->persist($sortie);
+        }
+
+        // sorties passées + d'un mois
+            // sortie pleines
+        for ($i=1;$i<=10;$i++) {
+            $jour_debut = rand(31,150);
+            $nb_inscrit = rand(10,25);
+            $organisateur = $this->participantRepository->find(rand(1,49));
+            $sortie = (new Sortie())
+                ->setNom('Sortie ' . $i)
+                ->setDateHeureDebut(new \DateTime('now -' . $jour_debut . ' day'))
+                ->setDuree(rand(30,180))
+                ->setDateLimiteInscription(new \DateTime('now -' . $jour_debut+5 . ' day'))
+                ->setNbInscriptionMax($nb_inscrit)
+                ->setInfosSortie('Bla bla bla lorem ipsum etc.')
+                ->setLieu($this->lieuRepository->find(rand(1, 15)))
+                ->setEtat($this->etatRepository->find(5))
+                ->setSiteOrganisateur($this->campusRepository->find(rand(1,4)))
+                ->setOrganisateur($organisateur)
+                ->addParticipant($organisateur);
+            for ($j = 1; $j <= $nb_inscrit; $j++) {
+                $id_participant = rand(1,5);
+                if ($id_participant !== $organisateur->getId()) {
+                    $sortie->addParticipant($this->participantRepository->find($j+$id_participant));
+                }
+            }
+            $manager->persist($sortie);
+        }
+
+            // sorties non pleines
+        for ($i=1;$i<=10;$i++) {
+            $jour_debut = rand(31,150);
+            $nb_inscrit = rand(10,25);
+            $organisateur = $this->participantRepository->find(rand(1,49));
+            $sortie = (new Sortie())
+                ->setNom('Sortie ' . $i)
+                ->setDateHeureDebut(new \DateTime('now -' . $jour_debut . ' day'))
+                ->setDuree(rand(30,180))
+                ->setDateLimiteInscription(new \DateTime('now -' . $jour_debut+5 . ' day'))
+                ->setNbInscriptionMax($nb_inscrit)
+                ->setInfosSortie('Bla bla bla lorem ipsum etc.')
+                ->setLieu($this->lieuRepository->find(rand(1, 15)))
+                ->setEtat($this->etatRepository->find(5))
+                ->setSiteOrganisateur($this->campusRepository->find(rand(1,4)))
+                ->setOrganisateur($organisateur)
+                ->addParticipant($organisateur);
+            for ($j = 1; $j <= $nb_inscrit-(rand(1,9)); $j++) {
+                $id_participant = rand(1,5);
+                if ($id_participant !== $organisateur->getId()) {
+                    $sortie->addParticipant($this->participantRepository->find($j+$id_participant));
+                }
+            }
+            $manager->persist($sortie);
+        }
+
+        // sortie en cours
+            // sortie pleines
+        for ($i=1;$i<=10;$i++) {
+            $nb_inscrit = rand(10,25);
+            $organisateur = $this->participantRepository->find(rand(1,49));
+            $sortie = (new Sortie())
+                ->setNom('Sortie ' . $i)
+                ->setDateHeureDebut(new \DateTime('now'))
+                ->setDuree(rand(30,180))
+                ->setDateLimiteInscription(new \DateTime('now -5 day'))
+                ->setNbInscriptionMax($nb_inscrit)
+                ->setInfosSortie('Bla bla bla lorem ipsum etc.')
+                ->setLieu($this->lieuRepository->find(rand(1, 15)))
+                ->setEtat($this->etatRepository->find(4))
+                ->setSiteOrganisateur($this->campusRepository->find(rand(1,4)))
+                ->setOrganisateur($organisateur)
+                ->addParticipant($organisateur);
+            for ($j = 1; $j <= $nb_inscrit; $j++) {
+                $id_participant = rand(1,5);
+                if ($id_participant !== $organisateur->getId()) {
+                    $sortie->addParticipant($this->participantRepository->find($j+$id_participant));
+                }
+            }
+            $manager->persist($sortie);
+        }
+
+            // sorties non pleines
+        for ($i=1;$i<=10;$i++) {
+            $nb_inscrit = rand(10,25);
+            $organisateur = $this->participantRepository->find(rand(1,49));
+            $sortie = (new Sortie())
+                ->setNom('Sortie ' . $i)
+                ->setDateHeureDebut(new \DateTime('now'))
+                ->setDuree(rand(30,180))
+                ->setDateLimiteInscription(new \DateTime('now -5 day'))
+                ->setNbInscriptionMax($nb_inscrit)
+                ->setInfosSortie('Bla bla bla lorem ipsum etc.')
+                ->setLieu($this->lieuRepository->find(rand(1, 15)))
+                ->setEtat($this->etatRepository->find(4))
+                ->setSiteOrganisateur($this->campusRepository->find(rand(1,4)))
+                ->setOrganisateur($organisateur)
+                ->addParticipant($organisateur);
+            for ($j = 1; $j <= $nb_inscrit-(rand(1,9)); $j++) {
+                $id_participant = rand(1,5);
+                if ($id_participant !== $organisateur->getId()) {
+                    $sortie->addParticipant($this->participantRepository->find($j+$id_participant));
+                }
+            }
+            $manager->persist($sortie);
+        }
+
+        // sortie non publiée
+        for ($i=1;$i<=20;$i++) {
+            $jour_debut = rand(1,40);
+            $nb_inscrit = rand(10,25);
+            $organisateur = $this->participantRepository->find(rand(1,49));
+            $sortie = (new Sortie())
+                ->setNom('Sortie ' . $i)
+                ->setDateHeureDebut(new \DateTime('now +' . $jour_debut . ' day'))
+                ->setDuree(rand(30,180))
+                ->setDateLimiteInscription(new \DateTime('now +' . $jour_debut-5 . ' day'))
+                ->setNbInscriptionMax($nb_inscrit)
+                ->setInfosSortie('Bla bla bla lorem ipsum etc.')
+                ->setLieu($this->lieuRepository->find(rand(1, 15)))
+                ->setEtat($this->etatRepository->find(1))
+                ->setSiteOrganisateur($this->campusRepository->find(rand(1,4)))
+                ->setOrganisateur($organisateur)
+                ->addParticipant($organisateur);
+            $manager->persist($sortie);
+        }
+
+        // sortie annulée
+            // à venir
+                // non pleines
+        for ($i=1;$i<=10;$i++) {
+            $jour_debut = rand(1,40);
+            $nb_inscrit = rand(10,25);
+            $organisateur = $this->participantRepository->find(rand(1,49));
+            $sortie = (new Sortie())
+                ->setNom('Sortie ' . $i)
+                ->setDateHeureDebut(new \DateTime('now +' . $jour_debut . ' day'))
+                ->setDuree(rand(30,180))
+                ->setDateLimiteInscription(new \DateTime('now +' . $jour_debut-5 . ' day'))
+                ->setNbInscriptionMax($nb_inscrit)
+                ->setInfosSortie('Bla bla bla lorem ipsum etc.')
+                ->setLieu($this->lieuRepository->find(rand(1, 15)))
+                ->setEtat($this->etatRepository->find(6))
+                ->setSiteOrganisateur($this->campusRepository->find(rand(1,4)))
+                ->setOrganisateur($organisateur)
+                ->addParticipant($organisateur);
+            for ($j = 1; $j <= $nb_inscrit-(rand(1,9)); $j++) {
+                $id_participant = rand(1,5);
+                if ($id_participant !== $organisateur->getId()) {
+                    $sortie->addParticipant($this->participantRepository->find($j+$id_participant));
+                }
+            }
+            $manager->persist($sortie);
+        }
+
+                // pleines
+        for ($i=1;$i<=10;$i++) {
+            $jour_debut = rand(1,40);
+            $nb_inscrit = rand(10,25);
+            $organisateur = $this->participantRepository->find(rand(1,49));
+            $sortie = (new Sortie())
+                ->setNom('Sortie ' . $i)
+                ->setDateHeureDebut(new \DateTime('now +' . $jour_debut . ' day'))
+                ->setDuree(rand(30,180))
+                ->setDateLimiteInscription(new \DateTime('now +' . $jour_debut-5 . ' day'))
+                ->setNbInscriptionMax($nb_inscrit)
+                ->setInfosSortie('Bla bla bla lorem ipsum etc.')
+                ->setLieu($this->lieuRepository->find(rand(1, 15)))
+                ->setEtat($this->etatRepository->find(6))
+                ->setSiteOrganisateur($this->campusRepository->find(rand(1,4)))
+                ->setOrganisateur($organisateur)
+                ->addParticipant($organisateur);
+            for ($j = 1; $j <= $nb_inscrit; $j++) {
+                $id_participant = rand(1,5);
+                if ($id_participant !== $organisateur->getId()) {
+                    $sortie->addParticipant($this->participantRepository->find($j+$id_participant));
+                }
+            }
+            $manager->persist($sortie);
+        }
+
+            // passée
+                // sortie pleines
+        for ($i=1;$i<=10;$i++) {
+            $jour_debut = rand(1,28);
+            $nb_inscrit = rand(10,25);
+            $organisateur = $this->participantRepository->find(rand(1,49));
+            $sortie = (new Sortie())
+                ->setNom('Sortie ' . $i)
+                ->setDateHeureDebut(new \DateTime('now -' . $jour_debut . ' day'))
+                ->setDuree(rand(30,180))
+                ->setDateLimiteInscription(new \DateTime('now -' . $jour_debut+5 . ' day'))
+                ->setNbInscriptionMax($nb_inscrit)
+                ->setInfosSortie('Bla bla bla lorem ipsum etc.')
+                ->setLieu($this->lieuRepository->find(rand(1, 15)))
+                ->setEtat($this->etatRepository->find(6))
+                ->setSiteOrganisateur($this->campusRepository->find(rand(1,4)))
+                ->setOrganisateur($organisateur)
+                ->addParticipant($organisateur);
+            for ($j = 1; $j <= $nb_inscrit; $j++) {
+                $id_participant = rand(1,5);
+                if ($id_participant !== $organisateur->getId()) {
+                    $sortie->addParticipant($this->participantRepository->find($j+$id_participant));
+                }
+            }
+            $manager->persist($sortie);
+        }
+
+                // sorties non pleines
+        for ($i=1;$i<=10;$i++) {
+            $jour_debut = rand(1,28);
+            $nb_inscrit = rand(10,25);
+            $organisateur = $this->participantRepository->find(rand(1,49));
+            $sortie = (new Sortie())
+                ->setNom('Sortie ' . $i)
+                ->setDateHeureDebut(new \DateTime('now -' . $jour_debut . ' day'))
+                ->setDuree(rand(30,180))
+                ->setDateLimiteInscription(new \DateTime('now -' . $jour_debut+5 . ' day'))
+                ->setNbInscriptionMax($nb_inscrit)
+                ->setInfosSortie('Bla bla bla lorem ipsum etc.')
+                ->setLieu($this->lieuRepository->find(rand(1, 15)))
+                ->setEtat($this->etatRepository->find(6))
+                ->setSiteOrganisateur($this->campusRepository->find(rand(1,4)))
+                ->setOrganisateur($organisateur)
+                ->addParticipant($organisateur);
+            for ($j = 1; $j <= $nb_inscrit-(rand(1,9)); $j++) {
+                $id_participant = rand(1,5);
+                if ($id_participant !== $organisateur->getId()) {
+                    $sortie->addParticipant($this->participantRepository->find($j+$id_participant));
+                }
+            }
+            $manager->persist($sortie);
+        }
 
         $manager->flush();
     }
