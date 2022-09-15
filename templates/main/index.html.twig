@@ -113,7 +113,36 @@
                             {% endif %}
                         </td>
                         <td>{{ sortie.organisateur.nom }}</td>
-                        <td>//todo ajouter action</td>
+                        <td>
+                            {#
+                                si organisateur et en création
+                                    modifier / publier
+                                sinon
+                                    afficher
+                                si organisateur et statut ouvert
+                                    + annuler
+                                sinon si inscrit et statut ouvert ou fermé
+                                    + se désister
+                                sinon si pas inscrit et fermé, en cours ou passé
+                                    + s'inscrire
+                            #}
+                            {% if app.user.userIdentifier is same as (sortie.organisateur.userIdentifier)
+                                and sortie.etat.id is same as (1) %}
+                                <a href="#">Modifier</a> - <a href="#">Publier</a>
+                            {% else %}
+                                <a href="#">Afficher</a>
+                            {% endif %}
+                            {% if app.user.userIdentifier is same as (sortie.organisateur.userIdentifier)
+                                and sortie.etat.id is same as (2) %}
+                                - <a href="#">Annuler</a>
+                            {% elseif app.user in (sortie.participants)
+                                and sortie.etat.id in ([2, 3]) %}
+                                - <a href="#">Se désister</a>
+                            {% elseif app.user not in sortie.participants
+                                and sortie.etat.id is same as (2) %}
+                                - <a href="#">S'inscrire</a>
+                            {% endif %}
+                        </td>
                     </tr>
                     </tbody>
                 {%  endfor %}
