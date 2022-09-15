@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Details sortie | {{ parent() }}{% endblock %}
+
+{% block body %}
+
+    <h2>Détail de la sortie : <b><i>{{ sortie.nom }}</i></b> </h2>
+
+        <p>Nom de la sortie : {{ sortie.nom }}</p>
+        <p>Date et heure de la sortie : Le {{ sortie.dateHeureDebut | date ("d/m/y") }} à {{ sortie.dateHeureDebut | date ("H:m") }}</p>
+        <p>Date limite d'inscription : {{ sortie.dateLimiteInscription |date("d/m/y") }} inclus</p>
+        <p>Nombre de places : {{ nbPlaces }}</p>
+        <p>Durée : {{ sortie.duree }} jours</p>
+        <p>Description et infos : {{ sortie.infosSortie }}</p>
+
+        <p>Campus : </p>
+        <p>Lieu : </p>
+        <p>Rue : </p>
+        <p>Code postal :</p>
+
+        <p>Latitude : </p> {# todo condition in >0 N else S #}
+        <p>Longitude : </p> {# todo condition in >0 E else W #}
+
+        <p>Liste des participants inscrits : </p>
+        <table class="table table-striped">
+
+        </table>
+
+        <form>
+            <input type="submit" value="S'inscrire à la sortie"> {# TODO le bonton est clickable si nbPlaces >0 #}
+        </form>
+
+
+{% endblock %}

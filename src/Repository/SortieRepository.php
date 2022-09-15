@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Lieu;
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +39,27 @@ class SortieRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findDetailsSortie($i){
+
+
+        $qb = $this->createQueryBuilder('s')
+            ->andWhere('s.id = :i')
+            ->setParameter('i', $i);
+//            ->leftJoin('s.participants','participants')
+//            ->andWhere('participants.sorties = :i')
+//            ->set()
+//            ->addSelect('participants');
+//        $queryBuilder->join(Lieu::class, 'lieu')
+//            ->andWhere('s.id = :i')
+//            ->set('i', $i)
+//            ->addSelect('lieu');
+
+//        $paginator = new Paginator($query);
+//        return $paginator;
+
+        return $qb->getQuery()->getResult();
     }
 
 //    /**
