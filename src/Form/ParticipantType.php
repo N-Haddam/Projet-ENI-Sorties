@@ -18,6 +18,7 @@ class ParticipantType extends AbstractType
         $builder
             ->add('prenom')
             ->add('nom')
+            ->add('pseudo')
             ->add('telephone')
             ->add('email')
             ->add('newPassword', PasswordType::class, [

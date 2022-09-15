@@ -56,6 +56,16 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
         $this->add($user, true);
     }
 
+    public function findByEmailOrUsername(string $emailOrUsername)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.email = :emailOrUsername')
+            ->orWhere('u.pseudo = :emailOrUsername')
+            ->setParameter('emailOrUsername', $emailOrUsername)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     //fonction pour la fixture de sortie
 //    public function findParticipants($sortie): array
 //    {
@@ -89,5 +99,6 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
 
 }
