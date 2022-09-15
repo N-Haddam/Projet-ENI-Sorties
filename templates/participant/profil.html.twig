@@ -9,7 +9,7 @@
         {% if (app.user.id is same as (participant.id)) %}
             Mon profil
         {% else %}
-            {{ participantName }}
+            {{ participant.pseudo }}
         {% endif %}
     </h2>
     {% if (app.user.id is same as (participant.id)) %}
