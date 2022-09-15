@@ -11,36 +11,74 @@
 
     <div>
         Filtrer les sorties :
-        <form name="filtre" method="get">
+        <form name="filtre" method="POST">
             Campus :
             <select name="campus">
-                <option></option>
-                {% for campus in campus %}
-                    <option>{{ campus.nom }}</option>
+                {% for campus in listeCampus %}
+                    {% if campus is same as params['campusAAfficher'] %}
+                        <option selected>{{ campus.nom }}</option>#}
+                    {% else %}
+                        <option>{{ campus.nom }}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
             <br>
             Le nom de la sortie contient :
-            <input type="text" name="nomSortieContient">
+            <input type="text" name="nomSortieContient"
+                    {% if params['portion'] is defined %}
+                    value="{{ params['portion'] }}"
+                    {% endif %}
+            >
             <br>
-            Entre <input type="datetime-local" name="dateMin" >
-            et <input type="datetime-local" name="dateMax" >
+            Entre <input type="datetime-local" name="dateMin"
+                    {% if params['dateMin'] is defined and params['dateMin'] is not same as '' %}
+                    value="{{ params['dateMin'] }}"
+                    {% endif %}
+            >
+            et <input type="datetime-local" name="dateMax"
+                    {% if params['dateMax'] is defined and params['dateMax'] is not same as '' %}
+                        value="{{ params['dateMax'] }}"
+                    {% endif %}
+            >
             <br>
 
-                <input type="checkbox" value="1" id="organisateurTrue" name="organisateurTrue" checked>
-                <label for="organisateurTrue">Sorties dont je suis l'oganisateur.trice</label>
+            <input type="checkbox" value="1" id="organisateurTrue" name="organisateurTrue"
+                   {% if params['methode'] is same as('get')  %}
+                       checked
+                   {% elseif params['ck']['organisateurTrue'] is defined %}
+                       checked
+                   {% endif %}
+            >
+            <label for="organisateurTrue">Sorties dont je suis l'oganisateur.trice</label>
 
-                <input type="checkbox" name="inscritTrue" checked>
-                <label for="inscritTrue">Sorties auxquelles je suis inscrit.e</label>
+            <input type="checkbox" name="inscritTrue"
+                    {% if params['methode'] is same as('get')  %}
+                        checked
+                    {% elseif params['ck']['inscritTrue'] is defined %}
+                        checked
+                    {% endif %}
+            >
+            <label for="inscritTrue">Sorties auxquelles je suis inscrit.e</label>
 
 
-                <input type="checkbox" name="inscritFalse" checked>
-                <label for="inscritFalse">Sorties auxquelles je ne suis pas inscrit.e</label>
+            <input type="checkbox" name="inscritFalse"
+                    {% if params['methode'] is same as('get')  %}
+                        checked
+                    {% elseif params['ck']['inscritFalse'] is defined %}
+                        checked
+                    {% endif %}
+            >
+            <label for="inscritFalse">Sorties auxquelles je ne suis pas inscrit.e</label>
 
-                <input type="checkbox" name="sortiesPassees">
-                <label for="sortiesPassees">Sorties passées</label>
+            <input type="checkbox" name="sortiesPassees"
+                    {% if params['ck']['sortiesPassees'] is defined %}
+                        checked
+                    {% endif %}
+            >
+            <label for="sortiesPassees">Sorties passées</label>
             <br>
-            <input type="button" value="Rechercher">
+            <input type="text" name="ok" hidden>
+            <input type="submit" value="Rechercher">
         </form>
 
     </div>
