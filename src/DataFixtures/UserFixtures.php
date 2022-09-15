@@ -27,7 +27,8 @@ class UserFixtures extends Fixture implements FixtureGroupInterface, OrderedFixt
             ->setTelephone('0000000000')
             ->setAdministrateur(true)
             ->setCampus($this->campusRepository->find('1'))
-            ->setActif(false);
+            ->setActif(false)
+            ->setPseudo('admin');
         $admin->setPassword($this->hasher->hashPassword($admin,'admin'));
         $manager->persist($admin);
 
@@ -44,7 +45,8 @@ class UserFixtures extends Fixture implements FixtureGroupInterface, OrderedFixt
                 ->setTelephone('0000000000')
                 ->setAdministrateur(false)
                 ->setCampus($this->campusRepository->find($campus_id))
-                ->setActif($tab[rand(0,1)]);
+                ->setActif($tab[rand(0,1)])
+                ->setPseudo($nom);
             $user->setPassword($this->hasher->hashPassword($user, 'test'));
             $manager->persist($user);
         }
