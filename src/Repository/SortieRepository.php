@@ -40,6 +40,50 @@ class SortieRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function findContient($nomSortieContient){
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.nom LIKE :nom')
+            ->setParameter('nom', '%'.$nomSortieContient.'%')
+//            ->andWhere('s.siteOrganisateur = :id')
+//            ->setParameter('id', $campusId)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function findFiltered($campusId, $dateMin, $dateMax, $organisateurId): array //$campusChoisi, $nomSortieContient, $dateMin, $dateMax, $organisateurTrue, $inscritTrue, $inscritFalse, $sortiesPassees
+    {
+        return $this->createQueryBuilder('s')
+//            ->andWhere('s.etat LIKE Ouverte')
+//            ->setParameter('Ouverte', $sortiesPassees)
+//            ->andWhere('s.nom LIKE %nom%')
+//            ->setParameter('nom', $nomSortieContient)
+            ->andWhere('s.siteOrganisateur = :id')
+            ->setParameter('id', $campusId)
+            ->andWhere('s.dateHeureDebut >= :dateMin')
+            ->setParameter('dateMin', $dateMin)
+            ->andWhere('s.dateLimiteInscription<= :dateMax')
+            ->setParameter('dateMax', $dateMax)
+            ->andWhere('s.organisateur = :id')
+            ->setParameter('id', $organisateurId)
+
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findDateFiltered($dateMin, $dateMax){
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.dateHeureDebut >= :dateMin')
+            ->setParameter('dateMin', $dateMin)
+            ->andWhere('s.dateLimiteInscription<= :dateMax')
+            ->setParameter('dateMax', $dateMax)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
 
     public function findDetailsSortie($i){
 
@@ -84,4 +128,5 @@ class SortieRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
 }
