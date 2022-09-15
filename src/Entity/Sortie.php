@@ -27,7 +27,7 @@ class Sortie
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\DateTime]
+    #[Assert\Type('DateTimeInterface')]
     //TODO ajouter contrainte date supérieur à la date d'aujourd'hui (voire encore plus tard)
     private ?\DateTimeInterface $dateHeureDebut = null;
 
@@ -39,7 +39,7 @@ class Sortie
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\Date]
+    #[Assert\Type('DateTimeInterface')]
     //TODO ajouter contrainte date supérieur à la date d'aujourd'hui et inférieur (avec minimum ?) à la date de début de l'activité
     private ?\DateTimeInterface $dateLimiteInscription = null;
 
