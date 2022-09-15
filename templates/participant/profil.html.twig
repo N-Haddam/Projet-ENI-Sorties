@@ -9,17 +9,42 @@
         {% if (app.user.id is same as (participant.id)) %}
             Mon profil
         {% else %}
-            {{ participantName }}
+            {{ participant.pseudo }}
         {% endif %}
     </h2>
-    {% if (app.user.id is same as (participant.id)) %}
-        {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button>Modifier</button>
-        <button type="button" ><a href="{{ path('app_main') }}">Annuler</a></button>
-        {{ form_end(form)}}
-    {% else %}
-
-    {% endif %}
+    <section class="row">
+        {% if (app.user.id is same as (participant.id)) %}
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button>Modifier</button>
+            <button type="button" ><a href="{{ path('app_main') }}">Annuler</a></button>
+            {{ form_end(form)}}
+        {% else %}
+        {% endif %}
+    </section>
+    <section class="row">
+        <table>
+            <tr>
+                <td><em>Prénom :</em></td>
+                <td>{{ participant.prenom }}</td>
+            </tr>
+            <tr>
+                <td><em>Nom :</em></td>
+                <td>{{ participant.nom }}</td>
+            </tr>
+            <tr>
+                <td><em>Téléphone :</em></td>
+                <td>{{ participant.telephone }}</td>
+            </tr>
+            <tr>
+                <td><em>Email :</em></td>
+                <td><a href="mailto:{{ participant.email }}">{{ participant.email }}</a></td>
+            </tr>
+            <tr>
+                <td><em>Campus :</em></td>
+                <td>{{ participant.campus.nom }}</td>
+            </tr>
+        </table>
+    </section>
 </div>
 {% endblock %}
