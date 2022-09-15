@@ -66,29 +66,46 @@ class SortieController extends AbstractController
         $nbPlaces = is_integer($sortie->getNbInscriptionMax());
         $nbParticipants =is_integer($sortie->getParticipants());
         $nbPlaces = $nbPlaces - $nbParticipants;
+
+
+        $user= $this->getUser();
+
 //        dd($sortieDetails);
         if (!$sortie) {
             throw $this->createNotFoundException();
         }
 
         if ($request->isMethod('POST')){
-            $user= $this->getUser();
+
             if($sortie->getDateLimiteInscription() >= new \DateTime('now') && ($nbParticipants < $nbPlaces) ){
+
                 $sortie ->addParticipant($user);
                 $entityManager->persist($sortie);
                 $entityManager->flush();
+                $this->addFlash('success','Vous êtes inscrit à cette sortie !');
+                return $this->redirectToRoute('app_sortie_detail',['i' => $sortie->getId()]);
             } else {
                 $this->addFlash('warning','Vous ne pouvez plus vous inscrire :(');
-                return $this->redirectToRoute('detail_sortie',['i' => $sortie->getId()]);
+                return $this->redirectToRoute('app_sortie_detail',['i' => $sortie->getId()]);
             }
 
         }
-
+//        dd($this->userParticipe($sortie,$sortie));
         return $this->render('sortie/afficherSortie.html.twig', [
             'sortie' => $sortie,
             'sortieDetails' => $sortieDetails,
-            'nbPlaces' => $nbPlaces
+            'nbPlaces' => $nbPlaces,
+            'userParticipe' => $this->userParticipe($sortie,$sortie)
         ]);
 
+    }
+
+    public function userParticipe($user, $sortie) {
+        $participants = $sortie->getParticipants();
+        if($participants->contains($user)){
+        return true;
+        }else {
+            return false;
+        }
     }
 }
