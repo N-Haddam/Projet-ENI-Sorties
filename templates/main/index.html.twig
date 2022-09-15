@@ -114,23 +114,11 @@
                         </td>
                         <td>{{ sortie.organisateur.nom }}</td>
                         <td>
-                            {#
-                                si organisateur et en création
-                                    modifier / publier
-                                sinon
-                                    afficher
-                                si organisateur et statut ouvert
-                                    + annuler
-                                sinon si inscrit et statut ouvert ou fermé
-                                    + se désister
-                                sinon si pas inscrit et fermé, en cours ou passé
-                                    + s'inscrire
-                            #}
                             {% if app.user.userIdentifier is same as (sortie.organisateur.userIdentifier)
                                 and sortie.etat.id is same as (1) %}
                                 <a href="#">Modifier</a> - <a href="#">Publier</a>
                             {% else %}
-                                <a href="#">Afficher</a>
+                                <a href="{{ path('app_sortie_detail', {'i': sortie.id}) }}">Afficher</a>
                             {% endif %}
                             {% if app.user.userIdentifier is same as (sortie.organisateur.userIdentifier)
                                 and sortie.etat.id is same as (2) %}
@@ -140,7 +128,7 @@
                                 - <a href="#">Se désister</a>
                             {% elseif app.user not in sortie.participants
                                 and sortie.etat.id is same as (2) %}
-                                - <a href="#">S'inscrire</a>
+                                - <a href="">S'inscrire</a>
                             {% endif %}
                         </td>
                     </tr>
@@ -153,30 +141,3 @@
     </div>
 </div>
 {% endblock %}
-
-{#{% block javascripts %}#}
-{#    {{ parent() }}#}
-{#    <script>#}
-{#        function initListCampus()#}
-{#        {#}
-{#            fetch("http://127.0.0.1:8000/main", {#}
-{#                method: 'GET',#}
-{#                headers: {'Accept' : 'application/json'}#}
-{#            })#}
-{#                .then(response => response.json())#}
-{#                .then(response => {#}
-{#                    let options="";#}
-{#                    response.map(campus => {#}
-{#                        options += <option  value="${campus.id}">${campus.nom}</option>;#}
-{#                    })#}
-{#                    document.querySelector("#campus").innerHTML = options;#}
-{#                })#}
-{#                .catch(e =>{#}
-{#                    alert(e)#}
-{#                })#}
-{#        }#}
-{#        window.onload = () => {#}
-{#            initListCampus();#}
-{#        }#}
-{#    </script>#}
-{#{% endblock %}#}
