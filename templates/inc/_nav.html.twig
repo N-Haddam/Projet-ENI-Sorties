@@ -9,7 +9,7 @@
 
             {% endif %}
 
-            <a href="{{ path('detail_sortie', {'i':1}) }}" title="Sortie test">SortieTest</a> {# //todo delete this line #}
+            <a href="{{ path('app_sortie_detail', {'i':1}) }}" title="Sortie test">SortieTest</a> {# //todo delete this line #}
             <a href="{{ path('app_main') }}" title="Accueil">Accueil</a>
             <a href="{{ path('app_participant_profil', {'i':app.user.getId}) }}" title="Test">Mon profil</a>
             <a href="{{ path('app_logout') }}" title="Logout">Se déconnecter</a>
