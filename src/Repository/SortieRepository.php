@@ -46,15 +46,13 @@ class SortieRepository extends ServiceEntityRepository
 
         $qb = $this->createQueryBuilder('s')
             ->andWhere('s.id = :i')
-            ->setParameter('i', $i);
-//            ->leftJoin('s.participants','participants')
-//            ->andWhere('participants.sorties = :i')
-//            ->set()
-//            ->addSelect('participants');
-//        $queryBuilder->join(Lieu::class, 'lieu')
-//            ->andWhere('s.id = :i')
-//            ->set('i', $i)
-//            ->addSelect('lieu');
+            ->setParameter('i', $i)
+            ->leftJoin('s.participants','participants')
+            ->addSelect('participants')
+            ->leftJoin('s.lieu','lieu')
+            ->addSelect('lieu')
+            ->leftJoin('s.siteOrganisateur', 'campus')
+            ->addSelect('campus');
 
 //        $paginator = new Paginator($query);
 //        return $paginator;

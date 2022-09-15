@@ -6,29 +6,72 @@
 
     <h2>Détail de la sortie : <b><i>{{ sortie.nom }}</i></b> </h2>
 
-        <p>Nom de la sortie : {{ sortie.nom }}</p>
-        <p>Date et heure de la sortie : Le {{ sortie.dateHeureDebut | date ("d/m/y") }} à {{ sortie.dateHeureDebut | date ("H:m") }}</p>
-        <p>Date limite d'inscription : {{ sortie.dateLimiteInscription |date("d/m/y") }} inclus</p>
-        <p>Nombre de places : {{ nbPlaces }}</p>
-        <p>Durée : {{ sortie.duree }} jours</p>
-        <p>Description et infos : {{ sortie.infosSortie }}</p>
+        {% for sortieDetail in sortieDetails %}
 
-        <p>Campus : </p>
-        <p>Lieu : </p>
-        <p>Rue : </p>
-        <p>Code postal :</p>
+            <p>Nom de la sortie : {{ sortieDetail.nom }}</p>
+            <p>Date et heure de la sortie : Le {{ sortieDetail.dateHeureDebut | date ("d/m/y") }} à {{ sortie.dateHeureDebut | date ("H:m") }}</p>
+            <p>Date limite d'inscription : {{ sortieDetail.dateLimiteInscription |date("d/m/y") }} inclus</p>
+            <p>Nombre de places : {{ nbPlaces }}</p>
+            <p>Durée : {{ sortieDetail.duree }} jours</p>
+            <p>Description et infos : {{ sortieDetail.infosSortie }}</p>
 
-        <p>Latitude : </p> {# todo condition in >0 N else S #}
-        <p>Longitude : </p> {# todo condition in >0 E else W #}
+            <p>Campus : {{ sortieDetail.siteOrganisateur.nom }}</p>
 
-        <p>Liste des participants inscrits : </p>
-        <table class="table table-striped">
+            <p>Lieu : {{ sortieDetail.lieu.nom }}</p>
+            <p>Rue : {{ sortieDetail.lieu.rue }}</p>
+            <p>Code postal : {{ sortieDetail.lieu.ville.codePostal }}</p>
+            <p>Ville : {{ sortieDetail.lieu.ville.nom }}</p>
+                {% if (sortieDetail.lieu.latitude >0) %}
+                    <p>Latitude : {{ sortieDetail.lieu.latitude }} N</p>
+                {% else %}
+                    <p>Latitude : {{ sortieDetail.lieu.latitude }} S</p>
+                {% endif %}
+                {% if (sortieDetail.lieu.longitude >0) %}
+                    <p>Longitude : {{ sortieDetail.lieu.longitude }} E</p>
+                {% else %}
+                    <p>Longitude : {{ sortieDetail.lieu.longitude }} W</p>
+                {% endif %}
 
-        </table>
 
-        <form>
-            <input type="submit" value="S'inscrire à la sortie"> {# TODO le bonton est clickable si nbPlaces >0 #}
-        </form>
+            <p>Liste des participants inscrits : </p>
+            <table class="table table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Pseudo</th>
+                        <th scope="col">Nom</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if (sortieDetail.participants is empty) %}
+                        <tr>
+                            <td>
+                                Pas de Participants pour l'instant
+                            </td>
+                        </tr>
+                    {% else %}
+                        {% for participant in sortieDetail.participants %}
+                            <tr>
+                            <td>
+                                <p>Pseudo à ajouter aux entitées</p>
+                            </td>
+                            <td>
+                                {{ participant.nom }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
 
+            {% if (nbPlaces > 0) %}
+            <form name="sinscrire" method="post">
+                <input type="submit" value="S'inscrire à la sortie"> {# TODO le bonton est clickable si nbPlaces >0 #}
+            </form>
+
+            {% else %}
+                <p>Il n'y a plus de places :(</p>
+            {% endif %}
+
+        {% endfor %}
 
 {% endblock %}
