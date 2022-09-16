@@ -37,6 +37,7 @@ class SortieRepository extends ServiceEntityRepository
     public function add(Sortie $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
+//        $this->archivage->postPersist($entity); //TODO génrère un bug lors création sortie
         if ($flush) {
             $this->getEntityManager()->flush();
         }
