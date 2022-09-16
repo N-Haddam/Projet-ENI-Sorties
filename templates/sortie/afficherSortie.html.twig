@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Details sortie | {{ parent() }}{% endblock %}
+{% block title %}Details {{ sortie.nom }} | {{ parent() }}{% endblock %}
 
 {% block body %}
 
@@ -12,7 +12,7 @@
             <p>Date et heure de la sortie : Le {{ sortieDetail.dateHeureDebut | date ("d/m/y") }} à {{ sortie.dateHeureDebut | date ("H:m") }}</p>
             <p>Date limite d'inscription : {{ sortieDetail.dateLimiteInscription |date("d/m/y") }} inclus</p>
             <p>Nombre de places : {{ nbPlaces }}</p>
-            <p>Durée : {{ sortieDetail.duree }} jours</p>
+            <p>Durée : {{ sortieDetail.duree }} minutes</p>
             <p>Description et infos : {{ sortieDetail.infosSortie }}</p>
 
             <p>Campus : {{ sortieDetail.siteOrganisateur.nom }}</p>

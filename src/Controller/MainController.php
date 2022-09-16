@@ -19,11 +19,6 @@ class MainController extends AbstractController
     public EntityManagerInterface $entityManager;
     private Response $response;
 
-//    public function __construct(EntityManagerInterface $entityManager)
-//    {
-//        $this->entityManager = $entityManager;
-//    }
-
     #[Route('/', name: 'app_default', methods: ['GET'])]
     public function default(): Response {
         return $this->redirectToRoute('app_main');
@@ -48,22 +43,6 @@ class MainController extends AbstractController
         $listeSorties = $sortieRepository->findBy(['siteOrganisateur'=>$campus]);
         $parametrageTwig = [];
         $parametrageTwig['methode'] = strtolower($request->getMethod());
-
-//        if ($request->getMethod() === 'GET') {
-//            $parametrageTwig['campusAAfficher'] = $campus;
-//            $listeTmp = [];
-//            foreach ($listeSorties as $sortie) {
-//                if ($sortie->getDateHeureDebut() >= new \DateTime()) {
-//                    $listeTmp[] = $sortie;
-//                }
-//            }
-//            usort($listeTmp, fn($a, $b) => ($a->getDateLimiteInscription() >= $b->getDateLimiteInscription()));
-//            return $this->render('main/index.html.twig', [
-//                "sorties" => $listeTmp,
-//                "listeCampus" => $listeCampus,
-//                "params" => $parametrageTwig,
-//            ]);
-//        }
 
         if (isset($_POST['campus']) && $_POST['campus'] !== $campus->getNom() ) {
             $campus = $campusRepository->findBy(['nom' => $_POST['campus']]);
@@ -92,7 +71,6 @@ class MainController extends AbstractController
             && !isset($_POST['inscritFalse'])
             && !isset($_POST['sortiesPassees']))
         {
-//            if (!isset($_POST['ok'])) {
             if ($request->getMethod() !== 'POST') {
                 $listeTmp = [];
                 foreach ($listeSorties as $sortie) {
@@ -165,13 +143,6 @@ class MainController extends AbstractController
             $listeSorties = $listeSortiesTriCkBox;
         }
 
-//        $listeTmp = [];
-//        foreach ($listeSorties as $sortie) {
-//            if (!in_array($sortie, $listeTmp)) {
-//                $listeTmp[] = $sortie;
-//            }
-//        }
-//        $listeSorties = $listeTmp;
         usort($listeSorties, fn($a, $b) => ($a->getDateLimiteInscription() >= $b->getDateLimiteInscription()));
 
         return $this->render('main/index.html.twig', [
@@ -217,63 +188,4 @@ class MainController extends AbstractController
         }
         return $nouvelleListe;
     }
-
-
-// ---------------------------------------------------------------------------------------------
-
-//    public function showAllSorties(): Response{
-//        $campus = $this->getCampus();
-//
-//        $sorties = $this->entityManager
-//            ->getRepository(Sortie::class)
-//            ->findAll();
-//
-//        return $this->render('main/index.html.twig', [
-//            "sorties" => $sorties,
-//            "campus" => $campus,
-//        ]);
-//    }
-//
-//    public function dateNotNull(): Response{
-//        $campus = $this->getCampus();
-//
-//        $dateMin = $_POST['dateMin'];
-//        $dateMax = $_POST['dateMax'];
-//
-//        $sorties = $this->entityManager
-//            ->getRepository(Sortie::class)
-//            ->findDateFiltered($dateMin, $dateMax);
-//
-//        return $this->render('main/index.html.twig', [
-//            "sorties" => $sorties,
-//            "campus" => $campus,
-//        ]);
-//
-//
-//    }
-//
-//    public function filtreCampus(SortieRepository $sortieRepository): array{
-//
-////        dd('filtre campus');
-//
-//        $campusChoisi = $_POST['campus'];
-//        $campusSelectionne = $this->entityManager
-//            ->getRepository(Campus::class)
-//            ->findOneBy(['nom' => $campusChoisi]);
-//        $campusId = $campusSelectionne->getId();
-//
-//        $sorties = $this->entityManager
-//            ->getRepository(Sortie::class)
-//            ->findBy(['siteOrganisateur' => $campusId]);
-//        return $sorties;
-//    }
-//
-////    public function getCampus(): array
-////    {
-////        $campus =  $this->entityManager
-////            ->getRepository(Campus::class)
-////            ->findAll();
-////        return $campus;
-////    }
-
 }
