@@ -52,7 +52,7 @@
                         {% for participant in sortieDetail.participants %}
                             <tr>
                             <td>
-                                <p>Pseudo à ajouter aux entitées</p>
+                                <p> {{ participant.pseudo }}</p>
                             </td>
                             <td>
                                 {{ participant.nom }}
@@ -63,13 +63,20 @@
                 </tbody>
             </table>
 
-            {% if (nbPlaces > 0) %}
-            <form name="sinscrire" method="post">
-                <input type="submit" value="S'inscrire à la sortie"> {# TODO le bonton est clickable si nbPlaces >0 #}
+            {% if (nbPlaces > 0) and (userParticipe) == false %}
+
+            <form name="sinscrire" method="post" action="{{ path('app_sortie_sinscrire', {'i': sortieDetail.id}) }}" >
+                <input name="sinscrire" type="submit" value="S'inscrire à la sortie"> {# TODO le bonton est clickable si nbPlaces >0 #}
             </form>
 
-            {% else %}
+            {% elseif (userParticipe) == true %}
+                <form name="desinscrire" method="post" action="{{ path('app_sortie_desinscription', {'i': sortieDetail.id}) }}">
+                    <input name="desinscrire" type="submit" value="Se désister ?" class="btn btn-warning"> {# TODO le bonton est clickable si nbPlaces >0 #}
+                </form>
+            {% elseif (nbPlaces <= 0) %}
                 <p>Il n'y a plus de places :(</p>
+{#            {% elseif (nbPlaces <= 0) %}#}
+{#                <p>todo autres cas</p>#}
             {% endif %}
 
         {% endfor %}
