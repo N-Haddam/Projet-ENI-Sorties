@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annulation {{ sortie.nom }} | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2 class="text-center">Annuler une sortie</h2>
+        <p class="row">
+            <span class="col-4 ml-4">Nom de la sortie :</span>
+            <span class="cole-4 mr-4">{{ sortie.nom }}</span>
+        </p>
+        <p class="row">
+            <span class="col-4 ml-4">Date de la sortie :</span>
+            <span class="cole-4 mr-4">{{ sortie.dateHeureDebut|date("d/m/Y") }}</span>
+        </p>
+        <p class="row">
+            <span class="col-4 ml-4">Campus :</span>
+            <span class="cole-4 mr-4">{{ sortie.siteOrganisateur.nom }}</span>
+        </p>
+        <p class="row">
+            <span class="col-4 ml-4">Lieu :</span>
+            <span class="cole-4 mr-4">{{ sortie.lieu.nom }}</span>
+        </p>
+        <form class="row" action="{{ path('app_sortie_annuler', {'i': sortie.id}) }}" method="post">
+            <label class="col-4 ml-4" for="motif">Motif :</label>
+            <textarea class="col-4 mr-4" name="motif" id="motif"></textarea>
+            <p class="row">
+                <button type="submit">Enregistrer</button>
+                <a class="button">Annuler</a>
+            </p>
+        </form>
+    </div>
+{% endblock %}
