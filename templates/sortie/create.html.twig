@@ -9,7 +9,15 @@
 
 {% block body %}
 <div class="container">
-    <h2 class="text-center">Créer une sortie</h2>
+    <h2 class="text-center">
+        {% if sortie is defined %}
+            Modifier la sortie : {{ sortie.nom }}
+        {% else %}
+            Créer une sortie
+        {% endif %}
+
+
+    </h2>
 
     <row class="row">
         <section class="col-6">
