@@ -24,7 +24,7 @@
             <select id="ville" name="ville">
                 <option></option>
                 {% for ville in villes %}
-                    <option value="{{ ville.id }}">{{ ville.nom }}</option>
+                    <option value="{{ ville.id }}">{{ ville.nom }} - {{ ville.codePostal }}</option>
                 {% endfor %}
             </select><br>
 
@@ -44,9 +44,8 @@
             <label for="longitude">Longitude</label>
             <input type="text" id="longitude" name="longitude" value="" readonly><br> {# TODO input ou p ? #}
         </section>
-        <button>Enregistrer</button>
-        <button>Publier la sortie</button>
-        <button type="button" ><a href="{{ path('app_main') }}">Annuler</a></button>
+            {# TODO revoir l'affichage des boutons, les deux premiers sont dans le formulaires maintenant #}
+        <button type="button"><a href="{{ path('app_main') }}">Annuler</a></button>
         {{ form_end(form)}}
     </row>
 </div>
