@@ -92,7 +92,10 @@ class SortieController extends AbstractController
         $nbParticipants = is_integer($sortie->getParticipants());
         $userParticipe = $this->userParticipe($user, $sortie);
 
-        if ($sortie->getDateLimiteInscription() >= new \DateTime('now') && ($nbParticipants < $nbPlaces)) {
+        if ($sortie->getDateLimiteInscription() >= new \DateTime('now')
+            && ($nbParticipants < $nbPlaces)
+            && $sortie->getEtat()->getId() !== 6)
+        {
             $sortie = $sortieRepository->find($i);
             $i = $sortie->getId();
             $this->ajoutParticipant($sortie, $entityManager);
