@@ -52,10 +52,10 @@
                         {% for participant in sortieDetail.participants %}
                             <tr>
                             <td>
-                                <p> {{ participant.pseudo }}</p>
+                                <a href="{{ path('app_participant_profil', {'i': participant.id}) }}">{{ participant.pseudo }}</a>
                             </td>
                             <td>
-                                {{ participant.nom }}
+                                {{ participant.prenom }} {{ participant.nom|upper }}
                             </td>
                         </tr>
                         {% endfor %}
