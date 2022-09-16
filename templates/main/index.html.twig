@@ -116,7 +116,7 @@
                         <td>
                             {% if app.user.userIdentifier is same as (sortie.organisateur.userIdentifier)
                                 and sortie.etat.id is same as (1) %}
-                                <a href="#">Modifier</a> - <a href="#">Publier</a>
+                                <a href="#">Modifier</a> - <a href="{{ path('app_sortie_publier', {'i': sortie.id}) }}">Publier</a>
                             {% else %}
                                 <a href="{{ path('app_sortie_detail', {'i': sortie.id}) }}">Afficher</a>
                             {% endif %}

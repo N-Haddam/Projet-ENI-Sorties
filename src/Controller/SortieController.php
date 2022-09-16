@@ -147,6 +147,29 @@ class SortieController extends AbstractController
         }
     }
 
+    #[Route('/publier/{i}', name: 'publier', methods: ['GET'])]
+    public function publier(
+        int $i,
+        SortieRepository $sortieRepository,
+        EtatRepository $etatRepository
+    ): Response {
+        $user = $this->getUser();
+        $sortie = $sortieRepository->find($i);
+        if ($sortie->getOrganisateur()->getId() === $user->getId()
+            && $sortie->getEtat()->getId() === 1
+            && $sortie->getDateLimiteInscription() > new \DateTime())
+        {
+            $etatPubliee = $etatRepository->find(2);
+            $sortie->setEtat($etatPubliee);
+            $sortieRepository->add($sortie, true);
+            $this->addFlash('success', 'Votre sortie est bien publiée');
+            return $this->redirectToRoute('app_sortie_detail', ['i' => $sortie->getId()]);
+        } else {
+            $this->addFlash('warning', 'La sortie ne peut être publiée');
+            return $this->redirectToRoute('app_main');
+        }
+    }
+
 
  // ----------------------------------------------------------------------------------------------------------------------
 
