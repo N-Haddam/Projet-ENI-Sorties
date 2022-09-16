@@ -4,9 +4,14 @@ namespace App\Repository;
 
 use App\Entity\Lieu;
 use App\Entity\Sortie;
+use App\EventListener\Archivage;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 
 /**
  * @extends ServiceEntityRepository<Sortie>
@@ -18,15 +23,21 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class SortieRepository extends ServiceEntityRepository
 {
+    private const DAYS_BEFORE_REMOVAL = 30;
+    private Archivage $archivage;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Sortie::class);
     }
 
+    /**
+     * @throws Exception
+     */
     public function add(Sortie $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
-
+//        $this->archivage->postPersist($entity); //TODO génrère un bug lors création sortie
         if ($flush) {
             $this->getEntityManager()->flush();
         }
@@ -102,6 +113,36 @@ class SortieRepository extends ServiceEntityRepository
 //        return $paginator;
 
         return $qb->getQuery()->getResult();
+    }
+
+
+    // Fonctions pour la commande symfony console app:trip:cleanup
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     * @throws Exception
+     */
+    public function countOldRejected(): int{
+        return $this->getOldRejectedQueryBuilder()->select('COUNT(s.id)')->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function deleteOldRejected(): int{
+        return $this->getOldRejectedQueryBuilder()->delete()->getQuery()->execute();
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getOldRejectedQueryBuilder(): QueryBuilder{
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.dateHeureDebut < :date')
+            ->setParameters([
+                'date' =>  new \DateTimeImmutable(-self::DAYS_BEFORE_REMOVAL.' days'),
+            ])
+        ;
     }
 
 //    /**

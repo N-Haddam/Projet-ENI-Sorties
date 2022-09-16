@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
+use App\EventListener\Archivage;
+use App\EventListener\DatabaseActivitySubscriber;
 use App\Form\SortieType;
 use App\Repository\CampusRepository;
 use App\Repository\EtatRepository;
@@ -27,7 +29,9 @@ class SortieController extends AbstractController
         EtatRepository $etatRepository,
         SortieRepository $sortieRepository,
         CampusRepository $campusRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+//        Archivage $archivage,
+        DatabaseActivitySubscriber $activitySubscriber
     ): Response
     {
         $villes = $villeRepository->findAll(); // TODO revoir par rapport à ce que disait Philippe surles findAll
@@ -43,7 +47,11 @@ class SortieController extends AbstractController
             } elseif ($form->getClickedButton() && 'publier' === $form->getClickedButton()->getName()) {
                 $sortie->setEtat($etatRepository->find(2));
             }
-            $sortieRepository->add($sortie, true);
+//            $sortieRepository->add($sortie, true);
+            $entityManager->persist($sortie);
+//            $archivage->postPersist($sortie);
+            $activitySubscriber->postPersist($sortie);
+            $entityManager->flush();
             $this->ajoutParticipant($sortie, $entityManager);
             $this->addFlash('success', 'La nouvelle sortie a bien été enregistrée');
             return $this->redirectToRoute('app_main');
