@@ -122,7 +122,7 @@
                             {% endif %}
                             {% if app.user.userIdentifier is same as (sortie.organisateur.userIdentifier)
                                 and sortie.etat.id is same as (2) %}
-                                - <a href="#">Annuler</a>
+                                - <a href="{{ path('app_sortie_annuler', {'i': sortie.id}) }}">Annuler</a>
                             {% elseif app.user in (sortie.participants)
                                 and sortie.etat.id in ([2, 3]) %}
                                 - <a href="{{ path('app_sortie_desinscription', {'i': sortie.id}) }}">Se désister</a>

@@ -170,6 +170,29 @@ class SortieController extends AbstractController
         }
     }
 
+    #[Route('/annuler/{i}', name: 'annuler', methods: ['GET'])]
+    public function annuler(
+        int $i,
+        SortieRepository $sortieRepository,
+        EtatRepository $etatRepository
+    ): Response {
+        $user = $this->getUser();
+        $sortie = $sortieRepository->find($i);
+        if ($sortie->getOrganisateur()->getId() === $user->getId()
+            && ($sortie->getEtat()->getId() === 1
+                || $sortie->getEtat()->getId() === 2))
+        {
+            $etatAnnule = $etatRepository->find(6);
+            $sortie->setEtat($etatAnnule);
+            $sortieRepository->add($sortie, true);
+            $this->addFlash('success', 'La sortie a bien été annulée');
+            return $this->redirectToRoute('app_sortie_detail', ['i' => $sortie->getId()]);
+        } else {
+            $this->addFlash('warning', 'La sortie ne peut être annulée');
+            return $this->redirectToRoute('app_main');
+        }
+    }
+
 
  // ----------------------------------------------------------------------------------------------------------------------
 
