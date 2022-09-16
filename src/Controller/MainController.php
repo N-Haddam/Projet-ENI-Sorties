@@ -44,13 +44,26 @@ class MainController extends AbstractController
     {
         $listeCampus = $campusRepository->findAll();
         $user = $this->getUser();
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
         $campus = $user->getCampus();
         $listeSorties = $sortieRepository->findBy(['siteOrganisateur'=>$campus]);
         $parametrageTwig = [];
         $parametrageTwig['methode'] = strtolower($request->getMethod());
+
+//        if ($request->getMethod() === 'GET') {
+//            $parametrageTwig['campusAAfficher'] = $campus;
+//            $listeTmp = [];
+//            foreach ($listeSorties as $sortie) {
+//                if ($sortie->getDateHeureDebut() >= new \DateTime()) {
+//                    $listeTmp[] = $sortie;
+//                }
+//            }
+//            usort($listeTmp, fn($a, $b) => ($a->getDateLimiteInscription() >= $b->getDateLimiteInscription()));
+//            return $this->render('main/index.html.twig', [
+//                "sorties" => $listeTmp,
+//                "listeCampus" => $listeCampus,
+//                "params" => $parametrageTwig,
+//            ]);
+//        }
 
         if (isset($_POST['campus']) && $_POST['campus'] !== $campus->getNom() ) {
             $campus = $campusRepository->findBy(['nom' => $_POST['campus']]);
@@ -140,9 +153,27 @@ class MainController extends AbstractController
                     }
                 }
                 $parametrageTwig['ck']['sortiesPassees'] = true;
+            } else {
+                $listeTmp = [];
+                foreach ($listeSortiesTriCkBox as $sortie) {
+                    if ($sortie->getDateHeureDebut() >= new \DateTime()) {
+                        $listeTmp[] = $sortie;
+                    }
+                }
+                $listeSortiesTriCkBox = $listeTmp;
             }
             $listeSorties = $listeSortiesTriCkBox;
         }
+
+//        $listeTmp = [];
+//        foreach ($listeSorties as $sortie) {
+//            if (!in_array($sortie, $listeTmp)) {
+//                $listeTmp[] = $sortie;
+//            }
+//        }
+//        $listeSorties = $listeTmp;
+        usort($listeSorties, fn($a, $b) => ($a->getDateLimiteInscription() >= $b->getDateLimiteInscription()));
+
         return $this->render('main/index.html.twig', [
             "sorties" => $listeSorties,
             "listeCampus" => $listeCampus,
