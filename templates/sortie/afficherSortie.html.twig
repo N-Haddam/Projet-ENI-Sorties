@@ -45,6 +45,9 @@
                 {#            {% elseif (nbPlaces <= 0) %}#}
                 {#                <p>todo autres cas</p>#}
             {% endif %}
+            {% if sortie.organisateur.id is same as app.user.id %}
+                <button type="button"><a href="{{ path('app_sortie_modifier', {'i': sortie.id}) }}">Modifier</a></button>
+            {% endif %}
 
 
             <p>Liste des participants inscrits : </p>
