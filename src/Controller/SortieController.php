@@ -181,7 +181,7 @@ class SortieController extends AbstractController
         }
     }
 
-    #[Route('/annuler/{i}', name: 'annuler', methods: ['GET'])]
+    #[Route('/annuler/{i}', name: 'annuler', methods: ['GET', 'POST'])]
     public function annuler(
         int $i,
         SortieRepository $sortieRepository,
@@ -189,19 +189,34 @@ class SortieController extends AbstractController
     ): Response {
         $user = $this->getUser();
         $sortie = $sortieRepository->find($i);
-        if ($sortie->getOrganisateur()->getId() === $user->getId()
-            && ($sortie->getEtat()->getId() === 1
-                || $sortie->getEtat()->getId() === 2))
-        {
-            $etatAnnule = $etatRepository->find(6);
-            $sortie->setEtat($etatAnnule);
-            $sortieRepository->add($sortie, true);
-            $this->addFlash('success', 'La sortie a bien été annulée');
-            return $this->redirectToRoute('app_sortie_detail', ['i' => $sortie->getId()]);
-        } else {
-            $this->addFlash('warning', 'La sortie ne peut être annulée');
-            return $this->redirectToRoute('app_main');
+        if (isset($_POST['motif'])) {
+            // check motif not null
+            if ($_POST['motif'] === '') {
+                $this->addFlash('danger', 'Vous devez renseigner un motif d\'annulation');
+                return $this->redirectToRoute('app_sortie_annuler', ['i' => $i]);
+            }
+            if (strlen($_POST['motif']) > 255) {
+                $this->addFlash('danger', 'Le motif ne peut dépasser 255 caractères !');
+                return $this->redirectToRoute('app_sortie_annuler', ['i' => $i]);
+            }
+            if ($sortie->getOrganisateur()->getId() === $user->getId()
+                && ($sortie->getEtat()->getId() === 1
+                    || $sortie->getEtat()->getId() === 2))
+            {
+                $etatAnnule = $etatRepository->find(6);
+                $sortie->setMotifAnnulation($_POST['motif']);
+                $sortie->setEtat($etatAnnule);
+                $sortieRepository->add($sortie, true);
+                $this->addFlash('success', 'La sortie a bien été annulée');
+                return $this->redirectToRoute('app_sortie_detail', ['i' => $sortie->getId()]);
+            } else {
+                $this->addFlash('warning', 'La sortie ne peut être annulée');
+                return $this->redirectToRoute('app_main');
+            }
         }
+        return $this->render('sortie/annuler.html.twig', [
+            "sortie" => $sortie,
+        ]);
     }
 
 
