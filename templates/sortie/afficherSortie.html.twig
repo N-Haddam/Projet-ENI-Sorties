@@ -32,6 +32,20 @@
                     <p>Longitude : {{ sortieDetail.lieu.longitude }} W</p>
                 {% endif %}
 
+            {% if (nbPlaces > 0) and (userParticipe) == false %}
+                <form name="sinscrire" method="post" action="{{ path('app_sortie_sinscrire', {'i': sortieDetail.id}) }}" >
+                    <input name="sinscrire" type="submit" value="S'inscrire à la sortie"> {# TODO le bonton est clickable si nbPlaces >0 #}
+                </form>
+            {% elseif (userParticipe) == true %}
+                <form name="desinscrire" method="post" action="{{ path('app_sortie_desinscription', {'i': sortieDetail.id}) }}">
+                    <input name="desinscrire" type="submit" value="Se désister ?" class="btn btn-warning"> {# TODO le bonton est clickable si nbPlaces >0 #}
+                </form>
+            {% elseif (nbPlaces <= 0) %}
+                <p>Il n'y a plus de places :(</p>
+                {#            {% elseif (nbPlaces <= 0) %}#}
+                {#                <p>todo autres cas</p>#}
+            {% endif %}
+
 
             <p>Liste des participants inscrits : </p>
             <table class="table table-striped">
@@ -62,22 +76,6 @@
                     {% endif %}
                 </tbody>
             </table>
-
-            {% if (nbPlaces > 0) and (userParticipe) == false %}
-
-            <form name="sinscrire" method="post" action="{{ path('app_sortie_sinscrire', {'i': sortieDetail.id}) }}" >
-                <input name="sinscrire" type="submit" value="S'inscrire à la sortie"> {# TODO le bonton est clickable si nbPlaces >0 #}
-            </form>
-
-            {% elseif (userParticipe) == true %}
-                <form name="desinscrire" method="post" action="{{ path('app_sortie_desinscription', {'i': sortieDetail.id}) }}">
-                    <input name="desinscrire" type="submit" value="Se désister ?" class="btn btn-warning"> {# TODO le bonton est clickable si nbPlaces >0 #}
-                </form>
-            {% elseif (nbPlaces <= 0) %}
-                <p>Il n'y a plus de places :(</p>
-{#            {% elseif (nbPlaces <= 0) %}#}
-{#                <p>todo autres cas</p>#}
-            {% endif %}
 
         {% endfor %}
 
