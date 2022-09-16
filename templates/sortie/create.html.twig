@@ -19,7 +19,7 @@
         <section class="col-6">
             <label for="campus">Campus</label>
             {% if 'create' in app.request.attributes.get('_route') %}
-                <span id="campus">{{ app.user.campus }}</span><br>
+                <label for="campus">Campus</label><input type="text" id="campus" name="campus" value="{{ app.user.campus }}" readonly><br>
             {% elseif 'modifier' in app.request.attributes.get('_route') %}
                 {% include 'inc/_campusModifierSortie.html.twig' %}<br>
             {% endif %}
@@ -44,9 +44,9 @@
                 {% if sortie is defined %}
                     {% for lieu in sortie.lieu.ville.lieus %}
                         {% if lieu.id is same as sortie.lieu.id %}
-                            <option value="lieu.id" selected>{{ lieu.nom }}</option>
+                            <option value="{{ lieu.id }}" selected>{{ lieu.nom }}</option>
                         {% else %}
-                            <option value="lieu.id">{{ lieu.nom }}</option>
+                            <option value="{{ lieu.id }}">{{ lieu.nom }}</option>
                         {% endif %}
                     {% endfor %}
                 {% endif %}

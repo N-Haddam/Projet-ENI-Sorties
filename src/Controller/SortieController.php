@@ -226,6 +226,8 @@ class SortieController extends AbstractController
         VilleRepository $villeRepository,
         Request $request,
         CampusRepository $campusRepository,
+        LieuRepository $lieuRepository,
+        EtatRepository $etatRepository,
     ): Response
     {
         $sortie = $sortieRepository->find($i);
@@ -238,7 +240,16 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // TODO traiter le formulaire
-            $sortie->setSiteOrganisateur($_POST['']);
+            $sortie->setSiteOrganisateur($campusRepository->find($_POST['campus']))
+                ->setLieu($lieuRepository->find($_POST['lieu']));
+            if ($form->getClickedButton() && 'enregistrer' === $form->getClickedButton()->getName()) {
+                $sortie->setEtat($etatRepository->find(1));
+            } elseif ($form->getClickedButton() && 'publier' === $form->getClickedButton()->getName()) {
+                $sortie->setEtat($etatRepository->find(2));
+            }
+            $sortieRepository->add($sortie, true);
+            $this->addFlash('success', 'La sortie a bien été modfiée');
+            return $this->redirectToRoute('app_sortie_detail', ['i' => $sortie->getId()]);
         }
 
         $listCampus = $campusRepository->findAll();
