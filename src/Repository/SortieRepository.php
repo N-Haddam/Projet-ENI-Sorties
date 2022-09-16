@@ -37,7 +37,6 @@ class SortieRepository extends ServiceEntityRepository
     public function add(Sortie $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
-        $this->archivage->postPersist($entity);
         if ($flush) {
             $this->getEntityManager()->flush();
         }
@@ -144,7 +143,6 @@ class SortieRepository extends ServiceEntityRepository
             ])
         ;
     }
-
 
 //    /**
 //     * @return SortieFixtures[] Returns an array of SortieFixtures objects
