@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Lieu;
 use App\Entity\Sortie;
-use Container5UH6WDQ\getDoctrine_Orm_Command_EntityManagerProviderService;
+use App\EventListener\Archivage;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -24,16 +24,20 @@ use Exception;
 class SortieRepository extends ServiceEntityRepository
 {
     private const DAYS_BEFORE_REMOVAL = 30;
+    private Archivage $archivage;
 
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Sortie::class);
     }
 
+    /**
+     * @throws Exception
+     */
     public function add(Sortie $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
-
+        $this->archivage->postPersist($entity);
         if ($flush) {
             $this->getEntityManager()->flush();
         }

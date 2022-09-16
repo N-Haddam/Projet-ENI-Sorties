@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
-class Sortie
+class Sortie extends \Doctrine\Persistence\Event\LifecycleEventArgs
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
