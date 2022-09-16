@@ -24,7 +24,7 @@
             <select id="ville" name="ville">
                 <option></option>
                 {% for ville in villes %}
-                    <option value="{{ ville.id }}">{{ ville.nom }}</option>
+                    <option value="{{ ville.id }}">{{ ville.nom }} - {{ ville.codePostal }}</option>
                 {% endfor %}
             </select><br>
 
