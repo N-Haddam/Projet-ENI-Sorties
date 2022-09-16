@@ -219,6 +219,49 @@ class SortieController extends AbstractController
         ]);
     }
 
+    #[Route('/modifier/{i}', name: 'modifier', methods: ['GET', 'POST'])]
+    public function modifier(
+        int $i,
+        SortieRepository $sortieRepository,
+        VilleRepository $villeRepository,
+        Request $request,
+        CampusRepository $campusRepository,
+        LieuRepository $lieuRepository,
+        EtatRepository $etatRepository,
+    ): Response
+    {
+        $sortie = $sortieRepository->find($i);
+        if ($this->getUser()->getUserIdentifier() !== $sortie->getOrganisateur()->getUserIdentifier()) {
+            $this->addFlash('danger', 'Vous ne pouvez pas modifier cette sortie !');
+            return $this->redirectToRoute('app_sortie_detail', ['i' => $i]);
+        }
+        $villes = $villeRepository->findAll(); // TODO revoir par rapport à ce que disait Philippe surles findAll
+        $form = $this->createForm(SortieType::class, $sortie);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // TODO traiter le formulaire
+            $sortie->setSiteOrganisateur($campusRepository->find($_POST['campus']))
+                ->setLieu($lieuRepository->find($_POST['lieu']));
+            if ($form->getClickedButton() && 'enregistrer' === $form->getClickedButton()->getName()) {
+                $sortie->setEtat($etatRepository->find(1));
+            } elseif ($form->getClickedButton() && 'publier' === $form->getClickedButton()->getName()) {
+                $sortie->setEtat($etatRepository->find(2));
+            }
+            $sortieRepository->add($sortie, true);
+            $this->addFlash('success', 'La sortie a bien été modfiée');
+            return $this->redirectToRoute('app_sortie_detail', ['i' => $sortie->getId()]);
+        }
+
+        $listCampus = $campusRepository->findAll();
+
+        return $this->renderForm('sortie/create.html.twig', [
+            'form' => $form,
+            'villes' => $villes,
+            'sortie' => $sortie,
+            'listeCampus' => $listCampus,
+        ]);
+
+    }
 
  // ----------------------------------------------------------------------------------------------------------------------
 
