@@ -1,0 +1,9 @@
+<select id="campus">
+    {% for campus in listeCampus %}
+        {% if campus.id is same as (sortie.siteOrganisateur.id) %}
+            <option selected value="{{ campus.id }}">{{ campus.nom }}</option>
+        {% else %}
+            <option value="{{ campus.id }}">{{ campus.nom }}</option>
+        {% endif %}
+    {% endfor %}
+</select>

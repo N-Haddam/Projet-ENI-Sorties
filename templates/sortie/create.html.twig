@@ -17,39 +17,77 @@
             {{ form_widget(form) }}
         </section>
         <section class="col-6">
-{#            <label for="campus">Campus</label><input type="text" id="campus" name="campus" value="{{ app.user.campus }}" readonly><br>#}
-            <span>Campus : </span><span id="campus">{{ app.user.campus }}</span><br>
+            <label for="campus">Campus</label>
+            {% if 'create' in app.request.attributes.get('_route') %}
+                <span id="campus">{{ app.user.campus }}</span><br>
+            {% elseif 'modifier' in app.request.attributes.get('_route') %}
+                {% include 'inc/_campusModifierSortie.html.twig' %}<br>
+            {% endif %}
 
             {# TODO peut-être pas de ville par défaut #}
             <label for="ville">Ville</label>
             <select id="ville" name="ville">
-                <option></option>
+                {% if 'create' in app.request.attributes.get('_route') %}
+                    <option></option>
+                {% endif %}
                 {% for ville in villes %}
-                    <option value="{{ ville.id }}">{{ ville.nom }} - {{ ville.codePostal }}</option>
+                    {% if sortie is defined and sortie.lieu.ville.id is same as ville.id %}
+                        <option value="{{ ville.id }}" selected>{{ ville.nom }} - {{ ville.codePostal }}</option>
+                    {% else %}
+                        <option value="{{ ville.id }}">{{ ville.nom }} - {{ ville.codePostal }}</option>
+                    {% endif %}
                 {% endfor %}
             </select><br>
 
-            {# TODO peut-être pas de lieu par défaut, et donc ni rue, cp, lati et longi #}
             <label for="lieu">Lieu</label>
-            <select id="lieu" name="lieu"></select><br>
+            <select id="lieu" name="lieu">
+                {% if sortie is defined %}
+                    {% for lieu in sortie.lieu.ville.lieus %}
+                        {% if lieu.id is same as sortie.lieu.id %}
+                            <option value="lieu.id" selected>{{ lieu.nom }}</option>
+                        {% else %}
+                            <option value="lieu.id">{{ lieu.nom }}</option>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </select><br>
 
 {#            <label for="rue">Rue</label>#}
-{#            <input type="text" id="rue" name="rue" value="" readonly><br> #}{# TODO input ou p ? #}
-            <span>Rue : </span><span id="rue"></span><br>
+{#            <input type="text" id="rue" name="rue" value="" readonly><br> #}
+            <span>Rue : </span><span id="rue">
+                {% if sortie is defined %}
+                    {{ sortie.lieu.rue }}
+                {% endif %}
+            </span><br>
 
 {#            <label for="cp">Code postal</label>#}
-{#            <input type="text" id="cp" name="cp" value="" readonly><br> #}{# TODO input ou p ? #}
-            <span>Code postal : </span><span id="cp"></span><br>
+{#            <input type="text" id="cp" name="cp" value="" readonly><br> #}
+            <span>Code postal : </span><span id="cp">
+                {% if sortie is defined %}
+                    {{ sortie.lieu.ville.codePostal }}
+                {% endif %}
+            </span><br>
 
 {#            <label for="latitude">Latitude</label>#}
-{#            <input type="text" id="latitude" name="latitude" value="" readonly><br> #}{# TODO input ou p ? #}
-            <span>Latitude : </span><span id="latitude"></span><br>
+{#            <input type="text" id="latitude" name="latitude" value="" readonly><br> #}
+            <span>Latitude : </span><span id="latitude">
+                {% if sortie is defined %}
+                    {{ sortie.lieu.latitude }}
+                {% endif %}
+            </span><br>
 
 {#            <label for="longitude">Longitude</label>#}
-{#            <input type="text" id="longitude" name="longitude" value="" readonly><br> #}{# TODO input ou p ? #}
-            <span>Longitude : </span><span id="longitude"></span><br>
+{#            <input type="text" id="longitude" name="longitude" value="" readonly><br> #}
+            <span>Longitude : </span><span id="longitude">
+                {% if sortie is defined %}
+                    {{ sortie.lieu.longitude }}
+                {% endif %}
+            </span><br>
         </section>
             {# TODO revoir l'affichage des boutons, les deux premiers sont dans le formulaires maintenant #}
+        {% if sortie is defined %}
+            <button type="button"><a href="{{ path('app_sortie_annuler', {'i': sortie.id}) }}">Annuler la sortie</a></button>
+        {% endif %}
         <button type="button"><a href="{{ path('app_main') }}">Annuler</a></button>
         {{ form_end(form)}}
     </row>
