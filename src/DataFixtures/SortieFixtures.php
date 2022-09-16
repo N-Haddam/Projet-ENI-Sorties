@@ -95,7 +95,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             $nb_inscrit = rand(10,25);
             $organisateur = $this->participantRepository->find(rand(1,49));
             $sortie = (new Sortie())
-                ->setNom('Sortie ' . $i)
+                ->setNom('Sortie ' . $i+30)
                 ->setDateHeureDebut(new \DateTime('now +' . $jour_debut . ' day'))
                 ->setDuree(rand(30,180))
                 ->setDateLimiteInscription(new \DateTime('now +' . $jour_debut-5 . ' day'))
@@ -121,7 +121,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             $nb_inscrit = rand(10,25);
             $organisateur = $this->participantRepository->find(rand(1,49));
             $sortie = (new Sortie())
-                ->setNom('Sortie ' . $i)
+                ->setNom('Sortie ' . $i+50)
                 ->setDateHeureDebut(new \DateTime('now +' . $jour_debut . ' day'))
                 ->setDuree(rand(30,180))
                 ->setDateLimiteInscription(new \DateTime('now +' . $jour_debut-5 . ' day'))
@@ -148,7 +148,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             $nb_inscrit = rand(10,25);
             $organisateur = $this->participantRepository->find(rand(1,49));
             $sortie = (new Sortie())
-                ->setNom('Sortie ' . $i)
+                ->setNom('Sortie ' . $i+70)
                 ->setDateHeureDebut(new \DateTime('now -' . $jour_debut . ' day'))
                 ->setDuree(rand(30,180))
                 ->setDateLimiteInscription(new \DateTime('now -' . $jour_debut+5 . ' day'))
@@ -174,7 +174,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             $nb_inscrit = rand(10,25);
             $organisateur = $this->participantRepository->find(rand(1,49));
             $sortie = (new Sortie())
-                ->setNom('Sortie ' . $i)
+                ->setNom('Sortie ' . $i+90)
                 ->setDateHeureDebut(new \DateTime('now -' . $jour_debut . ' day'))
                 ->setDuree(rand(30,180))
                 ->setDateLimiteInscription(new \DateTime('now -' . $jour_debut+5 . ' day'))
@@ -201,7 +201,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             $nb_inscrit = rand(10,25);
             $organisateur = $this->participantRepository->find(rand(1,49));
             $sortie = (new Sortie())
-                ->setNom('Sortie ' . $i)
+                ->setNom('Sortie ' . $i+120)
                 ->setDateHeureDebut(new \DateTime('now -' . $jour_debut . ' day'))
                 ->setDuree(rand(30,180))
                 ->setDateLimiteInscription(new \DateTime('now -' . $jour_debut+5 . ' day'))
@@ -227,7 +227,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             $nb_inscrit = rand(10,25);
             $organisateur = $this->participantRepository->find(rand(1,49));
             $sortie = (new Sortie())
-                ->setNom('Sortie ' . $i)
+                ->setNom('Sortie ' . $i+130)
                 ->setDateHeureDebut(new \DateTime('now -' . $jour_debut . ' day'))
                 ->setDuree(rand(30,180))
                 ->setDateLimiteInscription(new \DateTime('now -' . $jour_debut+5 . ' day'))
@@ -253,7 +253,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             $nb_inscrit = rand(10,25);
             $organisateur = $this->participantRepository->find(rand(1,49));
             $sortie = (new Sortie())
-                ->setNom('Sortie ' . $i)
+                ->setNom('Sortie ' . $i+140)
                 ->setDateHeureDebut(new \DateTime('now'))
                 ->setDuree(rand(30,180))
                 ->setDateLimiteInscription(new \DateTime('now -5 day'))
@@ -278,7 +278,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             $nb_inscrit = rand(10,25);
             $organisateur = $this->participantRepository->find(rand(1,49));
             $sortie = (new Sortie())
-                ->setNom('Sortie ' . $i)
+                ->setNom('Sortie ' . $i+150)
                 ->setDateHeureDebut(new \DateTime('now'))
                 ->setDuree(rand(30,180))
                 ->setDateLimiteInscription(new \DateTime('now -5 day'))
@@ -304,7 +304,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             $nb_inscrit = rand(10,25);
             $organisateur = $this->participantRepository->find(rand(1,49));
             $sortie = (new Sortie())
-                ->setNom('Sortie ' . $i)
+                ->setNom('Sortie ' . $i+160)
                 ->setDateHeureDebut(new \DateTime('now +' . $jour_debut . ' day'))
                 ->setDuree(rand(30,180))
                 ->setDateLimiteInscription(new \DateTime('now +' . $jour_debut-5 . ' day'))
@@ -326,7 +326,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             $nb_inscrit = rand(10,25);
             $organisateur = $this->participantRepository->find(rand(1,49));
             $sortie = (new Sortie())
-                ->setNom('Sortie ' . $i)
+                ->setNom('Sortie ' . $i+180)
                 ->setDateHeureDebut(new \DateTime('now +' . $jour_debut . ' day'))
                 ->setDuree(rand(30,180))
                 ->setDateLimiteInscription(new \DateTime('now +' . $jour_debut-5 . ' day'))
@@ -352,7 +352,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             $nb_inscrit = rand(10,25);
             $organisateur = $this->participantRepository->find(rand(1,49));
             $sortie = (new Sortie())
-                ->setNom('Sortie ' . $i)
+                ->setNom('Sortie ' . $i+190)
                 ->setDateHeureDebut(new \DateTime('now +' . $jour_debut . ' day'))
                 ->setDuree(rand(30,180))
                 ->setDateLimiteInscription(new \DateTime('now +' . $jour_debut-5 . ' day'))
@@ -379,7 +379,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             $nb_inscrit = rand(10,25);
             $organisateur = $this->participantRepository->find(rand(1,49));
             $sortie = (new Sortie())
-                ->setNom('Sortie ' . $i)
+                ->setNom('Sortie ' . $i+200)
                 ->setDateHeureDebut(new \DateTime('now -' . $jour_debut . ' day'))
                 ->setDuree(rand(30,180))
                 ->setDateLimiteInscription(new \DateTime('now -' . $jour_debut+5 . ' day'))
@@ -405,7 +405,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             $nb_inscrit = rand(10,25);
             $organisateur = $this->participantRepository->find(rand(1,49));
             $sortie = (new Sortie())
-                ->setNom('Sortie ' . $i)
+                ->setNom('Sortie ' . $i+210)
                 ->setDateHeureDebut(new \DateTime('now -' . $jour_debut . ' day'))
                 ->setDuree(rand(30,180))
                 ->setDateLimiteInscription(new \DateTime('now -' . $jour_debut+5 . ' day'))

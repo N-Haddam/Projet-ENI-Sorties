@@ -35,10 +35,14 @@ class SortieController extends AbstractController
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $sortie->setEtat($etatRepository->find(1)) // TODO : à gérer selon le bouton cliquer pour le formulaire
-                ->setSiteOrganisateur($campusRepository->findOneBy(['nom' => $_POST['campus']]))
+            $sortie->setSiteOrganisateur($campusRepository->findOneBy(['nom' => $_POST['campus']]))
                 ->setLieu($lieuRepository->find($_POST['lieu']))
                 ->setOrganisateur($this->getUser());
+            if ($form->getClickedButton() && 'enregistrer' === $form->getClickedButton()->getName()) {
+                $sortie->setEtat($etatRepository->find(1));
+            } elseif ($form->getClickedButton() && 'publier' === $form->getClickedButton()->getName()) {
+                $sortie->setEtat($etatRepository->find(2));
+            }
             $sortieRepository->add($sortie, true);
             $this->ajoutParticipant($sortie, $entityManager);
             $this->addFlash('success', 'La nouvelle sortie a bien été enregistrée');
@@ -48,7 +52,6 @@ class SortieController extends AbstractController
         return $this->renderForm('sortie/create.html.twig', [
             'form' => $form,
             'villes' => $villes,
-//            'lieux' => $lieuRepository->findBy(['ville' => $villes[0]])
         ]);
     }
 
@@ -75,14 +78,13 @@ class SortieController extends AbstractController
         ]);
     }
 
-        #[Route('/inscription/{i}', name: 'sinscrire', methods: 'POST')] // TODO valider que i soit un entier
-        public function inscription(
-            int $i,
-            EntityManagerInterface $entityManager,
-            SortieRepository $sortieRepository,
-        ): Response
-        {
-
+    #[Route('/inscription/{i}', name: 'sinscrire', methods: ['GET', 'POST'])] // TODO valider que i soit un entier
+    public function inscription(
+        int $i,
+        EntityManagerInterface $entityManager,
+        SortieRepository $sortieRepository,
+    ): Response
+    {
         $user = $this->getUser();
         $sortie = $sortieRepository->find($i);
         $sortieDetails = $sortieRepository->findDetailsSortie($i);
@@ -90,36 +92,34 @@ class SortieController extends AbstractController
         $nbParticipants = is_integer($sortie->getParticipants());
         $userParticipe = $this->userParticipe($user, $sortie);
 
-        if(isset($_POST['sinscrire'])) {
-
-            if ($sortie->getDateLimiteInscription() >= new \DateTime('now') && ($nbParticipants < $nbPlaces)) {
-                $sortie = $sortieRepository->find($i);
-                $i = $sortie->getId();
-                $this->ajoutParticipant($sortie, $entityManager);
-                $this->addFlash('success', 'Vous êtes inscrit à cette sortie !');
-                return $this->forward('App\Controller\SortieController::detail', [
-                    'i' => $i,
-                    'sortie' => $sortie,
-                    'sortieDetails' => $sortieDetails,
-                    'nbPlaces' => $nbPlaces,
-                    'userParticipe' => $userParticipe
-                ]);
-            } else {
-                $this->addFlash('warning', 'Vous ne pouvez plus vous inscrire :(');
-                return $this->forward('App\Controller\SortieController::detail', [
-                    'i' => $i,
-                    'sortie' => $sortie,
-                    'sortieDetails' => $sortieDetails,
-                    'nbPlaces' => $nbPlaces,
-                    'userParticipe' => $userParticipe
-                ]);
-            }
-        }else {
-            return $this->redirectToRoute('app_sortie_desinscription',['i' => $sortie->getId()]);
+        if ($sortie->getDateLimiteInscription() >= new \DateTime('now')
+            && ($nbParticipants < $nbPlaces)
+            && $sortie->getEtat()->getId() !== 6)
+        {
+            $sortie = $sortieRepository->find($i);
+            $i = $sortie->getId();
+            $this->ajoutParticipant($sortie, $entityManager);
+            $this->addFlash('success', 'Vous êtes inscrit à cette sortie !');
+            return $this->forward('App\Controller\SortieController::detail', [
+                'i' => $i,
+                'sortie' => $sortie,
+                'sortieDetails' => $sortieDetails,
+                'nbPlaces' => $nbPlaces,
+                'userParticipe' => $userParticipe
+            ]);
+        } else {
+            $this->addFlash('warning', 'Vous ne pouvez plus vous inscrire :(');
+            return $this->forward('App\Controller\SortieController::detail', [
+                'i' => $i,
+                'sortie' => $sortie,
+                'sortieDetails' => $sortieDetails,
+                'nbPlaces' => $nbPlaces,
+                'userParticipe' => $userParticipe
+            ]);
         }
     }
 
-    #[Route('/desinscription/{i}', name: 'desinscription', methods: 'POST')] // TODO valider que i soit un entier
+    #[Route('/desinscription/{i}', name: 'desinscription', methods: ['GET', 'POST'])] // TODO valider que i soit un entier
     public function desinscription(
         int $i,
         EntityManagerInterface $entityManager,
@@ -132,25 +132,67 @@ class SortieController extends AbstractController
         $sortieDetails = $sortieRepository->findDetailsSortie($i);
         $userParticipe = $this->userParticipe($user, $sortie);
 
-        if(isset($_POST['desinscrire'])) {
-            if ($sortie->getDateHeureDebut() >= new \DateTime('now')) {
-                $sortie->removeParticipant($user);
-                $entityManager->persist($sortie);
-                $entityManager->flush();
-                $this->addFlash('warning', 'Vous êtes désinscrit de cette sortie !');
-                return $this->forward('App\Controller\SortieController::detail',  [
-                    'i' => $sortie->getId(),
-                    'sortie' => $sortie,
-                    'sortieDetails' => $sortieDetails,
-                    'nbPlaces' => $nbPlaces,
-                    'userParticipe' => $userParticipe
-                ]);
-            }else {
-                $this->addFlash('warning', 'Vous ne pouvez plus vous désinscrire :(');
-                return $this->redirectToRoute('app_sortie_detail', ['i' => $sortie->getId()]);
-            }
+        if ($sortie->getDateHeureDebut() >= new \DateTime('now')) {
+            $sortie->removeParticipant($user);
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+            $this->addFlash('warning', 'Vous êtes désinscrit de cette sortie !');
+            return $this->forward('App\Controller\SortieController::detail',  [
+                'i' => $sortie->getId(),
+                'sortie' => $sortie,
+                'sortieDetails' => $sortieDetails,
+                'nbPlaces' => $nbPlaces,
+                'userParticipe' => $userParticipe
+            ]);
         }else {
+            $this->addFlash('warning', 'Vous ne pouvez plus vous désinscrire :(');
             return $this->redirectToRoute('app_sortie_detail', ['i' => $sortie->getId()]);
+        }
+    }
+
+    #[Route('/publier/{i}', name: 'publier', methods: ['GET'])]
+    public function publier(
+        int $i,
+        SortieRepository $sortieRepository,
+        EtatRepository $etatRepository
+    ): Response {
+        $user = $this->getUser();
+        $sortie = $sortieRepository->find($i);
+        if ($sortie->getOrganisateur()->getId() === $user->getId()
+            && $sortie->getEtat()->getId() === 1
+            && $sortie->getDateLimiteInscription() > new \DateTime())
+        {
+            $etatPubliee = $etatRepository->find(2);
+            $sortie->setEtat($etatPubliee);
+            $sortieRepository->add($sortie, true);
+            $this->addFlash('success', 'Votre sortie est bien publiée');
+            return $this->redirectToRoute('app_sortie_detail', ['i' => $sortie->getId()]);
+        } else {
+            $this->addFlash('warning', 'La sortie ne peut être publiée');
+            return $this->redirectToRoute('app_main');
+        }
+    }
+
+    #[Route('/annuler/{i}', name: 'annuler', methods: ['GET'])]
+    public function annuler(
+        int $i,
+        SortieRepository $sortieRepository,
+        EtatRepository $etatRepository
+    ): Response {
+        $user = $this->getUser();
+        $sortie = $sortieRepository->find($i);
+        if ($sortie->getOrganisateur()->getId() === $user->getId()
+            && ($sortie->getEtat()->getId() === 1
+                || $sortie->getEtat()->getId() === 2))
+        {
+            $etatAnnule = $etatRepository->find(6);
+            $sortie->setEtat($etatAnnule);
+            $sortieRepository->add($sortie, true);
+            $this->addFlash('success', 'La sortie a bien été annulée');
+            return $this->redirectToRoute('app_sortie_detail', ['i' => $sortie->getId()]);
+        } else {
+            $this->addFlash('warning', 'La sortie ne peut être annulée');
+            return $this->redirectToRoute('app_main');
         }
     }
 
