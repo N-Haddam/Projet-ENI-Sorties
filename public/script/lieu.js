@@ -1,9 +1,9 @@
 const selectVille = document.getElementById('ville');
 const selectLieu = document.getElementById('lieu');
-const inputRue = document.getElementById('rue');
-const inputCp = document.getElementById('cp');
-const inputLatitude = document.getElementById('latitude');
-const inputLongitude = document.getElementById('longitude');
+const rue = document.getElementById('rue');
+const cp = document.getElementById('cp');
+const latitude = document.getElementById('latitude');
+const longitude = document.getElementById('longitude');
 
 let lieux;
 
@@ -21,10 +21,10 @@ selectVille.addEventListener('change', () => {
                 options += `<option value="${lieu.id}">${lieu.nom}</option>`;
             })
             selectLieu.innerHTML = options;
-            inputRue.value = '';
-            inputCp.value = '';
-            inputLatitude.value = '';
-            inputLongitude.value = '';
+            rue.innerText = '';
+            cp.innerText = '';
+            latitude.innerText = '';
+            longitude.innerText = '';
         })
 
     // let lieux = ; // liste des lieux de la ville, à faire en requête ajax
@@ -35,16 +35,14 @@ selectVille.addEventListener('change', () => {
 
 selectLieu.addEventListener('change', () => {
     let lieu = selectLieu.value; // à vérifier, mais surement l'id du lieu
+    console.log('coucou')
     lieux.map(l => {
         if (l.id.toString() === lieu.toString()) {
-            inputRue.value = l.rue;
-            inputCp.value = l.ville.codePostal;
-            inputLatitude.value = l.latitude;
-            inputLongitude.value = l.longitude;
+            rue.innerText = l.rue;
+            cp.innerText = l.ville.codePostal;
+            latitude.innerText = l.latitude;
+            longitude.innerText = l.longitude;
 
         }
     })
-
-    // TODO demander à Yohann si je peux passer CP dans lieu plutôt que ville
-    // modifier les valeurs des input en fonction du lieu
 })
