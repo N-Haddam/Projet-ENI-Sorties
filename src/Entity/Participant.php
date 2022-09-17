@@ -43,14 +43,14 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(max: 60)]
-//    #[Assert\Regex('/^[a-zA-Z]+$/')]
+    #[Assert\Regex('/^[A-Za-zÀ-ÖØ-öø-ÿ]+$/')]
     private ?string $nom = null;
 
     #[ORM\Column(length: 60)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(max: 60)]
-//    #[Assert\Regex('/^[a-zA-Z]+$/')]
+    #[Assert\Regex('/^[A-Za-zÀ-ÖØ-öø-ÿ]+$/')]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 10)]

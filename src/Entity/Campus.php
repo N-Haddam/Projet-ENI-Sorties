@@ -20,7 +20,7 @@ class Campus
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(max: 60)]
-//    #[Assert\Regex('/^[a-zA-Z]+$/')]
+    #[Assert\Regex('/^[A-Za-zÀ-ÖØ-öø-ÿ]+$/')]
     private ?string $nom = null;
 
     #[ORM\OneToMany(mappedBy: 'siteOrganisateur', targetEntity: Sortie::class, orphanRemoval: true)]
