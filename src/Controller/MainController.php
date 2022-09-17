@@ -40,14 +40,14 @@ class MainController extends AbstractController
         $listeCampus = $campusRepository->findAll();
         $user = $this->getUser();
         $campus = $user->getCampus();
-        $listeSorties = $sortieRepository->findBy(['siteOrganisateur'=>$campus]);
+//        $listeSorties = $sortieRepository->findBy(['siteOrganisateur'=>$campus]);
         $parametrageTwig = [];
         $parametrageTwig['methode'] = strtolower($request->getMethod());
 
         if (isset($_POST['campus']) && $_POST['campus'] !== $campus->getNom() ) {
-            $campus = $campusRepository->findBy(['nom' => $_POST['campus']]);
-            $listeSorties = $sortieRepository->findBy(['siteOrganisateur'=>$campus]);
+            $campus = $campusRepository->findOneBy(['nom' => $_POST['campus']]);
         }
+        $listeSorties = $sortieRepository->findByCampus($campus);
         $parametrageTwig['campusAAfficher'] = $campus;
 
         if (isset($_POST['nomSortieContient']) && $_POST['nomSortieContient'] !== ''){

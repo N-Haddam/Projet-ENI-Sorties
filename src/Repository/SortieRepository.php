@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Campus;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\EventListener\Archivage;
@@ -51,6 +52,27 @@ class SortieRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function findByCampus(Campus $campus): array
+    {
+        $queryBuilder = $this->createQueryBuilder('s');
+        $queryBuilder->where('s.siteOrganisateur = :campus')
+            ->setParameter('campus', $campus)
+            ->leftJoin('s.siteOrganisateur', 'so')
+            ->addSelect('so')
+            ->leftJoin('s.etat', 'e')
+            ->addSelect('e')
+            ->leftJoin('s.participants', 'p')
+            ->addSelect('p');
+//            ->leftJoin('s.lieu', 'l')
+//            ->addSelect('l')
+//            ->leftJoin('l.ville', 'v')
+//            ->addSelect('v');
+        return $queryBuilder->getQuery()->getResult();
+
+
+    }
+
     public function findContient($nomSortieContient){
         return $this->createQueryBuilder('s')
             ->andWhere('s.nom LIKE :nom')
@@ -97,8 +119,6 @@ class SortieRepository extends ServiceEntityRepository
 
 
     public function findDetailsSortie($i){
-
-
         $qb = $this->createQueryBuilder('s')
             ->andWhere('s.id = :i')
             ->setParameter('i', $i)
@@ -145,6 +165,7 @@ class SortieRepository extends ServiceEntityRepository
         ;
     }
 
+
 //    /**
 //     * @return SortieFixtures[] Returns an array of SortieFixtures objects
 //     */
@@ -169,5 +190,6 @@ class SortieRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
 
 }
