@@ -41,7 +41,7 @@ class Sortie extends \Doctrine\Persistence\Event\LifecycleEventArgs
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Type('DateTimeInterface')] // TODO bizarre, si DateInterface ça ne fonctionne pas
-    #[Assert\Expression('value > this.getDateHeureDebut()')]
+    #[Assert\Expression('value < this.getDateHeureDebut()')]
     private ?\DateTimeInterface $dateLimiteInscription = null;
 
     #[ORM\Column]
