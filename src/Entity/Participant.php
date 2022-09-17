@@ -43,14 +43,14 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(max: 60)]
-    #[Assert\Regex('/^[A-Za-zÀ-ÖØ-öø-ÿ]+$/')]
+    #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ]+$/')] // TODO enlever le chiffres en prod
     private ?string $nom = null;
 
     #[ORM\Column(length: 60)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(max: 60)]
-    #[Assert\Regex('/^[A-Za-zÀ-ÖØ-öø-ÿ]+$/')]
+    #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ]+$/')] // TODO enlever le chiffres en prod
     private ?string $prenom = null;
 
     #[ORM\Column(length: 10)]
@@ -81,6 +81,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Campus $campus = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ]+$/')]
     private ?string $pseudo = null;
 
     public function __construct()
