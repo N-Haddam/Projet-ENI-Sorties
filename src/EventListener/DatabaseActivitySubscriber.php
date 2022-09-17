@@ -11,6 +11,7 @@ class DatabaseActivitySubscriber implements EventSubscriberInterface
     private const DAYS_BEFORE_REMOVAL = 30;
     // this method can only return the event names; you cannot define a
     // custom method name to execute when each event triggers
+
     public function getSubscribedEvents(): array
     {
         return [
@@ -28,6 +29,8 @@ class DatabaseActivitySubscriber implements EventSubscriberInterface
         $sortie = $args->getObject();
         if($sortie instanceof Sortie) {
             $dateDebut = $sortie->getDateHeureDebut();
+            $nbParticipants = $sortie->getParticipants();
+            $nbInscriptionMax = $sortie->getNbInscriptionMax();
             if ($dateDebut < new \DateTimeImmutable(-self::DAYS_BEFORE_REMOVAL . ' days')) {
                 $entityManager = $args->getObjectManager();
                 $entityManager->remove($sortie);

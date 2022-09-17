@@ -6,13 +6,19 @@ use App\Entity\Campus;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\EventListener\Archivage;
+use ContainerC8JBeMB\get_ServiceLocator_DuP8CuService;
+use ContainerC8JBeMB\getSortieRepositoryService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
+use http\QueryString;
+use PhpParser\Node\Expr\Array_;
 
 /**
  * @extends ServiceEntityRepository<Sortie>
@@ -24,11 +30,20 @@ use Exception;
  */
 class SortieRepository extends ServiceEntityRepository
 {
+    private const ETAT_CREE = 1;
+    private const ETAT_OUVERTE = 2;
+    private const ETAT_CLOTUREE = 3;
+    private const ETAT_PASSEE = 5;
+    private const ETAT_ANNULEE = 6;
+    private const ETAT_EN_COURS = 4;
     private const DAYS_BEFORE_REMOVAL = 30;
+    private $etatRepository;
+
     private Archivage $archivage;
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, EtatRepository $etatRepository)
     {
+        $this->etatRepository = $etatRepository;
         parent::__construct($registry, Sortie::class);
     }
 
@@ -136,7 +151,7 @@ class SortieRepository extends ServiceEntityRepository
     }
 
 
-    // Fonctions pour la commande symfony console app:trip:cleanup
+    // Fonctions pour la commande symfony console app:trip:cleanup -------------------------------------------------
     /**
      * @throws NonUniqueResultException
      * @throws NoResultException
@@ -163,6 +178,83 @@ class SortieRepository extends ServiceEntityRepository
                 'date' =>  new \DateTimeImmutable(-self::DAYS_BEFORE_REMOVAL.' days'),
             ])
         ;
+    }
+
+    // Fonctions pour la commande symfony console app:trip:update-cloturee ------------------------------------------
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    public function countOutdated(): int{
+
+        return $this->sortiesAcloturer->select('COUNT(s.id)')->getQuery()->getSingleScalarResult();
+    }
+
+    public function updateOutdated(): array
+    {
+        return $this->sortiesAcloturer();
+    }
+
+    public function sortiesAcloturer(): array
+    {
+        $sorties = $this->findAll();
+        $etatRepository = $this->etatRepository;
+        foreach ($sorties as $sortie){
+
+            $etatCree = $etatRepository->find(1);
+            $etatOuvert = $etatRepository->find(2);
+            $etatCloture = $etatRepository->find(3);
+            $etatEnCours = $etatRepository->find(4);
+            $etatPasse = $etatRepository->find(5);
+            $etatAnnule = $etatRepository->find(6);
+
+//            $id = $sortie->getId();
+//            $nbParticipants = $sortie->getParticipants()->count();
+//            $nbPlace = $sortie->getNbInscriptionMax();
+//            $nbPlacesLibres = $nbPlace - $nbParticipants;
+//
+//            $dateDebut = $sortie->getDateHeureDebut();
+//            $dateFinInscription = $sortie->getDateLimiteInscription();
+
+//            if($nbPlacesLibres <= 0 || $dateFinInscription < new \DateTimeImmutable('now')){
+            $sortie->setEtat($etatCree);
+            $this->add($sortie);
+//            }
+        }return $sorties;
+    }
+
+
+    public function closeSortiesQuerryBuilder($id): QueryBuilder
+    {
+        return $this-> createQueryBuilder('s')
+            ->set('s.etat', ':nouvelEtat')
+            ->andWhere('s.id = :id')
+            ->setParameters([
+                'nouvelEtat'=> self::ETAT_PASSEE,
+                'id' => $id
+            ]);
+    }
+    private function passeeSortiesQuerryBuilder($id){
+        return $this-> createQueryBuilder('s')
+            ->set('s.etat', ':nouvelEtat')
+            ->andWhere('s.id = :id')
+            ->setParameters([
+                'nouvelEtat'=> self::ETAT_PASSEE,
+                'id' => $id
+            ])
+            ->update()
+            ->getQuery()
+            ->execute();
+    }
+
+    private function enCoursSortiesQuerryBuilder($id): QueryBuilder{
+        return $this-> createQueryBuilder('s')
+            ->set('s.etat', ':nouvelEtat')
+            ->andWhere('s.id = :id')
+            ->setParameters([
+                'nouvelEtat'=> self::ETAT_EN_COURS,
+                'id' => $id
+            ]);
     }
 
 
