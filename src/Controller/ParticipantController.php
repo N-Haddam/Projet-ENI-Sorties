@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/participant', name: 'app_participant_')]
 class ParticipantController extends AbstractController
 {
-    #[Route('/profil/{i}', name: 'profil', methods: ['GET', 'POST'])] // TODO valider que i soit un entier
+    #[Route('/profil/{i}', name: 'profil', requirements: ['i' => '\d+'], methods: ['GET', 'POST'])]
     public function profil(
         int $i,
         ParticipantRepository $participantRepository,

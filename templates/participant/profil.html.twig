@@ -5,7 +5,6 @@
 {% block body %}
 <div class="container">
     <h2 class="text-center">
-        {# TODO : si modifier profile, afficher Mon profil, sinon afficher le nom de l'utilisateur  #}
         {% if (app.user.id is same as (participant.id)) %}
             Mon profil
         {% else %}

@@ -91,7 +91,7 @@ class MainController extends AbstractController
                 }
                 $parametrageTwig['ck']['organisateurTrue'] = true;
             }
-            if (isset($_POST['inscritTrue'])) { // TODO à tester avec plus de fixtures et revoir le lien entre sortie et participants
+            if (isset($_POST['inscritTrue'])) {
                 foreach ($listeSorties as $sortie) {
                     if ($sortie->getParticipants()) {
                         foreach ($sortie->getParticipants() as $participant) {
@@ -105,9 +105,9 @@ class MainController extends AbstractController
                 }
                 $parametrageTwig['ck']['inscritTrue'] = true;
             }
-            if (isset($_POST['inscritFalse'])) { // TODO à tester avec plus de fixtures et revoir le lien entre sortie et participants
+            if (isset($_POST['inscritFalse'])) {
                 foreach ($listeSorties as $sortie) {
-                    if (!$sortie->getParticipants()) { // TODO à revoir si modification nullable (avec ajout automatique du créateur
+                    if (!$sortie->getParticipants()) { // TODO modifier Sortie pour que participants soit not null
                         $listeSortiesTriCkBox[] = $sortie;
                     } else {
                         $test = false;
@@ -124,7 +124,7 @@ class MainController extends AbstractController
                 }
                 $parametrageTwig['ck']['inscritFalse'] = true;
             }
-            if (isset($_POST['sortiesPassees'])) { // TODO à tester avec plus de fixtures
+            if (isset($_POST['sortiesPassees'])) {
                 foreach ($listeSorties as $sortie) {
                     if ($sortie->getDateHeureDebut() <= new \DateTime() && !in_array($sortie, $listeSortiesTriCkBox)) {
                         $listeSortiesTriCkBox[] = $sortie;
