@@ -4,6 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Etat;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -38,7 +41,6 @@ class EtatRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
 //    /**
 //     * @return Etat[] Returns an array of Etat objects
 //     */
