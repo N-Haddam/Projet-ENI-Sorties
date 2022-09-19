@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\ParticipantType;
 use App\Repository\ParticipantRepository;
+use App\Service\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\File;
@@ -11,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/participant', name: 'app_participant_')]
 class ParticipantController extends AbstractController
@@ -22,7 +22,7 @@ class ParticipantController extends AbstractController
         ParticipantRepository $participantRepository,
         Request $request,
         UserPasswordHasherInterface $hasher,
-        SluggerInterface $slugger,
+        FileUploader $fileUploader,
     ): Response
     {
         $participant = $participantRepository->find($i);
@@ -57,20 +57,13 @@ class ParticipantController extends AbstractController
                 }
                 $imageFile = $form->get('image')->getData();
                 if ($imageFile) {
-                    $originalImageName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME); // TODO revoir avec guessExtension() au cas où piratage
-                    $safeImageName = $slugger->slug($originalImageName);
-                    $newImageName = $safeImageName.'-'.uniqid().'.'.$imageFile->guessExtension();
                     try {
-                        $imageFile->move(
-                            $this->getParameter('image_profil_directory'),
-                            $newImageName
-                        );
+                        $imageFileName = $fileUploader->upload($imageFile);
+                        $participant->setPictureFileName($imageFileName);
                     } catch (FileException $e) {
                         $this->addFlash('danger','Une erreur est survenue : ('.$e->getCode().') '.$e->getMessage()); // TODO revoir le message, surtout pour la prod
                         return $this->redirectToRoute('app_participant_profil', ['i' => $copie_participant->getId()]);
                     }
-                    $participant->setPictureFileName($newImageName);
-
                 }
                 $participant->setAdministrateur($copie_participant->isAdministrateur()) // TODO vérifier que ce soit nécessaire
                     ->setPassword($copie_participant->getPassword())

@@ -20,6 +20,9 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    App\Service\FileUploader:
+        arguments:
+            $targetDirectory: '%image_profil_directory%'
 #    App\EventListener\Archivage:
 #        tags:
 #            -
