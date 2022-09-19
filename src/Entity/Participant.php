@@ -84,6 +84,9 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ]+$/')]
     private ?string $pseudo = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pictureFileName = null;
+
     public function __construct()
     {
         $this->sortiesOrganisees = new ArrayCollection();
@@ -297,6 +300,18 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPseudo(?string $pseudo): self
     {
         $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    public function getPictureFileName(): ?string
+    {
+        return $this->pictureFileName;
+    }
+
+    public function setPictureFileName(?string $pictureFileName): self
+    {
+        $this->pictureFileName = $pictureFileName;
 
         return $this;
     }
