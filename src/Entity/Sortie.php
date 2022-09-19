@@ -53,7 +53,7 @@ class Sortie extends \Doctrine\Persistence\Event\LifecycleEventArgs
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ]+$/')]
+    #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ_\-:;().,!"\'?\/]+$/')]
     private ?string $infosSortie = null;
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
@@ -77,7 +77,7 @@ class Sortie extends \Doctrine\Persistence\Event\LifecycleEventArgs
     private Collection $participants;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Regex('/^[ A-Za-zÀ-ÖØ-öø-ÿ]+$/')] // TODO vérifier que ça ne bloque pas au chargement des fixtures
+    #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ_\-:;().,!"\'?\/]+$/')]
     private ?string $motifAnnulation = null;
 
     public function __construct()
