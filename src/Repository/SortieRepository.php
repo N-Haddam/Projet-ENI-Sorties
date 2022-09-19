@@ -13,12 +13,12 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
-use http\QueryString;
-use PhpParser\Node\Expr\Array_;
+
 
 /**
  * @extends ServiceEntityRepository<Sortie>
@@ -30,20 +30,13 @@ use PhpParser\Node\Expr\Array_;
  */
 class SortieRepository extends ServiceEntityRepository
 {
-    private const ETAT_CREE = 1;
-    private const ETAT_OUVERTE = 2;
-    private const ETAT_CLOTUREE = 3;
-    private const ETAT_PASSEE = 5;
-    private const ETAT_ANNULEE = 6;
-    private const ETAT_EN_COURS = 4;
     private const DAYS_BEFORE_REMOVAL = 30;
     private $etatRepository;
-
-    private Archivage $archivage;
 
     public function __construct(ManagerRegistry $registry, EtatRepository $etatRepository)
     {
         $this->etatRepository = $etatRepository;
+
         parent::__construct($registry, Sortie::class);
     }
 
@@ -87,51 +80,6 @@ class SortieRepository extends ServiceEntityRepository
 
 
     }
-
-    public function findContient($nomSortieContient){
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.nom LIKE :nom')
-            ->setParameter('nom', '%'.$nomSortieContient.'%')
-//            ->andWhere('s.siteOrganisateur = :id')
-//            ->setParameter('id', $campusId)
-            ->getQuery()
-            ->getResult()
-            ;
-    }
-
-    public function findFiltered($campusId, $dateMin, $dateMax, $organisateurId): array //$campusChoisi, $nomSortieContient, $dateMin, $dateMax, $organisateurTrue, $inscritTrue, $inscritFalse, $sortiesPassees
-    {
-        return $this->createQueryBuilder('s')
-//            ->andWhere('s.etat LIKE Ouverte')
-//            ->setParameter('Ouverte', $sortiesPassees)
-//            ->andWhere('s.nom LIKE %nom%')
-//            ->setParameter('nom', $nomSortieContient)
-            ->andWhere('s.siteOrganisateur = :id')
-            ->setParameter('id', $campusId)
-            ->andWhere('s.dateHeureDebut >= :dateMin')
-            ->setParameter('dateMin', $dateMin)
-            ->andWhere('s.dateLimiteInscription<= :dateMax')
-            ->setParameter('dateMax', $dateMax)
-            ->andWhere('s.organisateur = :id')
-            ->setParameter('id', $organisateurId)
-
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
-    public function findDateFiltered($dateMin, $dateMax){
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.dateHeureDebut >= :dateMin')
-            ->setParameter('dateMin', $dateMin)
-            ->andWhere('s.dateLimiteInscription<= :dateMax')
-            ->setParameter('dateMax', $dateMax)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
-
 
     public function findDetailsSortie($i){
         $qb = $this->createQueryBuilder('s')
@@ -180,82 +128,76 @@ class SortieRepository extends ServiceEntityRepository
         ;
     }
 
-    // Fonctions pour la commande symfony console app:trip:update-cloturee ------------------------------------------
+    // Fonctions pour la commande symfony console app:trip:update ------------------------------------------
     /**
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    public function countOutdated(): int{
 
-        return $this->sortiesAcloturer->select('COUNT(s.id)')->getQuery()->getSingleScalarResult();
-    }
-
-    public function updateOutdated(): array
-    {
-        return $this->sortiesAcloturer();
-    }
-
-    public function sortiesAcloturer(): array
+    public function sortiesACloturer(): array |bool
     {
         $sorties = $this->findAll();
-        $etatRepository = $this->etatRepository;
-        foreach ($sorties as $sortie){
 
-            $etatCree = $etatRepository->find(1);
-            $etatOuvert = $etatRepository->find(2);
-            $etatCloture = $etatRepository->find(3);
-            $etatEnCours = $etatRepository->find(4);
-            $etatPasse = $etatRepository->find(5);
-            $etatAnnule = $etatRepository->find(6);
+        $etatCloture = $this->etatRepository->find(3);
 
-//            $id = $sortie->getId();
-//            $nbParticipants = $sortie->getParticipants()->count();
-//            $nbPlace = $sortie->getNbInscriptionMax();
-//            $nbPlacesLibres = $nbPlace - $nbParticipants;
-//
-//            $dateDebut = $sortie->getDateHeureDebut();
-//            $dateFinInscription = $sortie->getDateLimiteInscription();
-
-//            if($nbPlacesLibres <= 0 || $dateFinInscription < new \DateTimeImmutable('now')){
-            $sortie->setEtat($etatCree);
-            $this->add($sortie);
-//            }
-        }return $sorties;
+            for ($i = 0; $i <= sizeof($sorties) - 1; $i++) {
+                $nbParticipants = $sorties[$i]->getParticipants()->count();
+                $nbPlace = $sorties[$i]->getNbInscriptionMax();
+                $nbPlacesLibres = $nbPlace - $nbParticipants;
+                $dateFinInscription =$sorties[$i]->getDateLimiteInscription();
+                if ($nbPlacesLibres <= 0 || $dateFinInscription < new \DateTimeImmutable('now')) {
+                    $sorties[$i]->setEtat($etatCloture);
+                    $this->add($sorties[$i], true);
+                }
+            }
+        return $sorties;
     }
 
-
-    public function closeSortiesQuerryBuilder($id): QueryBuilder
+    public function sortiesPasse(): array | bool
     {
-        return $this-> createQueryBuilder('s')
-            ->set('s.etat', ':nouvelEtat')
-            ->andWhere('s.id = :id')
-            ->setParameters([
-                'nouvelEtat'=> self::ETAT_PASSEE,
-                'id' => $id
-            ]);
-    }
-    private function passeeSortiesQuerryBuilder($id){
-        return $this-> createQueryBuilder('s')
-            ->set('s.etat', ':nouvelEtat')
-            ->andWhere('s.id = :id')
-            ->setParameters([
-                'nouvelEtat'=> self::ETAT_PASSEE,
-                'id' => $id
-            ])
-            ->update()
-            ->getQuery()
-            ->execute();
+        $sorties = $this->findNonAnnulee();
+        $etatPasse = $this->etatRepository->find(5);
+        $c = 0;
+        for ($i = 0; $i <= sizeof($sorties) - 1; $i++) {
+            $dateDebut = $sorties[$i]->getDateHeureDebut();
+            if ($dateDebut < new \DateTimeImmutable('now')) {
+                $sorties[$i]->setEtat($etatPasse);
+                $this->add($sorties[$i], true);
+                $c++;
+            }
+        }
+        return $sorties;
     }
 
-    private function enCoursSortiesQuerryBuilder($id): QueryBuilder{
-        return $this-> createQueryBuilder('s')
-            ->set('s.etat', ':nouvelEtat')
-            ->andWhere('s.id = :id')
-            ->setParameters([
-                'nouvelEtat'=> self::ETAT_EN_COURS,
-                'id' => $id
-            ]);
+    public function sortiesEnCours(): array |bool
+    {
+        $sorties = $this->findAll();
+
+        $etatPasse = $this->etatRepository->find(5);
+        $c = 0;
+        foreach ($sorties as $sortie) {
+            for ($i = 0; $i <= sizeof($sorties) - 1; $i++) {
+                $dateDebut = $sortie->getDateHeureDebut();
+                if ($dateDebut == new \DateTimeImmutable('now')) {
+                    $sorties[$i]->setEtat($etatPasse);
+                    $this->add($sorties[$i], true);
+                    $c++;
+                }
+            }
+        }
+        return $sorties;
     }
+
+    private function findNonAnnulee()
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->andWhere('s.etat != :etat')
+            ->setParameters(['etat' => 'Annulee'])
+        ;
+        return $qb->getQuery()->getResult();
+    }
+
+
 
 
 //    /**

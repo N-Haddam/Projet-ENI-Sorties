@@ -2,19 +2,20 @@
 
 namespace App\Command;
 
-use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class CommentUpdateClotureeCommand extends Command
+class CommentUpdateCommand extends Command
 {
     private $sortieRepository;
 
-    protected static $defaultName = 'app:trip:update-cloturee';
+    protected static $defaultName = 'app:trip:update';
 
     public function __construct(SortieRepository $sortieRepository)
     {
@@ -30,6 +31,10 @@ class CommentUpdateClotureeCommand extends Command
             ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Dry run');
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -37,14 +42,14 @@ class CommentUpdateClotureeCommand extends Command
         if ($input->getOption('dry-run')) {
             $io->note('Dry mode enabled');
 
-
-            $count = $this->sortieRepository->countOutdated();
         } else {
-            $count = $this->sortieRepository->updateOutdated();
+
+        $this->sortieRepository->sortiesACloturer();
+        $this->sortieRepository->sortiesPasse();
+        $this->sortieRepository->sortiesEnCours();
+        $io->success(sprintf('Field trips updated'));
+
         }
-
-        $io->success(sprintf('Updated "%d" field trips', $count));
-
         return 0;
     }
 }
