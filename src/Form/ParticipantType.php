@@ -5,10 +5,12 @@ namespace App\Form;
 use App\Entity\Participant;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 use function Sodium\add;
 
 class ParticipantType extends AbstractType
@@ -30,6 +32,24 @@ class ParticipantType extends AbstractType
                 'required' => false
             ])
             ->add('campus')
+            ->add('image', FileType::class, [
+                'label' => 'Ma photo :',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'application/bmp',
+                            'image/x-icon',
+                            'image/jpeg',
+                            'image/png',
+                            'image/webp',
+                        ],
+                        'mimeTypesMessage' => 'Charger un format d\'image valide (bmp,icon,jpeg,png,webp)',
+                    ])
+                ],
+            ])
         ;
     }
 

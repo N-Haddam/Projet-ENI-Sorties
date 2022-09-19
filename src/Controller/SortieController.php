@@ -63,7 +63,7 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/detail/{i}', name: 'detail', methods: ['GET'])] // TODO valider que i soit un entier
+    #[Route('/detail/{i}', name: 'detail', requirements: ['i' => '\d+'], methods: ['GET'])]
     public function detail(
         int $i,
         EntityManagerInterface $entityManager,
@@ -86,7 +86,7 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/inscription/{i}', name: 'sinscrire', methods: ['GET', 'POST'])] // TODO valider que i soit un entier
+    #[Route('/inscription/{i}', name: 'sinscrire', requirements: ['i' => '\d+'], methods: ['GET', 'POST'])]
     public function inscription(
         int $i,
         EntityManagerInterface $entityManager,
@@ -127,7 +127,7 @@ class SortieController extends AbstractController
         }
     }
 
-    #[Route('/desinscription/{i}', name: 'desinscription', methods: ['GET', 'POST'])] // TODO valider que i soit un entier
+    #[Route('/desinscription/{i}', name: 'desinscription', requirements: ['i' => '\d+'], methods: ['GET', 'POST'])]
     public function desinscription(
         int $i,
         EntityManagerInterface $entityManager,
@@ -239,7 +239,6 @@ class SortieController extends AbstractController
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // TODO traiter le formulaire
             $sortie->setSiteOrganisateur($campusRepository->find($_POST['campus']))
                 ->setLieu($lieuRepository->find($_POST['lieu']));
             if ($form->getClickedButton() && 'enregistrer' === $form->getClickedButton()->getName()) {

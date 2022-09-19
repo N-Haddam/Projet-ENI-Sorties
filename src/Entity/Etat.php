@@ -20,7 +20,7 @@ class Etat
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(max: 60)]
-//    #[Assert\Regex('/^[a-zA-Z]+$/')]
+    #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ]+$/')]
     private ?string $libelle = null;
 
     #[ORM\OneToMany(mappedBy: 'etat', targetEntity: Sortie::class, orphanRemoval: true)]

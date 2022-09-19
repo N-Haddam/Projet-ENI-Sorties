@@ -21,38 +21,39 @@ class Sortie extends \Doctrine\Persistence\Event\LifecycleEventArgs
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(max: 60)]
-//    #[Assert\Regex('/^[a-zA-Z]+$/')]
+    #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ]+$/')]
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Type('DateTimeInterface')]
-    //TODO ajouter contrainte date supérieur à la date d'aujourd'hui (voire encore plus tard)
+    #[Assert\GreaterThan('today')]
     private ?\DateTimeInterface $dateHeureDebut = null;
 
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
+    #[Assert\Positive]
     private ?int $duree = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\Type('DateTimeInterface')]
-    //TODO ajouter contrainte date supérieur à la date d'aujourd'hui et inférieur (avec minimum ?) à la date de début de l'activité
+    #[Assert\Type('DateTimeInterface')] // TODO bizarre, si DateInterface ça ne fonctionne pas
+    #[Assert\Expression('value < this.getDateHeureDebut()')]
     private ?\DateTimeInterface $dateLimiteInscription = null;
 
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    //TODO assert pour les nombres ? (regex pas forcément car c'est pour les chaines de caractères)
+    #[Assert\Positive]
     private ?int $nbInscriptionMax = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-//    #[Assert\Regex('/^[a-zA-Z]+$/')]
+    #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ]+$/')]
     private ?string $infosSortie = null;
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
@@ -76,6 +77,7 @@ class Sortie extends \Doctrine\Persistence\Event\LifecycleEventArgs
     private Collection $participants;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Regex('/^[ A-Za-zÀ-ÖØ-öø-ÿ]+$/')] // TODO vérifier que ça ne bloque pas au chargement des fixtures
     private ?string $motifAnnulation = null;
 
     public function __construct()

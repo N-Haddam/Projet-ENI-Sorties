@@ -21,7 +21,7 @@ class Ville
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(max: 60)]
-//    #[Assert\Regex('/^[a-zA-Z]+$/')]
+    #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ]+$/')]
     #[Groups(['liste_lieux_par_ville'])]
     private ?string $nom = null;
 

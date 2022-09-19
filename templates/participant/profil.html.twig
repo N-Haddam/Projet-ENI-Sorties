@@ -5,13 +5,16 @@
 {% block body %}
 <div class="container">
     <h2 class="text-center">
-        {# TODO : si modifier profile, afficher Mon profil, sinon afficher le nom de l'utilisateur  #}
         {% if (app.user.id is same as (participant.id)) %}
             Mon profil
         {% else %}
             {{ participant.pseudo }}
         {% endif %}
     </h2>
+
+        {% if participant.pictureFileName %}
+            <img src="{{ asset('uploads/participantProfilImage/' ~ participant.pictureFileName) }}" alt="Image de profil">
+        {% endif %}
 
         {% if (app.user.id is same as (participant.id)) %}
             <section class="row">

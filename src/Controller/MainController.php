@@ -4,6 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Campus;
 use App\Entity\Sortie;
+use App\Filtres\CheckBoxFiltre;
+use App\Filtres\DateFiltre;
+use App\Filtres\DefaultCheckBoxFiltre;
+use App\Filtres\PortionFiltre;
 use App\Repository\CampusRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,12 +39,15 @@ class MainController extends AbstractController
         Request $request,
         SortieRepository $sortieRepository,
         CampusRepository $campusRepository,
+        DateFiltre $dateFiltre,
+        DefaultCheckBoxFiltre $defaultCheckBoxFiltre,
+        PortionFiltre $portionFiltre,
+        CheckBoxFiltre $checkBoxFiltre,
     ): Response
     {
         $listeCampus = $campusRepository->findAll();
         $user = $this->getUser();
         $campus = $user->getCampus();
-//        $listeSorties = $sortieRepository->findBy(['siteOrganisateur'=>$campus]);
         $parametrageTwig = [];
         $parametrageTwig['methode'] = strtolower($request->getMethod());
 
@@ -52,12 +59,12 @@ class MainController extends AbstractController
 
         if (isset($_POST['nomSortieContient']) && $_POST['nomSortieContient'] !== ''){
             $portion = $_POST['nomSortieContient'];
-            $listeSorties = $this->trierSortiesParPortion($listeSorties, $portion);
+            $listeSorties = $portionFiltre->trierSortiesParPortion($listeSorties, $portion);
             $parametrageTwig['portion'] = $portion;
         }
         // TODO passer de datetime a date dans le twig
         if (isset($_POST['dateMin']) && isset($_POST['dateMax'])) {
-            $listeSorties = $this->trierSortiesParDate($listeSorties, $_POST['dateMin'], $_POST['dateMax']);
+            $listeSorties = $dateFiltre->trierSortiesParDate($listeSorties, $_POST['dateMin'], $_POST['dateMax']);
             if ($_POST['dateMin'] !== '') {
                 $parametrageTwig['dateMin'] = $_POST['dateMin'];
             }
@@ -72,75 +79,11 @@ class MainController extends AbstractController
             && !isset($_POST['sortiesPassees']))
         {
             if ($request->getMethod() !== 'POST') {
-                $listeTmp = [];
-                foreach ($listeSorties as $sortie) {
-                    if ($sortie->getDateHeureDebut() >= new \DateTime()) {
-                        $listeTmp[] = $sortie;
-                    }
-                }
-                $listeSorties = $listeTmp;
+                $listeSorties = $defaultCheckBoxFiltre->triCkbDefault($listeSorties);
                 $parametrageTwig['ck'] = [];
             }
         } else {
-            $listeSortiesTriCkBox = [];
-            if (isset($_POST['organisateurTrue'])) {
-                foreach ($listeSorties as $sortie) {
-                    if ($sortie->getOrganisateur()->getUserIdentifier() === $user->getUserIdentifier()) {
-                        $listeSortiesTriCkBox[] = $sortie;
-                    }
-                }
-                $parametrageTwig['ck']['organisateurTrue'] = true;
-            }
-            if (isset($_POST['inscritTrue'])) { // TODO à tester avec plus de fixtures et revoir le lien entre sortie et participants
-                foreach ($listeSorties as $sortie) {
-                    if ($sortie->getParticipants()) {
-                        foreach ($sortie->getParticipants() as $participant) {
-                            if (($participant->getUserIdentifier() === $user->getUserIdentifier())
-                                && !in_array($sortie, $listeSortiesTriCkBox))
-                            {
-                                $listeSortiesTriCkBox[] = $sortie;
-                            }
-                        }
-                    }
-                }
-                $parametrageTwig['ck']['inscritTrue'] = true;
-            }
-            if (isset($_POST['inscritFalse'])) { // TODO à tester avec plus de fixtures et revoir le lien entre sortie et participants
-                foreach ($listeSorties as $sortie) {
-                    if (!$sortie->getParticipants()) { // TODO à revoir si modification nullable (avec ajout automatique du créateur
-                        $listeSortiesTriCkBox[] = $sortie;
-                    } else {
-                        $test = false;
-                        foreach ($sortie->getParticipants() as $participant) {
-                            if ($participant->getUserIdentifier() === $user->getUserIdentifier()) {
-                                $test = true;
-                                break;
-                            }
-                        }
-                        if (!$test && !in_array($sortie, $listeSortiesTriCkBox)) {
-                            $listeSortiesTriCkBox[] = $sortie;
-                        }
-                    }
-                }
-                $parametrageTwig['ck']['inscritFalse'] = true;
-            }
-            if (isset($_POST['sortiesPassees'])) { // TODO à tester avec plus de fixtures
-                foreach ($listeSorties as $sortie) {
-                    if ($sortie->getDateHeureDebut() <= new \DateTime() && !in_array($sortie, $listeSortiesTriCkBox)) {
-                        $listeSortiesTriCkBox[] = $sortie;
-                    }
-                }
-                $parametrageTwig['ck']['sortiesPassees'] = true;
-            } else {
-                $listeTmp = [];
-                foreach ($listeSortiesTriCkBox as $sortie) {
-                    if ($sortie->getDateHeureDebut() >= new \DateTime()) {
-                        $listeTmp[] = $sortie;
-                    }
-                }
-                $listeSortiesTriCkBox = $listeTmp;
-            }
-            $listeSorties = $listeSortiesTriCkBox;
+            list($parametrageTwig, $listeSorties) = $checkBoxFiltre->triCk($listeSorties, $user, $parametrageTwig, $defaultCheckBoxFiltre);
         }
 
         usort($listeSorties, fn($a, $b) => ($a->getDateLimiteInscription() >= $b->getDateLimiteInscription()));
@@ -152,40 +95,4 @@ class MainController extends AbstractController
         ]);
     }
 
-    public function trierSortiesParDate(array $listeSorties, string $dateMin, string $dateMax): array {
-        $nouvelleListe = [];
-        if ($dateMin !== '' && $dateMax !== '') {
-            foreach ($listeSorties as $sortie) {
-                if ($sortie->getDateHeureDebut() >= date_timestamp_set(new \DateTime(), strtotime($dateMin))
-                    && $sortie->getDateHeureDebut() <= date_timestamp_set(new \DateTime(), strtotime($dateMax))) {
-                    $nouvelleListe[] = $sortie;
-                }
-            }
-        } elseif ($dateMin !== '') {
-            foreach ($listeSorties as $sortie) {
-                if ($sortie->getDateHeureDebut() >= date_timestamp_set(new \DateTime(), strtotime($dateMin))) {
-                    $nouvelleListe[] = $sortie;
-                }
-            }
-        } elseif ($dateMax !== '') {
-            foreach ($listeSorties as $sortie) {
-                if ($sortie->getDateHeureDebut() <= date_timestamp_set(new \DateTime(), strtotime($dateMax))) {
-                    $nouvelleListe[] = $sortie;
-                }
-            }
-        } else {
-            $nouvelleListe = $listeSorties;
-        }
-        return $nouvelleListe;
-    }
-
-    public function trierSortiesParPortion(array $listeSorties, string $portion): array {
-        $nouvelleListe = [];
-        foreach ($listeSorties as $sortie) {
-            if (str_contains(strtolower($sortie->getNom()), strtolower($portion))) {
-                $nouvelleListe[] = $sortie;
-            }
-        }
-        return $nouvelleListe;
-    }
 }

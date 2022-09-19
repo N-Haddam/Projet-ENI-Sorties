@@ -43,14 +43,14 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(max: 60)]
-//    #[Assert\Regex('/^[a-zA-Z]+$/')]
+    #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ]+$/')] // TODO enlever le chiffres en prod
     private ?string $nom = null;
 
     #[ORM\Column(length: 60)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(max: 60)]
-//    #[Assert\Regex('/^[a-zA-Z]+$/')]
+    #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ]+$/')] // TODO enlever le chiffres en prod
     private ?string $prenom = null;
 
     #[ORM\Column(length: 10)]
@@ -81,7 +81,11 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Campus $campus = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ]+$/')]
     private ?string $pseudo = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pictureFileName = null;
 
     public function __construct()
     {
@@ -296,6 +300,18 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPseudo(?string $pseudo): self
     {
         $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    public function getPictureFileName(): ?string
+    {
+        return $this->pictureFileName;
+    }
+
+    public function setPictureFileName(?string $pictureFileName): self
+    {
+        $this->pictureFileName = $pictureFileName;
 
         return $this;
     }

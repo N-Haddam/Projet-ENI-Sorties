@@ -32,7 +32,6 @@
                 {% include 'inc/_campusModifierSortie.html.twig' %}<br>
             {% endif %}
 
-            {# TODO peut-être pas de ville par défaut #}
             <label for="ville">Ville</label>
             <select id="ville" name="ville">
                 {% if 'create' in app.request.attributes.get('_route') %}
@@ -92,7 +91,6 @@
                 {% endif %}
             </span><br>
         </section>
-            {# TODO revoir l'affichage des boutons, les deux premiers sont dans le formulaires maintenant #}
         {% if sortie is defined %}
             <button type="button"><a href="{{ path('app_sortie_annuler', {'i': sortie.id}) }}">Annuler la sortie</a></button>
         {% endif %}
