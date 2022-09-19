@@ -9,6 +9,8 @@ use Doctrine\Persistence\ObjectManager;
 
 class EtatFixtures extends Fixture implements OrderedFixtureInterface
 {
+    public const LISTE_ETATS_REFERENCE = 'liste-etats';
+
     public function load(ObjectManager $manager): void
     {
 
@@ -31,6 +33,8 @@ class EtatFixtures extends Fixture implements OrderedFixtureInterface
         $manager->persist($etat6);
 
         $manager->flush();
+
+        $this->addReference(self::LISTE_ETATS_REFERENCE, $etat1, $etat2);
     }
 
     public function getOrder()

@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\Participant;
-use App\Repository\CampusRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
@@ -13,12 +12,22 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserFixtures extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface
 {
     public function __construct(
-        private CampusRepository $campusRepository,
         private UserPasswordHasherInterface $hasher,
     ){}
 
     public function load(ObjectManager $manager): void
     {
+        $nantesCampus = $this->getReference(CampusFixtures::NANTES_CAMPUS_REFERENCE);
+        $rennesCampus = $this->getReference(CampusFixtures::RENNES_CAMPUS_REFERENCE);
+        $quimperCampus = $this->getReference(CampusFixtures::QUIMPER_CAMPUS_REFERENCE);
+        $niortCampus = $this->getReference(CampusFixtures::NIORT_CAMPUS_REFERENCE);
+        $listeCampus = [
+            0 => $nantesCampus,
+            1 => $rennesCampus,
+            2 => $quimperCampus,
+            3 => $niortCampus,
+        ];
+
         $admin = (new Participant())
             ->setEmail('admin@sortir.bzh')
             ->setRoles(['ROLE_ADMIN'])
@@ -26,17 +35,15 @@ class UserFixtures extends Fixture implements FixtureGroupInterface, OrderedFixt
             ->setPrenom('Admin')
             ->setTelephone('0000000000')
             ->setAdministrateur(true)
-            ->setCampus($this->campusRepository->find('1'))
+            ->setCampus($listeCampus[rand(0,3)])
             ->setActif(false)
             ->setPseudo('admin');
         $admin->setPassword($this->hasher->hashPassword($admin,'admin'));
         $manager->persist($admin);
 
-        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $tab = [0 => false, 1 => true ];
         for ($i=1;$i<=50;$i++) {
             $nom = 'bot' . $i;
-            $campus_id = rand(1,4);
             $user = (new Participant())
                 ->setEmail($nom . '@campus-eni.fr')
                 ->setRoles(['ROLE_USER'])
@@ -44,7 +51,7 @@ class UserFixtures extends Fixture implements FixtureGroupInterface, OrderedFixt
                 ->setPrenom($nom)
                 ->setTelephone('0000000000')
                 ->setAdministrateur(false)
-                ->setCampus($this->campusRepository->find($campus_id))
+                ->setCampus($listeCampus[rand(0,3)])
                 ->setActif($tab[rand(0,1)])
                 ->setPseudo($nom);
             $user->setPassword($this->hasher->hashPassword($user, 'test'));
