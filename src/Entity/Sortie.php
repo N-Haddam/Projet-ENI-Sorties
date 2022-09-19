@@ -77,7 +77,7 @@ class Sortie extends \Doctrine\Persistence\Event\LifecycleEventArgs
     private Collection $participants;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Regex('/^[A-Za-zÀ-ÖØ-öø-ÿ]+$/')] // TODO vérifier que ça ne bloque pas au chargement des fixtures
+    #[Assert\Regex('/^[ A-Za-zÀ-ÖØ-öø-ÿ]+$/')] // TODO vérifier que ça ne bloque pas au chargement des fixtures
     private ?string $motifAnnulation = null;
 
     public function __construct()
