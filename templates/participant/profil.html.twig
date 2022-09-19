@@ -12,6 +12,10 @@
         {% endif %}
     </h2>
 
+        {% if participant.pictureFileName %}
+            <img src="{{ asset('uploads/participantProfilImage/' ~ participant.pictureFileName) }}" alt="Image de profil">
+        {% endif %}
+
         {% if (app.user.id is same as (participant.id)) %}
             <section class="row">
             {{ form_start(form) }}
