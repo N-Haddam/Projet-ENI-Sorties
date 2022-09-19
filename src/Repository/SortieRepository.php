@@ -32,11 +32,12 @@ class SortieRepository extends ServiceEntityRepository
 {
     private const DAYS_BEFORE_REMOVAL = 30;
     private $etatRepository;
+    private $campusRepository;
 
-    public function __construct(ManagerRegistry $registry, EtatRepository $etatRepository)
+    public function __construct(ManagerRegistry $registry, EtatRepository $etatRepository, CampusRepository $campusRepository)
     {
         $this->etatRepository = $etatRepository;
-
+        $this->campusRepository = $campusRepository;
         parent::__construct($registry, Sortie::class);
     }
 
@@ -197,7 +198,47 @@ class SortieRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findByRequest(array $params): array
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->leftJoin('s.siteOrganisateur', 'so')
+            ->addSelect('so')
+            ->leftJoin('s.etat', 'e')
+            ->addSelect('e')
+            ->leftJoin('s.participants', 'p')
+            ->addSelect('p')
+            ->where('s.siteOrganisateur = :camp')->setParameter('camp', $params['campus']);
+        if ($params['nomSortieContient'] !== '') {
+            $qb->andWhere('LOWER(s.nom) LIKE :portion')->setParameter('portion', '%'.strtolower($params['nomSortieContient']).'%');
+        }
+        if ($params['dateMin'] !== '') {
+            dump($qb->getQuery()->getResult());
+            $qb->andWhere('s.dateHeureDebut >= :dateMin')->setParameter('dateMin', $params['dateMin']);
+            dump($qb->getQuery()->getResult());
+        }
+        if ($params['dateMax'] !== '') {
+            $qb->andWhere('s.dateHeureDebut <= :dateMax')->setParameter('dateMax', $params['dateMax']);
+        }
+        if (isset($params['organisateurTrue'])) {
+            $qb->andWhere('s.organisateur = :user')->setParameter('user', $params['user']);
+            if (isset($params['inscritTrue'])) {
+                $qb->orWhere(':user IN (p)')->setParameter('user', $params['user']);
+            }
+        } else {
+            if (isset($params['inscritTrue'])) {
+                $qb->orWhere(':user IN (p)')->setParameter('user', $params['user']);
+            }
+        }
 
+
+
+        $qb->orderBy('s.dateLimiteInscription', 'DESC');
+
+        // TODO order the liste (via order by)
+
+
+        return $qb->getQuery()->getResult();
+    }
 
 
 //    /**
@@ -224,6 +265,7 @@ class SortieRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
 
 
 }

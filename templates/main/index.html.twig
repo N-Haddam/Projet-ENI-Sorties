@@ -15,7 +15,7 @@
             Campus :
             <select name="campus">
                 {% for campus in listeCampus %}
-                    {% if campus is same as params['campusAAfficher'] %}
+                    {% if campus is same as campusAAficher %}
                         <option selected>{{ campus.nom }}</option>#}
                     {% else %}
                         <option>{{ campus.nom }}</option>
@@ -42,14 +42,14 @@
             >
             <br>
 
-            <input type="checkbox" value="1" id="organisateurTrue" name="organisateurTrue"
+            <input type="checkbox" id="organisateurTrue" name="organisateurTrue"
                    {% if params['methode'] is same as('get')  %}
                        checked
                    {% elseif params['ck']['organisateurTrue'] is defined %}
                        checked
                    {% endif %}
             >
-            <label for="organisateurTrue">Sorties dont je suis l'oganisateur.trice</label>
+            <label for="organisateurTrue">Sorties dont je suis l'organisateur.trice</label>
 
             <input type="checkbox" name="inscritTrue"
                     {% if params['methode'] is same as('get')  %}
