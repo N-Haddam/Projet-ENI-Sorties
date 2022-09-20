@@ -208,7 +208,6 @@ class SortieRepository extends ServiceEntityRepository
             ->addSelect('e')
             ->leftJoin('s.participants', 'p')
             ->addSelect('p')
-//            ->select('s.id as idSortie, e.libelle as libelleEtat, s.siteOrganisateur as siteOrganisateur, s.organisateur os organisateur, s.nom, s.dateHeureDebut, s.dateLimiteInscription, s.nbInscriptionMax')
             ->where('s.dateHeureDebut >= :today')->setParameter('today', new \DateTime());
         if (isset($params['sortiesPassees'])) {
             $qb->orWhere('s.dateHeureDebut <= :today')->setParameter('today', new \DateTime());
@@ -225,28 +224,22 @@ class SortieRepository extends ServiceEntityRepository
 
         if (isset($params['organisateurTrue'])) {
             if (!isset($params['inscritTrue']) && !isset($params['inscritFalse'])) {
-                $qb->andWhere('s.organisateur = :user')->setParameter('user', $params['user']); // TODO il en manque une avec le bot 16 !!!
+                $qb->andWhere('s.organisateur = :user')->setParameter('user', $params['user']);
             } elseif (isset($params['inscritTrue']) && !isset($params['inscritFalse'])) {
                 $qb->orWhere('s.organisateur = :user')->setParameter('user', $params['user']);
                 $qb->andWhere(':user IN (p)')->setParameter('user', $params['user']);
             } elseif (!isset($params['inscritTrue']) && isset($params['inscritFalse'])) {
                 $qb->andWhere('s.organisateur = :user')->setParameter('user', $params['user']);
                 $qb->orWhere(':user NOT IN (p)')->setParameter('user', $params['user']);
-                // TODO n'affiche pas les sorties où je suis organisateur parce que je suis également participant
             }
         } else {
-            if (isset($params['inscritTrue']) && isset($params['inscritFalse'])) {
-                $qb->andWhere('s.organisateur != :user')->setParameter('user', $params['user']);
-            } elseif (isset($params['inscritTrue']) && !isset($params['inscritFalse'])) {
-                $qb->andWhere('s.organisateur != :user')->setParameter('user', $params['user']);
+            $qb->andWhere('s.organisateur != :user')->setParameter('user', $params['user']);
+            if (isset($params['inscritTrue']) && !isset($params['inscritFalse'])) {
                 $qb->andWhere(':user IN (p)')->setParameter('user', $params['user']);
             } elseif (!isset($params['inscritTrue']) && isset($params['inscritFalse'])) {
-                $qb->andWhere('s.organisateur != :user')->setParameter('user', $params['user']);
                 $qb->andWhere(':user NOT IN (p)')->setParameter('user', $params['user']);
             }
         }
-
-
 
         $qb->andwhere('s.siteOrganisateur = :camp')->setParameter('camp', $params['campus'])
             ->orderBy('s.dateLimiteInscription', 'ASC');
