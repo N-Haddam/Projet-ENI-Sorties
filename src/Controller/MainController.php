@@ -45,17 +45,10 @@ class MainController extends AbstractController
         CheckBoxFiltre $checkBoxFiltre,
     ): Response
     {
-        // si get, méthode du repository getDefaultSortie (ou
-
-//        $listeCampus = $campusRepository->findAll();
-//        $user = $this->getUser();
-//        $campus = $user->getCampus();
 
         $user = $this->getUser();
         $userCampus = $user->getCampus();
         // TODO revoir après la gestion du paramétrage de Twig
-        $parametrageTwig = [];
-        $parametrageTwig['methode'] = strtolower($request->getMethod());
 
         if ($request->getMethod() === 'GET') {
             $params = [
@@ -73,12 +66,13 @@ class MainController extends AbstractController
             $params['campus'] = $campusRepository->findOneBy(['nom' => $params['campus']]);
             $params['user'] = $user;
         }
+        $params['methode'] = strtolower($request->getMethod());
         $sorties = $sortieRepository->findByRequest($params);
+
         return $this->render('main/index.html.twig', [
             "sorties" => $sorties,
-            "campusAAficher" => $params['campus'], // TODO dans paramétrage twig array (peut-être juste $params comme $paramtwig, à voir
             "listeCampus" => $campusRepository->findAll(),
-            "params" => $parametrageTwig,
+            "params" => $params,
         ]);
 
 
