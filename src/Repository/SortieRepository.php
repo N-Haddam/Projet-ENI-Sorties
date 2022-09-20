@@ -8,6 +8,7 @@ use App\Entity\Sortie;
 use App\EventListener\Archivage;
 use ContainerC8JBeMB\get_ServiceLocator_DuP8CuService;
 use ContainerC8JBeMB\getSortieRepositoryService;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,11 +33,12 @@ class SortieRepository extends ServiceEntityRepository
 {
     private const DAYS_BEFORE_REMOVAL = 30;
     private $etatRepository;
+    private $campusRepository;
 
-    public function __construct(ManagerRegistry $registry, EtatRepository $etatRepository)
+    public function __construct(ManagerRegistry $registry, EtatRepository $etatRepository, CampusRepository $campusRepository)
     {
         $this->etatRepository = $etatRepository;
-
+        $this->campusRepository = $campusRepository;
         parent::__construct($registry, Sortie::class);
     }
 
@@ -197,33 +199,63 @@ class SortieRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findByRequest(array $params): array
+    {
+        $qb = $this->createQueryBuilder('s') // TODO restreindre les trucs auxquels j'ai besoin
+            ->leftJoin('s.siteOrganisateur', 'so')
+            ->addSelect('so')
+            ->leftJoin('s.etat', 'e')
+            ->addSelect('e')
+            ->leftJoin('s.participants', 'p')
+            ->addSelect('p');
+        if (isset($params['sortiesPassees']) && !isset($params['organisateurTrue'])
+            && !isset($params['inscritTrue']) && !isset($params['inscritFalse'])) {
+            $qb->where('s.dateHeureDebut <= :today')->setParameter('today', new \DateTime());
+        }
 
+        if ($params['nomSortieContient'] !== '') {
+            $qb->andWhere('LOWER(s.nom) LIKE :portion')->setParameter('portion', '%'.strtolower($params['nomSortieContient']).'%');
+        }
+        if ($params['dateMin'] !== '') {
+            $qb->andWhere('s.dateHeureDebut >= :dateMin')->setParameter('dateMin', $params['dateMin']);
+        }
+        if ($params['dateMax'] !== '') {
+            $qb->andWhere('s.dateHeureDebut <= :dateMax')->setParameter('dateMax', $params['dateMax']);
+        }
 
+        if (isset($params['organisateurTrue'])) {
+            if (!isset($params['inscritTrue']) && !isset($params['inscritFalse'])) {
+                $qb->andWhere('s.organisateur = :user')->setParameter('user', $params['user']);
+            } elseif (isset($params['inscritTrue']) && !isset($params['inscritFalse'])) {
+                $qb->andWhere(':user IN (p)')->setParameter('user', $params['user']);
+                $qb->orWhere('s.organisateur = :user')->setParameter('user', $params['user']);
+            } elseif (!isset($params['inscritTrue']) && isset($params['inscritFalse'])) {
+                $qb->andWhere('s.organisateur = :user')->setParameter('user', $params['user']);
+                $qb->orWhere(':user NOT IN (p)')->setParameter('user', $params['user']);
+            }
+        } else {
+            $qb->andWhere('s.organisateur != :user')->setParameter('user', $params['user']);
+            if (isset($params['inscritTrue']) && !isset($params['inscritFalse'])) {
+                $qb->andWhere(':user IN (p)')->setParameter('user', $params['user']);
+            } elseif (!isset($params['inscritTrue']) && isset($params['inscritFalse'])) {
+                $qb->andWhere(':user NOT IN (p)')->setParameter('user', $params['user']);
+            }
+        }
 
-//    /**
-//     * @return SortieFixtures[] Returns an array of SortieFixtures objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+        if (!isset($params['sortiesPassees'])) {
+            if (!isset($params['organisateurTrue'])
+                && !isset($params['inscritTrue']) && !isset($params['inscritFalse']))
+            {
+                $qb->orwhere('s.dateHeureDebut >= :today')->setParameter('today', new \DateTime());
+            } else {
+                $qb->andwhere('s.dateHeureDebut >= :today')->setParameter('today', new \DateTime());
+            }
+        }
 
-//    public function findOneBySomeField($value): ?SortieFixtures
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $qb->andwhere('s.siteOrganisateur = :camp')->setParameter('camp', $params['campus'])
+            ->orderBy('s.dateLimiteInscription', 'ASC');
 
+        return $qb->getQuery()->getResult();
+    }
 
 }

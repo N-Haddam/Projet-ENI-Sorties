@@ -15,8 +15,8 @@
             Campus :
             <select name="campus">
                 {% for campus in listeCampus %}
-                    {% if campus is same as params['campusAAfficher'] %}
-                        <option selected>{{ campus.nom }}</option>#}
+                    {% if campus is same as params['campus'] %}
+                        <option selected>{{ campus.nom }}</option>
                     {% else %}
                         <option>{{ campus.nom }}</option>
                     {% endif %}
@@ -25,8 +25,8 @@
             <br>
             Le nom de la sortie contient :
             <input type="text" name="nomSortieContient"
-                    {% if params['portion'] is defined %}
-                    value="{{ params['portion'] }}"
+                    {% if params['nomSortieContient'] is defined %}
+                    value="{{ params['nomSortieContient'] }}"
                     {% endif %}
             >
             <br>
@@ -42,19 +42,19 @@
             >
             <br>
 
-            <input type="checkbox" value="1" id="organisateurTrue" name="organisateurTrue"
+            <input type="checkbox" id="organisateurTrue" name="organisateurTrue"
                    {% if params['methode'] is same as('get')  %}
                        checked
-                   {% elseif params['ck']['organisateurTrue'] is defined %}
+                   {% elseif params['organisateurTrue'] is defined %}
                        checked
                    {% endif %}
             >
-            <label for="organisateurTrue">Sorties dont je suis l'oganisateur.trice</label>
+            <label for="organisateurTrue">Sorties dont je suis l'organisateur.trice</label>
 
             <input type="checkbox" name="inscritTrue"
                     {% if params['methode'] is same as('get')  %}
                         checked
-                    {% elseif params['ck']['inscritTrue'] is defined %}
+                    {% elseif params['inscritTrue'] is defined %}
                         checked
                     {% endif %}
             >
@@ -64,14 +64,14 @@
             <input type="checkbox" name="inscritFalse"
                     {% if params['methode'] is same as('get')  %}
                         checked
-                    {% elseif params['ck']['inscritFalse'] is defined %}
+                    {% elseif params['inscritFalse'] is defined %}
                         checked
                     {% endif %}
             >
             <label for="inscritFalse">Sorties auxquelles je ne suis pas inscrit.e</label>
 
             <input type="checkbox" name="sortiesPassees"
-                    {% if params['ck']['sortiesPassees'] is defined %}
+                    {% if params['sortiesPassees'] is defined %}
                         checked
                     {% endif %}
             >
