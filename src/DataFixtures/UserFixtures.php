@@ -27,6 +27,7 @@ class UserFixtures extends Fixture implements FixtureGroupInterface, OrderedFixt
             2 => $quimperCampus,
             3 => $niortCampus,
         ];
+        $compteur = 1;
 
         $admin = (new Participant())
             ->setEmail('admin@sortir.bzh')
@@ -40,6 +41,8 @@ class UserFixtures extends Fixture implements FixtureGroupInterface, OrderedFixt
             ->setPseudo('admin');
         $admin->setPassword($this->hasher->hashPassword($admin,'admin'));
         $manager->persist($admin);
+        $this->addReference('user'.$compteur.'-participant', $admin);
+        $compteur ++;
 
         $tab = [0 => false, 1 => true ];
         for ($i=1;$i<=50;$i++) {
@@ -56,6 +59,8 @@ class UserFixtures extends Fixture implements FixtureGroupInterface, OrderedFixt
                 ->setPseudo($nom);
             $user->setPassword($this->hasher->hashPassword($user, 'test'));
             $manager->persist($user);
+            $this->addReference('user'.$compteur.'-participant', $user);
+            $compteur ++;
         }
 
         $manager->flush();
