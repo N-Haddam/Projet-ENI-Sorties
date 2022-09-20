@@ -43,14 +43,14 @@ class SortieController extends AbstractController
                 ->setLieu($lieuRepository->find($_POST['lieu']))
                 ->setOrganisateur($this->getUser());
             if ($form->getClickedButton() && 'enregistrer' === $form->getClickedButton()->getName()) {
-                $sortie->setEtat($etatRepository->find(1));
+                $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Créée']));
             } elseif ($form->getClickedButton() && 'publier' === $form->getClickedButton()->getName()) {
-                $sortie->setEtat($etatRepository->find(2));
+                $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
             }
 //            $sortieRepository->add($sortie, true);
             $entityManager->persist($sortie);
 //            $archivage->postPersist($sortie);
-            $activitySubscriber->postPersist($sortie);
+//            $activitySubscriber->postPersist($sortie);
             $entityManager->flush();
             $this->ajoutParticipant($sortie, $entityManager);
             $this->addFlash('success', 'La nouvelle sortie a bien été enregistrée');

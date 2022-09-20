@@ -1,13 +1,13 @@
 <?php
-//namespace App\EventListener;
-//
-//use App\Entity\Sortie;
-//use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
-//use Doctrine\ORM\Events;
-//use Doctrine\Persistence\Event\LifecycleEventArgs;
-//
-//class DatabaseActivitySubscriber implements EventSubscriberInterface
-//{
+namespace App\EventListener;
+
+use App\Entity\Sortie;
+use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
+use Doctrine\ORM\Events;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
+
+class DatabaseActivitySubscriber // implements EventSubscriberInterface
+{
 //    private const DAYS_BEFORE_REMOVAL = 30;
 //    // this method can only return the event names; you cannot define a
 //    // custom method name to execute when each event triggers
@@ -61,5 +61,5 @@
 //
 //        // ... get the entity information and log it somehow
 //    }
-//}
-//
+}
+
