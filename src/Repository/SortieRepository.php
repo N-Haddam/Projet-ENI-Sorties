@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\QueryBuilder;
@@ -199,7 +200,7 @@ class SortieRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findByRequest(array $params): array
+    public function findByRequest(array $params): Query
     {
         $qb = $this->createQueryBuilder('s') // TODO restreindre les trucs auxquels j'ai besoin
             ->leftJoin('s.siteOrganisateur', 'so')
@@ -255,7 +256,7 @@ class SortieRepository extends ServiceEntityRepository
         $qb->andwhere('s.siteOrganisateur = :camp')->setParameter('camp', $params['campus'])
             ->orderBy('s.dateLimiteInscription', 'ASC');
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery();
     }
 
 }

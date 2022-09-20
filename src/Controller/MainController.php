@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\CampusRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,6 +27,7 @@ class MainController extends AbstractController
         Request $request,
         SortieRepository $sortieRepository,
         CampusRepository $campusRepository,
+        PaginatorInterface $paginator
     ): Response
     {
         $user = $this->getUser();
@@ -48,10 +50,15 @@ class MainController extends AbstractController
             $params['user'] = $user;
         }
         $params['methode'] = strtolower($request->getMethod());
-        $sorties = $sortieRepository->findByRequest($params);
+
+
+        $query = $sortieRepository->findByRequest($params);
+        $pagination = $paginator->paginate($query, $request->query->getInt('page',1),10);
+
+
 
         return $this->render('main/index.html.twig', [
-            "sorties" => $sorties,
+            "pagination" => $pagination,
             "listeCampus" => $campusRepository->findAll(),
             "params" => $params,
         ]);
