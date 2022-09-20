@@ -1,5 +1,9 @@
 framework:
     messenger:
+        buses:
+            command_bus:
+                middleware:
+                    - router_context
         failure_transport: failed
 
         transports:
