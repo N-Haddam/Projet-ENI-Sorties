@@ -15,6 +15,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use SebastianBergmann\Type\FalseType;
@@ -39,6 +40,7 @@ class SortieCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         $fields = [
+            FormField::addPanel( 'Sortie' )->setIcon( 'fa fa-suitcase' ),
             TextField::new('nom', 'Nom')->setDisabled(),
             DateField::new('dateHeureDebut', 'Date et heure de début')->setDisabled(),
             IntegerField::new('duree','Durée')->setDisabled(),
