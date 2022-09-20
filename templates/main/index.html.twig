@@ -98,10 +98,10 @@
                 <th scope="col">Actions</th>
             </tr>
             </thead>
-            {% if sorties %}
-                {%  for sortie in sorties %}
+            {% if pagination %}
+                {%  for sortie in pagination %}
                     <tbody>
-                    <tr>
+                    <tr {% if loop.index is odd %}class="color"{% endif %}>
                         <td><a href="{{ path('app_sortie_detail', {'i': sortie.id}) }}">{{ sortie.nom }}</a></td>
                         <td>{{ sortie.dateHeureDebut |date }}</td>
                         <td>{{ sortie.dateLimiteInscription |date }}</td>
@@ -138,6 +138,9 @@
                 <p>Pas de sorties pour l'instant</p>
             {%  endif %}
         </table>
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
     </div>
 </div>
 {% endblock %}
