@@ -2,8 +2,11 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Campus;
+use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Entity\Ville;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -51,7 +54,13 @@ class DashboardController extends AbstractDashboardController
             yield MenuItem::section('Utilisateurs'),
             yield MenuItem::linkToCrud('Participants', 'fa fa-user', Participant::class),
             yield MenuItem::section('Sorties'),
-            yield MenuItem::linkToCrud('Sorties', 'fas fa-list', Sortie::class)
+            yield MenuItem::linkToCrud('Sorties', 'fa fa-suitcase', Sortie::class),
+            yield MenuItem::section('Campus'),
+            yield MenuItem::linkToCrud('Campus', 'fa fa-graduation-cap', Campus::class),
+            yield MenuItem::section('Ville'),
+            yield MenuItem::linkToCrud('Villes', 'fa fa-globe', Ville::class),
+            yield MenuItem::section('Lieu'),
+            yield MenuItem::linkToCrud('Lieux', 'fa fa-map-marker', Lieu::class),
         ];
     }
 }

@@ -28,11 +28,11 @@ class MainController extends AbstractController
         return $this->redirectToRoute('app_main');
     }
 
-    #[Route('/main', name: 'app_main', methods: ['GET'])]
-    public function index(): Response
-    {
-        return $this->render('main/index.html.twig', []);
-    }
+//    #[Route('/main', name: 'app_main', methods: ['GET'])]
+//    public function index(): Response
+//    {
+//        return $this->render('main/index.html.twig', []);
+//    }
 
     #[Route('/main', name: 'app_main', methods: ['GET', 'POST'])]
     public function list(
