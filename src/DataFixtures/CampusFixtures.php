@@ -10,6 +10,11 @@ use Doctrine\Persistence\ObjectManager;
 
 class CampusFixtures extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface
 {
+    public const NANTES_CAMPUS_REFERENCE = 'nantes-campus';
+    public const RENNES_CAMPUS_REFERENCE = 'rennes-campus';
+    public const QUIMPER_CAMPUS_REFERENCE = 'quimper-campus';
+    public const NIORT_CAMPUS_REFERENCE = 'niort-campus';
+
     public function load(ObjectManager $manager): void
     {
         $nantes = (new Campus())->setNom('Nantes');
@@ -25,6 +30,11 @@ class CampusFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
         $manager->persist($niort);
 
         $manager->flush();
+
+        $this->addReference(self::NANTES_CAMPUS_REFERENCE, $nantes);
+        $this->addReference(self::RENNES_CAMPUS_REFERENCE, $rennes);
+        $this->addReference(self::QUIMPER_CAMPUS_REFERENCE, $quimper);
+        $this->addReference(self::NIORT_CAMPUS_REFERENCE, $niort);
     }
 
     public static function getGroups(): array
