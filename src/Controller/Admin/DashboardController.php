@@ -49,7 +49,7 @@ class DashboardController extends AbstractDashboardController
         return [
             yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home'),
             yield MenuItem::section('Utilisateurs'),
-            yield MenuItem::linkToCrud('Participants', 'fas fa-list', Participant::class),
+            yield MenuItem::linkToCrud('Participants', 'fa fa-user', Participant::class),
             yield MenuItem::section('Sorties'),
             yield MenuItem::linkToCrud('Sorties', 'fas fa-list', Sortie::class)
         ];
