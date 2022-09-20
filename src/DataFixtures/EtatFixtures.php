@@ -9,6 +9,13 @@ use Doctrine\Persistence\ObjectManager;
 
 class EtatFixtures extends Fixture implements OrderedFixtureInterface
 {
+    public const CREEE_ETAT_REFERENCE = 'creee-etat';
+    public const OUVERTE_ETAT_REFERENCE = 'ouverte-etat';
+    public const CLOTUREE_ETAT_REFERENCE = 'cloturee-etat';
+    public const EN_COURS_ETAT_REFERENCE = 'en-cours-etat';
+    public const PASSEE_ETAT_REFERENCE = 'passee-etat';
+    public const ANNULEE_ETAT_REFERENCE = 'annulee-etat';
+
     public function load(ObjectManager $manager): void
     {
 
@@ -31,6 +38,13 @@ class EtatFixtures extends Fixture implements OrderedFixtureInterface
         $manager->persist($etat6);
 
         $manager->flush();
+
+        $this->addReference(self::CREEE_ETAT_REFERENCE, $etat1);
+        $this->addReference(self::OUVERTE_ETAT_REFERENCE, $etat2);
+        $this->addReference(self::CLOTUREE_ETAT_REFERENCE, $etat3);
+        $this->addReference(self::EN_COURS_ETAT_REFERENCE, $etat4);
+        $this->addReference(self::PASSEE_ETAT_REFERENCE, $etat5);
+        $this->addReference(self::ANNULEE_ETAT_REFERENCE, $etat6);
     }
 
     public function getOrder()
