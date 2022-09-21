@@ -74,6 +74,11 @@ class SortieController extends AbstractController
     {
         $sortieDetails = $sortieRepository->findDetailsSortie($i);
         $sortie = $sortieRepository->find($i);
+
+        if (!$sortie) {
+            throw $this->createNotFoundException();
+        }
+
         $nbPlaces = $this->nbPlaces($sortie);
         $user = $this->getUser();
         $userParticipe = $this->userParticipe($user, $sortie);
@@ -95,6 +100,11 @@ class SortieController extends AbstractController
     {
         $user = $this->getUser();
         $sortie = $sortieRepository->find($i);
+
+        if (!$sortie) {
+            throw $this->createNotFoundException();
+        }
+
         $sortieDetails = $sortieRepository->findDetailsSortie($i);
         $nbPlaces = $this->nbPlaces($sortie);
         $nbParticipants = is_integer($sortie->getParticipants());
@@ -136,6 +146,11 @@ class SortieController extends AbstractController
     {
         $user = $this->getUser();
         $sortie = $sortieRepository->find($i);
+
+        if (!$sortie) {
+            throw $this->createNotFoundException();
+        }
+
         $nbPlaces = $this->nbPlaces($sortie);
         $sortieDetails = $sortieRepository->findDetailsSortie($i);
         $userParticipe = $this->userParticipe($user, $sortie);
@@ -166,6 +181,11 @@ class SortieController extends AbstractController
     ): Response {
         $user = $this->getUser();
         $sortie = $sortieRepository->find($i);
+
+        if (!$sortie) {
+            throw $this->createNotFoundException();
+        }
+
         if ($sortie->getOrganisateur()->getId() === $user->getId()
             && $sortie->getEtat()->getId() === 1
             && $sortie->getDateLimiteInscription() > new \DateTime())
@@ -189,6 +209,11 @@ class SortieController extends AbstractController
     ): Response {
         $user = $this->getUser();
         $sortie = $sortieRepository->find($i);
+
+        if (!$sortie) {
+            throw $this->createNotFoundException();
+        }
+
         if (isset($_POST['motif'])) {
             // check motif not null
             if ($_POST['motif'] === '') {
@@ -231,6 +256,11 @@ class SortieController extends AbstractController
     ): Response
     {
         $sortie = $sortieRepository->find($i);
+
+        if (!$sortie) {
+            throw $this->createNotFoundException();
+        }
+
         if ($this->getUser()->getUserIdentifier() !== $sortie->getOrganisateur()->getUserIdentifier()) {
             $this->addFlash('danger', 'Vous ne pouvez pas modifier cette sortie !');
             return $this->redirectToRoute('app_sortie_detail', ['i' => $i]);
