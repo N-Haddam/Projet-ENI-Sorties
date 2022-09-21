@@ -17,7 +17,6 @@ class Ville
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups('liste_ville')]
     private ?int $id = null;
 
     #[ORM\Column(length: 60)]
@@ -25,7 +24,7 @@ class Ville
     #[Assert\NotNull]
     #[Assert\Length(max: 60)]
     #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ\'-]+$/')]
-    #[Groups(['liste_lieux_par_ville', 'liste_ville'])]
+    #[Groups(['liste_lieux_par_ville'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 5)]
@@ -33,11 +32,10 @@ class Ville
     #[Assert\NotNull]
     #[Assert\Length(max: 5)]
     #[Assert\Regex('/^[0-9]{5}$/')]
-    #[Groups(['liste_lieux_par_ville', 'liste_ville'])]
+    #[Groups(['liste_lieux_par_ville'])]
     private ?string $codePostal = null;
 
     #[ORM\OneToMany(mappedBy: 'ville', targetEntity: Lieu::class, orphanRemoval: true)]
-    #[Groups('liste_ville')]
     private Collection $lieus;
 
     public function __construct()
