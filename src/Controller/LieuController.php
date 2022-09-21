@@ -27,6 +27,12 @@ class LieuController extends AbstractController
         $form = $this->createForm(LieuType::class, $lieu);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $villeChoisie = $villeRepository->findOneBy(['id'=>$_POST['ville']]);
+
+            $lieu->setVille($villeChoisie);
+            $lieu->setLatitude($_POST['latitude']);
+            $lieu->setLongitude($_POST['longitude']);
+
             $entityManager->persist($lieu);
             $entityManager->flush();
             $this->addFlash('success', 'Le nouveau lieu bien été enregistrée');

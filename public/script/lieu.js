@@ -2,8 +2,8 @@ const selectVille = document.getElementById('ville');
 const selectLieu = document.getElementById('lieu');
 const rue = document.getElementById('rue');
 const cp = document.getElementById('cp');
-const latitude = document.getElementById('latitude');
-const longitude = document.getElementById('longitude');
+let latitude = document.getElementById('latitude');
+let longitude = document.getElementById('longitude');
 
 let lieux;
 
