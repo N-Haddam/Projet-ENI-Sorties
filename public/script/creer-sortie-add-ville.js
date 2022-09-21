@@ -9,7 +9,8 @@ const selectNoms = document.getElementById('noms')
 const btnAjouter = document.getElementById('ajouterVille');
 const spanMessages = document.getElementById('span-messages');
 const sectionMessages = document.getElementById('messages');
-// const selectVille = document.getElementById('ville');
+
+const selectLieu =document.getElementById('lieu');
 
 addVille.addEventListener('click', () => {
     modalVille.style.display = "block";
@@ -56,6 +57,44 @@ selectNoms.addEventListener('change', () => {
         })
 })
 
+/* Version apiplatform */
+btnAjouter.addEventListener('click', () => {
+    const ville = {
+        "nom": selectNoms.value,
+        "codePostal": selectCodePostal.value,
+        "lieus": []
+    }
+    fetch(urlApiPlatformVille, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(ville)
+    })
+        .then(response => {
+            if (response.status === 201) {
+                response.json()
+                    .then(response => {
+                        sectionMessages.innerText = `La ville a bien été ajoutée : ${response.nom}(${response.codePostal})`;
+                        sectionMessages.classList.add('alert');
+                        sectionMessages.classList.add('alert-success');
+                        selectVille.innerHTML += `<option value="${response.id}" selected>${response.nom} - ${response.codePostal}</option>`;
+                        inputNom.value = '';
+                        selectNoms.innerText = '';
+                        selectCodePostal.innerText = '';
+                        selectLieu.innerHTML = '<option></option>';
+                        modalVille.style.display = "none";
+                    })
+            } else {
+                spanMessages.innerText = 'Une erreur inconnue est survenue';
+                spanMessages.classList.add('alert');
+                spanMessages.classList.add('alert-danger');
+            }
+        })
+})
+
+/* Version api perso
 btnAjouter.addEventListener('click', () => {
     let nom = selectNoms.value;
     let cp = selectCodePostal.value;
@@ -72,6 +111,10 @@ btnAjouter.addEventListener('click', () => {
                 sectionMessages.classList.add('alert');
                 sectionMessages.classList.add('alert-success');
                 selectVille.innerHTML += `<option value="${response[2]}" selected>${nom}</option>`;
+                inputNom.value = '';
+                selectNoms.innerText = '';
+                selectCodePostal.innerText = '';
+                selectLieu.innerHTML = '<option></option>';
                 modalVille.style.display = "none";
             } else if (response[0] === '418') {
                 spanMessages.innerText = response[1];
@@ -83,4 +126,4 @@ btnAjouter.addEventListener('click', () => {
                 spanMessages.classList.add('alert-danger');
             }
         })
-})
+})*/
