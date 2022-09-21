@@ -7,6 +7,7 @@
     <h2>Détail de la sortie : <b><i>{{ sortie.nom }}</i></b> </h2>
 
     <p>Nom de la sortie : {{ sortie.nom }}</p>
+    <p>État de la sortie : {{ sortie.etat.libelle }}</p>
     <p>Date et heure de la sortie : Le {{ sortie.dateHeureDebut | date ("d/m/y") }} à {{ sortie.dateHeureDebut | date ("H:m") }}</p>
     <p>Date limite d'inscription : {{ sortie.dateLimiteInscription |date("d/m/y") }} inclus</p>
     <p>Nombre de places : {{ nbPlaces }}</p>
@@ -30,11 +31,11 @@
             <p>Longitude : {{ sortie.lieu.longitude }} W</p>
         {% endif %}
 
-    {% if (nbPlaces > 0) and (userParticipe) == false %}
+    {% if sortie.etat.libelle is same as ('Ouverte') and (nbPlaces > 0) and (userParticipe) == false %}
         <form name="sinscrire" method="post" action="{{ path('app_sortie_sinscrire', {'i': sortie.id}) }}" >
             <input name="sinscrire" type="submit" value="S'inscrire à la sortie"> {# TODO le bonton est clickable si nbPlaces >0 #}
         </form>
-    {% elseif (userParticipe) == true %}
+    {% elseif sortie.etat.libelle is same as ('Ouverte') or sortie.etat.libelle is same as ('Clôturée') and (userParticipe) == true %}
         <form name="desinscrire" method="post" action="{{ path('app_sortie_desinscription', {'i': sortie.id}) }}">
             <input name="desinscrire" type="submit" value="Se désister ?" class="btn btn-warning"> {# TODO le bonton est clickable si nbPlaces >0 #}
         </form>
@@ -43,10 +44,15 @@
         {#            {% elseif (nbPlaces <= 0) %}#}
         {#                <p>todo autres cas</p>#}
     {% endif %}
-    {% if sortie.organisateur.id is same as app.user.id %}
-        <button type="button"><a href="{{ path('app_sortie_modifier', {'i': sortie.id}) }}">Modifier</a></button>
-    {% endif %}
 
+    {% if sortie.organisateur.id is same as app.user.id and sortie.etat.libelle is same as ('Créée') %}
+        <button type="button"><a href="{{ path('app_sortie_modifier', {'i': sortie.id}) }}">Modifier</a></button>
+        <button type="button"><a href="{{ path('app_sortie_publier', {'i': sortie.id}) }}">Publier</a></button>
+    {% endif %}
+    {% if sortie.organisateur.id is same as app.user.id and sortie.etat.libelle is same as ('Créée')
+        or sortie.etat.libelle is same as ('Ouverte') or sortie.etat.libelle is same as ('Clôturée') %}
+        <button type="button"><a href="{{ path('app_sortie_annuler', {'i': sortie.id}) }}">Annuler la sortie</a></button>
+    {% endif %}
 
     <p>Liste des participants inscrits : </p>
     <table class="table table-striped">

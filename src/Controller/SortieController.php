@@ -296,6 +296,12 @@ class SortieController extends AbstractController
             $this->addFlash('danger', 'Vous ne pouvez pas modifier cette sortie !');
             return $this->redirectToRoute('app_sortie_detail', ['i' => $i]);
         }
+
+        if ($sortie->getEtat()->getLibelle() !== 'Créée') {
+            $this->addFlash('danger', 'Cette sortie n\'est plus modifiable !');
+            return $this->redirectToRoute('app_sortie_detail', ['i' => $i]);
+        }
+
         $villes = $villeRepository->findAll(); // TODO revoir par rapport à ce que disait Philippe surles findAll
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
