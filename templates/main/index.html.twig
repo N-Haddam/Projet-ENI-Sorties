@@ -103,8 +103,8 @@
                     <tbody>
                         <tr {% if loop.index is odd %}class="color"{% endif %}>
                             <td><a href="{{ path('app_sortie_detail', {'i': sortie.id}) }}">{{ sortie.nom }}</a></td>
-                            <td>{{ sortie.dateHeureDebut |date }}</td>
-                            <td>{{ sortie.dateLimiteInscription |date }}</td>
+                            <td>{{ sortie.dateHeureDebut |date('d/m/Y h:i') }}</td>
+                            <td>{{ sortie.dateLimiteInscription |date('d/m/Y') }}</td>
                             <td>{{ sortie.participants.count }}/{{ sortie.nbInscriptionMax }}</td>
                             <td>{{ sortie.etat.libelle }}</td>
                             <td>
