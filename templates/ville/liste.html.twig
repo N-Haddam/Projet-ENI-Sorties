@@ -9,7 +9,8 @@
 
 {% block body %}
 <div class="container">
-    <h2 class="text-align">Gérer les villes</h2>
+    <h2 class="text-center">Gérer les villes</h2>
+    <section class="" id="erreurs"></section> {# TODO peut-être à ajouter à la base #}
     <section>
         <h3 class="row">Filtrer les villes</h3>
         <form class="row form-inline" method="post">
@@ -42,10 +43,14 @@
                     {# TODO à n'afficher que sur la dernière page de la pagination #}
                         {# TODO ou seulement si un recherche a été faite au préalable #}
                     <tr>
-                        <td><input type="text" name="nouveauNom" id="nouveauNom"></td>
-                        <td><select type="text" name="nouveauCodePostal" id="nouveauCodePostal"></td>
+                        <td><em>Recherche une ville : </em>
+                            <input type="text" name="nouveauNom" id="nouveauNom">
+                            <select name="noms" id="noms"></select>
+                        </td>
+                        <td><select name="nouveauCodePostal" id="nouveauCodePostal"></select></td>
                         <td><a href="#" id="ajouterVille">Ajouter</a></td>
                     </tr>
+
                 </tbody>
             </table>
         </section>

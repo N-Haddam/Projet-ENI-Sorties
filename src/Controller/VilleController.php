@@ -49,8 +49,14 @@ class VilleController extends AbstractController
         }
 
         if (isset($_GET['nom']) && $_GET['nom'] !== '' && isset($_GET['cp']) && strlen($_GET['cp']) === 5) {
+            $test = $villeRepository->findOneBy(['nom' => $_GET['nom'], 'codePostal' => $_GET['cp']]);
+            if ($test) {
+                $this->addFlash('danger', 'La ville est déjà enregistrée');
+                return $this->redirectToRoute('app_ville_liste');
+            }
+
             $nouvelleVille = (new Ville())
-                ->setNom($_GET['nom'])
+                ->setNom(ucfirst($_GET['nom']))
                 ->setCodePostal($_GET['cp']);
             $villeRepository->add($nouvelleVille, true);
             $this->addFlash('success',
