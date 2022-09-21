@@ -34,6 +34,11 @@ class SortieController extends AbstractController
         DatabaseActivitySubscriber $activitySubscriber
     ): Response
     {
+        if (!$this->getUser()->isActif()) {
+            $this->addFlash('danger', 'Vous devez avoir le statut actif pour créer une sortie');
+            return $this->redirectToRoute('app_main');
+        }
+
         $villes = $villeRepository->findAll(); // TODO revoir par rapport à ce que disait Philippe surles findAll
         $sortie = new Sortie();
         $form = $this->createForm(SortieType::class, $sortie);
@@ -72,6 +77,14 @@ class SortieController extends AbstractController
         Request $request,
     ): Response
     {
+
+        $user = $this->getUser();
+
+        if (!$user->isActif()) {
+            $this->addFlash('danger', 'Vous devez avoir le statut actif pour afficher le détail d\'une sortie');
+            return $this->redirectToRoute('app_main');
+        }
+
         $sortieDetails = $sortieRepository->findDetailsSortie($i);
         $sortie = $sortieRepository->find($i);
 
@@ -80,7 +93,6 @@ class SortieController extends AbstractController
         }
 
         $nbPlaces = $this->nbPlaces($sortie);
-        $user = $this->getUser();
         $userParticipe = $this->userParticipe($user, $sortie);
 
         return $this->render('sortie/afficherSortie.html.twig', [
@@ -99,6 +111,12 @@ class SortieController extends AbstractController
     ): Response
     {
         $user = $this->getUser();
+
+        if (!$user->isActif()) {
+            $this->addFlash('danger', 'Vous devez avoir le statut actif pour vous inscrire à une sortie');
+            return $this->redirectToRoute('app_main');
+        }
+
         $sortie = $sortieRepository->find($i);
 
         if (!$sortie) {
@@ -145,6 +163,12 @@ class SortieController extends AbstractController
     ): Response
     {
         $user = $this->getUser();
+
+        if (!$user->isActif()) {
+            $this->addFlash('danger', 'Vous devez avoir le statut actif pour vous désinscrire d\'une sortie');
+            return $this->redirectToRoute('app_main');
+        }
+
         $sortie = $sortieRepository->find($i);
 
         if (!$sortie) {
@@ -178,8 +202,15 @@ class SortieController extends AbstractController
         int $i,
         SortieRepository $sortieRepository,
         EtatRepository $etatRepository
-    ): Response {
+    ): Response
+    {
         $user = $this->getUser();
+
+        if (!$user->isActif()) {
+            $this->addFlash('danger', 'Vous devez avoir le statut actif pour créer une sortie');
+            return $this->redirectToRoute('app_main');
+        }
+
         $sortie = $sortieRepository->find($i);
 
         if (!$sortie) {
@@ -208,6 +239,12 @@ class SortieController extends AbstractController
         EtatRepository $etatRepository
     ): Response {
         $user = $this->getUser();
+
+        if (!$user->isActif()) {
+            $this->addFlash('danger', 'Vous devez avoir le statut actif pour annuler une sortie');
+            return $this->redirectToRoute('app_main');
+        }
+
         $sortie = $sortieRepository->find($i);
 
         if (!$sortie) {
@@ -255,13 +292,20 @@ class SortieController extends AbstractController
         EtatRepository $etatRepository,
     ): Response
     {
+        $user = $this->getUser();
+
+        if (!$user->isActif()) {
+            $this->addFlash('danger', 'Vous devez avoir le statut actif pour modifier une sortie');
+            return $this->redirectToRoute('app_main');
+        }
+
         $sortie = $sortieRepository->find($i);
 
         if (!$sortie) {
             throw $this->createNotFoundException();
         }
 
-        if ($this->getUser()->getUserIdentifier() !== $sortie->getOrganisateur()->getUserIdentifier()) {
+        if ($user->getUserIdentifier() !== $sortie->getOrganisateur()->getUserIdentifier()) {
             $this->addFlash('danger', 'Vous ne pouvez pas modifier cette sortie !');
             return $this->redirectToRoute('app_sortie_detail', ['i' => $i]);
         }
