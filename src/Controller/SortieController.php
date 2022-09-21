@@ -62,7 +62,7 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('app_main');
         }
 
-        return $this->renderForm('sortie/create.html.twig', [
+        return $this->renderForm('sortie/gerer.html.twig', [
             'form' => $form,
             'villes' => $villes,
         ]);
@@ -316,7 +316,7 @@ class SortieController extends AbstractController
 
         $listCampus = $campusRepository->findAll();
 
-        return $this->renderForm('sortie/create.html.twig', [
+        return $this->renderForm('sortie/gerer.html.twig', [
             'form' => $form,
             'villes' => $villes,
             'sortie' => $sortie,
