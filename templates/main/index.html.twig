@@ -115,19 +115,21 @@
                             <td><a href="{{ path('app_participant_profil', {'i': sortie.organisateur.id}) }}">{{ sortie.organisateur.nom }}</a></td>
                             <td>
                                 {% if app.user.userIdentifier is same as (sortie.organisateur.userIdentifier)
-                                    and sortie.etat.libelle is same as ('Créée') %}
+                                    and sortie.etat.libelle is same as ('Créée')
+                                    and app.user.actif %}
                                     <a href="{{ path('app_sortie_modifier', {'i': sortie.id}) }}">Modifier</a> - <a href="{{ path('app_sortie_publier', {'i': sortie.id}) }}">Publier</a>
                                 {% else %}
                                     <a href="{{ path('app_sortie_detail', {'i': sortie.id}) }}">Afficher</a>
                                 {% endif %}
                                 {% if app.user.userIdentifier is same as (sortie.organisateur.userIdentifier)
-                                    and sortie.etat.libelle is same as ('Ouverte') %}
+                                    and app.user.actif and sortie.etat.libelle is same as ('Ouverte') %}
                                     - <a href="{{ path('app_sortie_annuler', {'i': sortie.id}) }}">Annuler</a>
                                 {% elseif app.user in (sortie.participants)
                                     and sortie.etat.libelle in (['Ouverte', 'Clôturée']) %}
                                     - <a href="{{ path('app_sortie_desinscription', {'i': sortie.id}) }}">Se désister</a>
                                 {% elseif app.user not in sortie.participants
-                                    and sortie.etat.libelle is same as ('Ouverte') %}
+                                    and sortie.etat.libelle is same as ('Ouverte')
+                                    and app.user.actif %}
                                     - <a href="{{ path('app_sortie_sinscrire', {'i': sortie.id}) }}">S'inscrire</a>
                                 {% endif %}
                             </td>

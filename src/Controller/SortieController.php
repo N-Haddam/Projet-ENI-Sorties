@@ -77,18 +77,11 @@ class SortieController extends AbstractController
         Request $request,
     ): Response
     {
-
         $user = $this->getUser();
-
-        if (!$user->isActif()) {
-            $this->addFlash('danger', 'Vous devez avoir le statut actif pour afficher le détail d\'une sortie');
-            return $this->redirectToRoute('app_main');
-        }
-
         $sortieDetails = $sortieRepository->findDetailsSortie($i);
         $sortie = $sortieRepository->find($i);
 
-        if (!$sortie) {
+        if (!$sortie || ($user->getId() != $sortie->getOrganisateur()->getId() && $sortie->getEtat()->getLibelle() === 'Créée' )) {
             throw $this->createNotFoundException();
         }
 
@@ -110,17 +103,17 @@ class SortieController extends AbstractController
         SortieRepository $sortieRepository,
     ): Response
     {
+        $sortie = $sortieRepository->find($i);
+
+        if (!$sortie) {
+            throw $this->createNotFoundException();
+        }
+
         $user = $this->getUser();
 
         if (!$user->isActif()) {
             $this->addFlash('danger', 'Vous devez avoir le statut actif pour vous inscrire à une sortie');
             return $this->redirectToRoute('app_main');
-        }
-
-        $sortie = $sortieRepository->find($i);
-
-        if (!$sortie) {
-            throw $this->createNotFoundException();
         }
 
         $sortieDetails = $sortieRepository->findDetailsSortie($i);
@@ -162,18 +155,13 @@ class SortieController extends AbstractController
         SortieRepository $sortieRepository,
     ): Response
     {
-        $user = $this->getUser();
-
-        if (!$user->isActif()) {
-            $this->addFlash('danger', 'Vous devez avoir le statut actif pour vous désinscrire d\'une sortie');
-            return $this->redirectToRoute('app_main');
-        }
-
         $sortie = $sortieRepository->find($i);
 
         if (!$sortie) {
             throw $this->createNotFoundException();
         }
+
+        $user = $this->getUser();
 
         $nbPlaces = $this->nbPlaces($sortie);
         $sortieDetails = $sortieRepository->findDetailsSortie($i);
@@ -204,17 +192,17 @@ class SortieController extends AbstractController
         EtatRepository $etatRepository
     ): Response
     {
+        $sortie = $sortieRepository->find($i);
+
+        if (!$sortie) {
+            throw $this->createNotFoundException();
+        }
+
         $user = $this->getUser();
 
         if (!$user->isActif()) {
             $this->addFlash('danger', 'Vous devez avoir le statut actif pour créer une sortie');
             return $this->redirectToRoute('app_main');
-        }
-
-        $sortie = $sortieRepository->find($i);
-
-        if (!$sortie) {
-            throw $this->createNotFoundException();
         }
 
         if ($sortie->getOrganisateur()->getId() === $user->getId()
@@ -237,18 +225,19 @@ class SortieController extends AbstractController
         int $i,
         SortieRepository $sortieRepository,
         EtatRepository $etatRepository
-    ): Response {
+    ): Response
+    {
+        $sortie = $sortieRepository->find($i);
+
+        if (!$sortie) {
+            throw $this->createNotFoundException();
+        }
+
         $user = $this->getUser();
 
         if (!$user->isActif()) {
             $this->addFlash('danger', 'Vous devez avoir le statut actif pour annuler une sortie');
             return $this->redirectToRoute('app_main');
-        }
-
-        $sortie = $sortieRepository->find($i);
-
-        if (!$sortie) {
-            throw $this->createNotFoundException();
         }
 
         if (isset($_POST['motif'])) {
@@ -292,17 +281,17 @@ class SortieController extends AbstractController
         EtatRepository $etatRepository,
     ): Response
     {
+        $sortie = $sortieRepository->find($i);
+
+        if (!$sortie) {
+            throw $this->createNotFoundException();
+        }
+
         $user = $this->getUser();
 
         if (!$user->isActif()) {
             $this->addFlash('danger', 'Vous devez avoir le statut actif pour modifier une sortie');
             return $this->redirectToRoute('app_main');
-        }
-
-        $sortie = $sortieRepository->find($i);
-
-        if (!$sortie) {
-            throw $this->createNotFoundException();
         }
 
         if ($user->getUserIdentifier() !== $sortie->getOrganisateur()->getUserIdentifier()) {
