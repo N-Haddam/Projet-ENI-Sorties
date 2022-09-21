@@ -85,62 +85,62 @@
 
 
     <div  class="table-responsive">
-        <table  class="table table-striped">
-            <thead class="thead-light">
-            <tr>
-                <th scope="col">Nom de la sortie</th>
-                <th scope="col">Date de la sortie</th>
-                <th scope="col">Clôture</th>
-                <th scope="col">inscrits/places</th>
-                <th scope="col">Etat</th>
-                <th scope="col">Inscrit</th>
-                <th scope="col">organisateur</th>
-                <th scope="col">Actions</th>
-            </tr>
-            </thead>
-            {% if pagination %}
+        {% if pagination %}
+            <table  class="table table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Nom de la sortie</th>
+                        <th scope="col">Date de la sortie</th>
+                        <th scope="col">Clôture</th>
+                        <th scope="col">inscrits/places</th>
+                        <th scope="col">Etat</th>
+                        <th scope="col">Inscrit</th>
+                        <th scope="col">organisateur</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
                 {%  for sortie in pagination %}
                     <tbody>
-                    <tr {% if loop.index is odd %}class="color"{% endif %}>
-                        <td><a href="{{ path('app_sortie_detail', {'i': sortie.id}) }}">{{ sortie.nom }}</a></td>
-                        <td>{{ sortie.dateHeureDebut |date }}</td>
-                        <td>{{ sortie.dateLimiteInscription |date }}</td>
-                        <td>{{ sortie.participants.count }}/{{ sortie.nbInscriptionMax }}</td>
-                        <td>{{ sortie.etat.libelle }}</td>
-                        <td>
-                            {% if sortie.participants.contains(app.user) %}
-                                X
-                            {% endif %}
-                        </td>
-                        <td><a href="{{ path('app_participant_profil', {'i': sortie.organisateur.id}) }}">{{ sortie.organisateur.nom }}</a></td>
-                        <td>
-                            {% if app.user.userIdentifier is same as (sortie.organisateur.userIdentifier)
-                                and sortie.etat.id is same as (1) %}
-                                <a href="{{ path('app_sortie_modifier', {'i': sortie.id}) }}">Modifier</a> - <a href="{{ path('app_sortie_publier', {'i': sortie.id}) }}">Publier</a>
-                            {% else %}
-                                <a href="{{ path('app_sortie_detail', {'i': sortie.id}) }}">Afficher</a>
-                            {% endif %}
-                            {% if app.user.userIdentifier is same as (sortie.organisateur.userIdentifier)
-                                and sortie.etat.id is same as (2) %}
-                                - <a href="{{ path('app_sortie_annuler', {'i': sortie.id}) }}">Annuler</a>
-                            {% elseif app.user in (sortie.participants)
-                                and sortie.etat.id in ([2, 3]) %}
-                                - <a href="{{ path('app_sortie_desinscription', {'i': sortie.id}) }}">Se désister</a>
-                            {% elseif app.user not in sortie.participants
-                                and sortie.etat.id is same as (2) %}
-                                - <a href="{{ path('app_sortie_sinscrire', {'i': sortie.id}) }}">S'inscrire</a>
-                            {% endif %}
-                        </td>
-                    </tr>
+                        <tr {% if loop.index is odd %}class="color"{% endif %}>
+                            <td><a href="{{ path('app_sortie_detail', {'i': sortie.id}) }}">{{ sortie.nom }}</a></td>
+                            <td>{{ sortie.dateHeureDebut |date }}</td>
+                            <td>{{ sortie.dateLimiteInscription |date }}</td>
+                            <td>{{ sortie.participants.count }}/{{ sortie.nbInscriptionMax }}</td>
+                            <td>{{ sortie.etat.libelle }}</td>
+                            <td>
+                                {% if sortie.participants.contains(app.user) %}
+                                    X
+                                {% endif %}
+                            </td>
+                            <td><a href="{{ path('app_participant_profil', {'i': sortie.organisateur.id}) }}">{{ sortie.organisateur.nom }}</a></td>
+                            <td>
+                                {% if app.user.userIdentifier is same as (sortie.organisateur.userIdentifier)
+                                    and sortie.etat.id is same as (1) %}
+                                    <a href="{{ path('app_sortie_modifier', {'i': sortie.id}) }}">Modifier</a> - <a href="{{ path('app_sortie_publier', {'i': sortie.id}) }}">Publier</a>
+                                {% else %}
+                                    <a href="{{ path('app_sortie_detail', {'i': sortie.id}) }}">Afficher</a>
+                                {% endif %}
+                                {% if app.user.userIdentifier is same as (sortie.organisateur.userIdentifier)
+                                    and sortie.etat.id is same as (2) %}
+                                    - <a href="{{ path('app_sortie_annuler', {'i': sortie.id}) }}">Annuler</a>
+                                {% elseif app.user in (sortie.participants)
+                                    and sortie.etat.id in ([2, 3]) %}
+                                    - <a href="{{ path('app_sortie_desinscription', {'i': sortie.id}) }}">Se désister</a>
+                                {% elseif app.user not in sortie.participants
+                                    and sortie.etat.id is same as (2) %}
+                                    - <a href="{{ path('app_sortie_sinscrire', {'i': sortie.id}) }}">S'inscrire</a>
+                                {% endif %}
+                            </td>
+                        </tr>
                     </tbody>
-                {%  endfor %}
-            {% else %}
-                <p>Pas de sorties pour l'instant</p>
-            {%  endif %}
-        </table>
-        <div class="navigation">
-            {{ knp_pagination_render(pagination) }}
-        </div>
+                {% endfor %}
+            </table>
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        {% else %}
+            <p>Pas de sorties pour l'instant</p>
+        {%  endif %}
     </div>
 </div>
 {% endblock %}
