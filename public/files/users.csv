@@ -1,0 +1,3 @@
+email,roles,password,nom,prenom,telephone,administrateur,actif,campus,pseudo,pictureFileName
+p.bibi@libye.ly,ROLE_USER,1234,Bismuth,Paul,1234567890,0,1,Nantes,Sarko,sarko.png
+p.balkany@maroc.ma,ROLE_USER,1234,Balkany,Patrick,1234567890,0,1,Nantes,eBracelet,balka.png
