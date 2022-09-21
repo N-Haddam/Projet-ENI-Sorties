@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Villes | {{ parent() }}{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('script/ville.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2 class="text-align">Gérer les villes</h2>
+    <section>
+        <h3 class="row">Filtrer les villes</h3>
+        <form class="row form-inline" method="post">
+            <label for="portion" class="col-2">Le nom contient :</label>
+            <input type="text" name="portion" id="portion" class="col-2" required
+            {% if params['portion'] is not same as '' %}value="{{ params['portion'] }}" {% endif %}>
+            <button type="submit" class="btn btn-info col-2">Rechercher</button>
+        </form>
+    </section>
+    {% if pagination %}
+        <section class="table-responsive">
+            <table class="table table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Ville</th>
+                        <th scope="col">Code postal</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for ville in pagination %}
+                    <tr>
+                        <td>{{ ville.nom }}</td>
+                        <td>{{ ville.codePostal }}</td>
+                        <td>
+                            <a href="#">Modifier</a> - <a href="#">Supprimer</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                    {# TODO à n'afficher que sur la dernière page de la pagination #}
+                    <tr>
+                        <td><input type="text" name="nouveauNom" id="nouveauNom"></td>
+                        <td><select type="text" name="nouveauCodePostal" id="nouveauCodePostal"></td>
+                        <td><a href="#">Ajouter</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    {% else %}
+        <p>Pas de sorties pour l'instant</p>
+    {%  endif %}
+</div>
+{% endblock %}

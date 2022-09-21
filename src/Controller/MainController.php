@@ -32,8 +32,9 @@ class MainController extends AbstractController
     {
         $user = $this->getUser();
         $userCampus = $user->getCampus();
+        $methode = $request->getMethod();
 
-        if ($request->getMethod() === 'GET') {
+        if ($methode === 'GET') {
             $params = [
                 "user" => $user,
                 "campus" => $userCampus,
@@ -47,9 +48,9 @@ class MainController extends AbstractController
         } else {
             $params = $_POST;
             $params['campus'] = $campusRepository->findOneBy(['nom' => $params['campus']]);
-            $params['user'] = $user;
+            $params['user'] = $user; // TODO vraiment nécessaire ? on peut avoir l'user dans twig avec app.user
         }
-        $params['methode'] = strtolower($request->getMethod());
+        $params['methode'] = strtolower($methode);
 
 
         $query = $sortieRepository->findByRequest($params);
