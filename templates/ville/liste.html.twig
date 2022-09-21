@@ -40,10 +40,11 @@
                     </tr>
                 {% endfor %}
                     {# TODO à n'afficher que sur la dernière page de la pagination #}
+                        {# TODO ou seulement si un recherche a été faite au préalable #}
                     <tr>
                         <td><input type="text" name="nouveauNom" id="nouveauNom"></td>
                         <td><select type="text" name="nouveauCodePostal" id="nouveauCodePostal"></td>
-                        <td><a href="#">Ajouter</a></td>
+                        <td><a href="#" id="ajouterVille">Ajouter</a></td>
                     </tr>
                 </tbody>
             </table>

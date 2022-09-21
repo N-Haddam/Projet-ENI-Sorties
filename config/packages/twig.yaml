@@ -2,6 +2,7 @@ twig:
     default_path: '%kernel.project_dir%/templates'
     globals:
         app_url_api_lieu: '%env(resolve:URL_API_LIEU)%'
+        app_url_ajouter_ville: '%env(resolve:URL_AJOUTER_VILLE)%'
 
 when@test:
     twig:

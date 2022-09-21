@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Ville;
 use App\Repository\VilleRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,14 +40,25 @@ class VilleController extends AbstractController
     }
 
     #[Route('/ajouter', name: 'ajouter', methods: ['GET'])]
-    public function ajouter(): Response
+    public function ajouter(
+        VilleRepository $villeRepository
+    ): Response
     {
         if (!$this->getUser()->isActif()) {
             throw $this->createAccessDeniedException();
         }
 
-        return $this->render('liste.html.twig', [ // TODO modifier le template
-            'controller_name' => 'VilleController',
-        ]);
+        if (isset($_GET['nom']) && $_GET['nom'] !== '' && isset($_GET['cp']) && strlen($_GET['cp']) === 5) {
+            $nouvelleVille = (new Ville())
+                ->setNom($_GET['nom'])
+                ->setCodePostal($_GET['cp']);
+            $villeRepository->add($nouvelleVille, true);
+            $this->addFlash('success',
+                'La ville a bien été ajouté : '.$nouvelleVille->getNom().' ('.$nouvelleVille->getCodePostal().')');
+        } else {
+            // TODO détailler les cas pour plus de précision dans les flash
+            $this->addFlash('danger', 'La ville n\'a pas pu être ajoutée...');
+        }
+        return $this->redirectToRoute('app_ville_liste');
     }
 }

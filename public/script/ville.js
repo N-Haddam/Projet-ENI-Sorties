@@ -1,5 +1,6 @@
 const inputNom = document.getElementById('nouveauNom');
 const selectCodePostal = document.getElementById('nouveauCodePostal');
+const linkAjouter = document.getElementById('ajouterVille');
 
 inputNom.addEventListener('change', () => {
     let nom = inputNom.value;
@@ -9,7 +10,6 @@ inputNom.addEventListener('change', () => {
     })
         .then(response => response.json())
         .then(response => {
-            console.log(response)
             let options;
             response.forEach(element => {
                 if (element.nom.toLowerCase() === nom.toLowerCase()) {
@@ -17,9 +17,13 @@ inputNom.addEventListener('change', () => {
                         options += `<option value="${codePostal}">${codePostal}</option>`
                     })
                 }
-
             })
             selectCodePostal.innerHTML = options;
-
         })
+})
+
+linkAjouter.addEventListener('click', () => {
+    if (selectCodePostal.value !== '' && inputNom.value !== '') {
+        window.location.href = `${urlAjouterVille}?nom=${selectCodePostal.value}&cp=${inputNom.value}`;
+    }
 })
