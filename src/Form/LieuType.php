@@ -15,9 +15,6 @@ class LieuType extends AbstractType
         $builder
             ->add('nom')
             ->add('rue')
-            ->add('latitude')
-            ->add('longitude')
-            ->add('ville')
             ->add('enregistrer', SubmitType::class, ['label' => 'Enregistrer'])
         ;
     }
