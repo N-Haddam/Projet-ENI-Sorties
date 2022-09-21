@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau lieu | {{ parent()}} {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('script/lieu.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2 class="text-center">
+        Ajouter un lieu
+    </h2>
+
+    <row class="row">
+        <section class="col-6">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+
+        <button type="button"><a href="{{ path('app_main') }}">Annuler</a></button>
+            {{ form_end(form)}}
+    </row>
+{% endblock %}
