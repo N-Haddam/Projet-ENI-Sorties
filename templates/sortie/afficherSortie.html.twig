@@ -6,80 +6,76 @@
 
     <h2>Détail de la sortie : <b><i>{{ sortie.nom }}</i></b> </h2>
 
-        {% for sortieDetail in sortieDetails %}
+    <p>Nom de la sortie : {{ sortie.nom }}</p>
+    <p>Date et heure de la sortie : Le {{ sortie.dateHeureDebut | date ("d/m/y") }} à {{ sortie.dateHeureDebut | date ("H:m") }}</p>
+    <p>Date limite d'inscription : {{ sortie.dateLimiteInscription |date("d/m/y") }} inclus</p>
+    <p>Nombre de places : {{ nbPlaces }}</p>
+    <p>Durée : {{ sortie.duree }} minutes</p>
+    <p>Description et infos : {{ sortie.infosSortie }}</p>
 
-            <p>Nom de la sortie : {{ sortieDetail.nom }}</p>
-            <p>Date et heure de la sortie : Le {{ sortieDetail.dateHeureDebut | date ("d/m/y") }} à {{ sortie.dateHeureDebut | date ("H:m") }}</p>
-            <p>Date limite d'inscription : {{ sortieDetail.dateLimiteInscription |date("d/m/y") }} inclus</p>
-            <p>Nombre de places : {{ nbPlaces }}</p>
-            <p>Durée : {{ sortieDetail.duree }} minutes</p>
-            <p>Description et infos : {{ sortieDetail.infosSortie }}</p>
+    <p>Campus : {{ sortie.siteOrganisateur.nom }}</p>
 
-            <p>Campus : {{ sortieDetail.siteOrganisateur.nom }}</p>
+    <p>Lieu : {{ sortie.lieu.nom }}</p>
+    <p>Rue : {{ sortie.lieu.rue }}</p>
+    <p>Code postal : {{ sortie.lieu.ville.codePostal }}</p>
+    <p>Ville : {{ sortie.lieu.ville.nom }}</p>
+        {% if (sortie.lieu.latitude >0) %}
+            <p>Latitude : {{ sortie.lieu.latitude }} N</p>
+        {% else %}
+            <p>Latitude : {{ sortie.lieu.latitude }} S</p>
+        {% endif %}
+        {% if (sortie.lieu.longitude >0) %}
+            <p>Longitude : {{ sortie.lieu.longitude }} E</p>
+        {% else %}
+            <p>Longitude : {{ sortie.lieu.longitude }} W</p>
+        {% endif %}
 
-            <p>Lieu : {{ sortieDetail.lieu.nom }}</p>
-            <p>Rue : {{ sortieDetail.lieu.rue }}</p>
-            <p>Code postal : {{ sortieDetail.lieu.ville.codePostal }}</p>
-            <p>Ville : {{ sortieDetail.lieu.ville.nom }}</p>
-                {% if (sortieDetail.lieu.latitude >0) %}
-                    <p>Latitude : {{ sortieDetail.lieu.latitude }} N</p>
-                {% else %}
-                    <p>Latitude : {{ sortieDetail.lieu.latitude }} S</p>
-                {% endif %}
-                {% if (sortieDetail.lieu.longitude >0) %}
-                    <p>Longitude : {{ sortieDetail.lieu.longitude }} E</p>
-                {% else %}
-                    <p>Longitude : {{ sortieDetail.lieu.longitude }} W</p>
-                {% endif %}
-
-            {% if (nbPlaces > 0) and (userParticipe) == false %}
-                <form name="sinscrire" method="post" action="{{ path('app_sortie_sinscrire', {'i': sortieDetail.id}) }}" >
-                    <input name="sinscrire" type="submit" value="S'inscrire à la sortie"> {# TODO le bonton est clickable si nbPlaces >0 #}
-                </form>
-            {% elseif (userParticipe) == true %}
-                <form name="desinscrire" method="post" action="{{ path('app_sortie_desinscription', {'i': sortieDetail.id}) }}">
-                    <input name="desinscrire" type="submit" value="Se désister ?" class="btn btn-warning"> {# TODO le bonton est clickable si nbPlaces >0 #}
-                </form>
-            {% elseif (nbPlaces <= 0) %}
-                <p>Il n'y a plus de places :(</p>
-                {#            {% elseif (nbPlaces <= 0) %}#}
-                {#                <p>todo autres cas</p>#}
-            {% endif %}
-            {% if sortie.organisateur.id is same as app.user.id %}
-                <button type="button"><a href="{{ path('app_sortie_modifier', {'i': sortie.id}) }}">Modifier</a></button>
-            {% endif %}
+    {% if (nbPlaces > 0) and (userParticipe) == false %}
+        <form name="sinscrire" method="post" action="{{ path('app_sortie_sinscrire', {'i': sortie.id}) }}" >
+            <input name="sinscrire" type="submit" value="S'inscrire à la sortie"> {# TODO le bonton est clickable si nbPlaces >0 #}
+        </form>
+    {% elseif (userParticipe) == true %}
+        <form name="desinscrire" method="post" action="{{ path('app_sortie_desinscription', {'i': sortie.id}) }}">
+            <input name="desinscrire" type="submit" value="Se désister ?" class="btn btn-warning"> {# TODO le bonton est clickable si nbPlaces >0 #}
+        </form>
+    {% elseif (nbPlaces <= 0) %}
+        <p>Il n'y a plus de places :(</p>
+        {#            {% elseif (nbPlaces <= 0) %}#}
+        {#                <p>todo autres cas</p>#}
+    {% endif %}
+    {% if sortie.organisateur.id is same as app.user.id %}
+        <button type="button"><a href="{{ path('app_sortie_modifier', {'i': sortie.id}) }}">Modifier</a></button>
+    {% endif %}
 
 
-            <p>Liste des participants inscrits : </p>
-            <table class="table table-striped">
-                <thead class="thead-light">
+    <p>Liste des participants inscrits : </p>
+    <table class="table table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Pseudo</th>
+                <th scope="col">Nom</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if (sortie.participants is empty) %}
+                <tr>
+                    <td>
+                        Pas de Participants pour l'instant
+                    </td>
+                </tr>
+            {% else %}
+                {% for participant in sortie.participants %}
                     <tr>
-                        <th scope="col">Pseudo</th>
-                        <th scope="col">Nom</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if (sortieDetail.participants is empty) %}
-                        <tr>
-                            <td>
-                                Pas de Participants pour l'instant
-                            </td>
-                        </tr>
-                    {% else %}
-                        {% for participant in sortieDetail.participants %}
-                            <tr>
-                            <td>
-                                <a href="{{ path('app_participant_profil', {'i': participant.id}) }}">{{ participant.pseudo }}</a>
-                            </td>
-                            <td>
-                                {{ participant.prenom }} {{ participant.nom|upper }}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    {% endif %}
-                </tbody>
-            </table>
-
-        {% endfor %}
+                    <td>
+                        <a href="{{ path('app_participant_profil', {'i': participant.id}) }}">{{ participant.pseudo }}</a>
+                    </td>
+                    <td>
+                        {{ participant.prenom }} {{ participant.nom|upper }}
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
 
 {% endblock %}

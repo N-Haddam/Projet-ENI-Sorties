@@ -78,8 +78,7 @@ class SortieController extends AbstractController
     ): Response
     {
         $user = $this->getUser();
-        $sortieDetails = $sortieRepository->findDetailsSortie($i);
-        $sortie = $sortieRepository->find($i);
+        $sortie = $sortieRepository->findDetailsSortie($i)[0]; // TODO faire que la requête ne renvoie qu'un résultat et pas un tableau
 
         if (!$sortie || ($user->getId() != $sortie->getOrganisateur()->getId() && $sortie->getEtat()->getLibelle() === 'Créée' )) {
             throw $this->createNotFoundException();
@@ -90,7 +89,6 @@ class SortieController extends AbstractController
 
         return $this->render('sortie/afficherSortie.html.twig', [
             'sortie' => $sortie,
-            'sortieDetails' => $sortieDetails,
             'nbPlaces' => $nbPlaces,
             'userParticipe' => $userParticipe
         ]);
