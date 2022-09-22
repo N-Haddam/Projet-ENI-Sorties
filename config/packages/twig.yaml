@@ -5,6 +5,7 @@ twig:
         app_url_ajouter_ville: '%env(resolve:URL_AJOUTER_VILLE)%'
         app_url_api_ville_ajouter: '%env(resolve:URL_API_AJOUTER_VILLE)%'
         app_url_apiplatform_ville: '%env(resolve:URL_APIPLATFORM_VILLE)%'
+        app_url_apiplatform_lieu: '%env(resolve:URL_APIPLATFORM_LIEU)%'
 
 when@test:
     twig:
