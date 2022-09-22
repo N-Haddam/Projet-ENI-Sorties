@@ -42,6 +42,8 @@
                 {% endfor %}
                     {# TODO à n'afficher que sur la dernière page de la pagination #}
                         {# TODO ou seulement si un recherche a été faite au préalable #}
+                {% if pagination.count is not same as (pagination.itemNumberPerPage)
+                    or pagination.totalItemCount <= pagination.itemNumberPerPage %}
                     <tr>
                         <td><em>Recherche une ville : </em>
                             <input type="text" name="nouveauNom" id="nouveauNom">
@@ -50,13 +52,14 @@
                         <td><select name="nouveauCodePostal" id="nouveauCodePostal"></select></td>
                         <td><a href="#" id="ajouterVille">Ajouter</a></td>
                     </tr>
-
+                {% endif %}
                 </tbody>
             </table>
         </section>
         <div class="navigation">
             {{ knp_pagination_render(pagination) }}
         </div>
+        {{ pagination.currentPageNumber }} | {{ nbPages }}
     {% else %}
         <p>Pas de sorties pour l'instant</p>
     {%  endif %}
