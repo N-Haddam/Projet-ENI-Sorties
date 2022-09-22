@@ -51,7 +51,7 @@
             >
             <label for="organisateurTrue">Sorties dont je suis l'organisateur.trice</label>
 
-            <input type="checkbox" name="inscritTrue"
+            <input type="checkbox" name="inscritTrue" id="inscritTrue"
                     {% if params['methode'] is same as('get')  %}
                         checked
                     {% elseif params['inscritTrue'] is defined %}
@@ -61,7 +61,7 @@
             <label for="inscritTrue">Sorties auxquelles je suis inscrit.e</label>
 
 
-            <input type="checkbox" name="inscritFalse"
+            <input type="checkbox" name="inscritFalse" id="inscritFalse"
                     {% if params['methode'] is same as('get')  %}
                         checked
                     {% elseif params['inscritFalse'] is defined %}
@@ -70,7 +70,7 @@
             >
             <label for="inscritFalse">Sorties auxquelles je ne suis pas inscrit.e</label>
 
-            <input type="checkbox" name="sortiesPassees"
+            <input type="checkbox" name="sortiesPassees" id="sortiesPassees"
                     {% if params['sortiesPassees'] is defined %}
                         checked
                     {% endif %}
