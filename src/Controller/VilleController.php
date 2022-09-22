@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class VilleController extends AbstractController
 {
     #[Route('/liste', name: 'liste', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function liste(
         Request $request,
         VilleRepository $villeRepository,
