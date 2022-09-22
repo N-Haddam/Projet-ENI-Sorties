@@ -35,7 +35,6 @@ selectVille.addEventListener('change', () => {
 
 selectLieu.addEventListener('change', () => {
     let lieu = selectLieu.value; // à vérifier, mais surement l'id du lieu
-    console.log('coucou')
     lieux.map(l => {
         if (l.id.toString() === lieu.toString()) {
             rue.innerText = l.rue;
