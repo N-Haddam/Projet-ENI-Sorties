@@ -89,10 +89,18 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $pictureFileName = null;
 
+    #[ORM\ManyToMany(targetEntity: GroupePrive::class, mappedBy: 'participants')]
+    private Collection $participants;
+
+    #[ORM\OneToMany(mappedBy: 'organisateur', targetEntity: GroupePrive::class, orphanRemoval: true)]
+    private Collection $groupePrivesOrganises;
+
     public function __construct()
     {
         $this->sortiesOrganisees = new ArrayCollection();
         $this->sorties = new ArrayCollection();
+        $this->participants = new ArrayCollection();
+        $this->groupePrivesOrganises = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -321,5 +329,62 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     public function createdBy(?UserInterface $getUser)
     {
 
+    }
+
+    /**
+     * @return Collection<int, GroupePrive>
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(GroupePrive $participant): self
+    {
+        if (!$this->participants->contains($participant)) {
+            $this->participants->add($participant);
+            $participant->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(GroupePrive $participant): self
+    {
+        if ($this->participants->removeElement($participant)) {
+            $participant->removeParticipant($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GroupePrive>
+     */
+    public function getGroupePrivesOrganises(): Collection
+    {
+        return $this->groupePrivesOrganises;
+    }
+
+    public function addGroupePrivesOrganise(GroupePrive $groupePrivesOrganise): self
+    {
+        if (!$this->groupePrivesOrganises->contains($groupePrivesOrganise)) {
+            $this->groupePrivesOrganises->add($groupePrivesOrganise);
+            $groupePrivesOrganise->setOrganisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupePrivesOrganise(GroupePrive $groupePrivesOrganise): self
+    {
+        if ($this->groupePrivesOrganises->removeElement($groupePrivesOrganise)) {
+            // set the owning side to null (unless already changed)
+            if ($groupePrivesOrganise->getOrganisateur() === $this) {
+                $groupePrivesOrganise->setOrganisateur(null);
+            }
+        }
+
+        return $this;
     }
 }
