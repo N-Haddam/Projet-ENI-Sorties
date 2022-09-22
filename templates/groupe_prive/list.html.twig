@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chuuuuuuut !!{% endblock %}
+
+{% block body %}
+    <h1>Mes groupes</h1>
+
+    {% if groupes %}
+    <section class="table-responsive">
+    <table class="table table-striped">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Groupe</th>
+            <th scope="col">Participants</th>
+{#            <th scope="col">Actions</th>#}
+        </tr>
+        </thead>
+        <tbody>
+        {% for gourpe in groupes %}
+            <tr>
+                <td>{{ gourpe.nom }}</td>
+                <td>
+                    {%  for participant in gourpe.participants  %}
+                         - {{ participant.nom }}<br>
+                    {% endfor %}
+                </td>
+{#                <td>#}
+{#                    <a href="#">Modifier</a> - <a href="#">Supprimer</a>#}
+{#                </td>#}
+            </tr>
+        {% endfor %}
+    </table>
+
+    {% else %}
+    <p>vous n'avez pas de groupe pour l'instant</p>
+        <a href="{{ path("app_groupe_creer") }}">Ajouter un groupe</a>
+    {% endif %}
+
+{% endblock %}
