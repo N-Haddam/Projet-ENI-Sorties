@@ -2,7 +2,7 @@ const selectVille = document.getElementById('ville');
 const selectLieu = document.getElementById('lieu');
 const rue = document.getElementById('rue');
 const cp = document.getElementById('cp');
-const latitude = document.getElementById('latitude');
+const latitude = document.getElementById('latitude'); // TODO à retester parce que passer en const
 const longitude = document.getElementById('longitude');
 
 let lieux;

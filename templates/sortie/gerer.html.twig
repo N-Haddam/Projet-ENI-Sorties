@@ -2,9 +2,15 @@
 
 {% block title %}Nouvelle sortie | {{ parent()}} {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('style/creer-ville.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
-<script src="{{ asset('script/lieu.js') }}" defer></script>
+    <script src="{{ asset('script/lieu.js') }}" defer></script>
+    <script src="{{ asset('script/creer-sortie-add-ville.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -15,9 +21,9 @@
         {% else %}
             Créer une sortie
         {% endif %}
-
-
     </h2>
+
+    <section id="messages"></section>
 
     <row class="row">
         <section class="col-6">
@@ -44,7 +50,7 @@
                         <option value="{{ ville.id }}">{{ ville.nom }} - {{ ville.codePostal }}</option>
                     {% endif %}
                 {% endfor %}
-            </select><br>
+            </select><a href="#" id="addVille"><img src="{{ asset('img/add-30px.png') }}"></a><br>
 
             <label for="lieu">Lieu</label>
             <select id="lieu" name="lieu">
@@ -57,7 +63,7 @@
                         {% endif %}
                     {% endfor %}
                 {% endif %}
-            </select><br>
+            </select><a href="#" id="addLieu"><img src="{{ asset('img/add-30px.png') }}"></a><br>
 
 {#            <label for="rue">Rue</label>#}
 {#            <input type="text" id="rue" name="rue" value="" readonly><br> #}
@@ -98,4 +104,30 @@
         {{ form_end(form)}}
     </row>
 </div>
+    {# TODO mettre les modales dans des fichiers à inclure #}
+    <modal class="modal" id="modal-ville">
+        <modalcontent class="modal-content">
+            <span class="close" id="close-modal-ville">&times;</span>
+            <h3 class="text-center">Ajouter une ville</h3>
+            <span id="span-messages-ville"></span>
+            <span>Entrez un nom ou une portion de nom </span><input type="text" name="nouveauNom" id="nouveauNom">
+            <select name="noms" id="noms"></select>
+            <select name="nouveauCodePostal" id="nouveauCodePostal"></select>
+            <button type="button" id="ajouterVille">Ajouter</button>
+        </modalcontent>
+    </modal>
+    <modal class="modal" id="modal-lieu">
+        <modalcontent class="modal-content">
+            <span class="close" id="close-modal-lieu">&times;</span>
+            <h3 class="text-center">Ajouter un Lieu</h3>
+            <span id="span-messages-lieu"></span>
+            <span>Ville : </span><select name="select-ville-lieu" id="select-ville-lieu"></select>
+{#            <span>Ville : </span><input type="text" name="select-ville-lieu" id="select-ville-lieu">#}
+            <span>Nom : </span><input type="text" name="nouveauNomLieu" id="nouveauNomLieu">
+            <span>Rue : </span><input type="text" name="nouvelleRue" id="nouvelleRue">
+            <span>Latitude : </span><input type="text" name="nouvelleLatitude" id="nouvelleLatitude">
+            <span>Longitude : </span><input type="text" name="nouvelleLongitude" id="nouvelleLongitude">
+            <button type="button" id="ajouterLieu">Ajouter</button>
+        </modalcontent>
+    </modal>
 {% endblock %}

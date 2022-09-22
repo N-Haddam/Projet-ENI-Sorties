@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau lieu | {{ parent()}} {% endblock %}
+
+
+
+{% block body %}
+<div class="container">
+    <h2 class="text-center">
+        Ajouter un lieu
+    </h2>
+
+    <row class="row">
+        <section class="col-6">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <form method="post" name="lieu" id="lieu">
+                <div id="coordonnees">
+                    <label for="latitude">Latitude</label>
+                    <input type="number" step="any"  name="latitude" id="latitude" required><br>
+                    <label for="longitude">Longitude</label>
+                    <input type="number" step="any" name="longitude" id="longitude" required><br>
+                    <label for="ville">Ville</label>
+                </div>
+                <select id="ville" name="ville">
+                    {% for ville in villes %}
+                            <option value="{{ ville.id }}">{{ ville.nom }} - {{ ville.codePostal }}</option>
+                    {% endfor %}
+                </select><br>
+            </form>
+        <button type="button"><a href="{{ path('app_main') }}">Annuler</a></button>
+            {{ form_end(form)}}
+    </row>
+    {% include "inc/_map.html.twig" %}
+{% endblock %}

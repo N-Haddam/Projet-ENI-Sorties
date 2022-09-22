@@ -24,7 +24,6 @@ class ApiLieuController extends AbstractController
         return $this->json(
             $lieux,
             Response::HTTP_OK,
-//            ['Access-Control-Allow-Origin' => '*'], // TODO attention, accès à tout le monde, peut-être restreindre
             [],
             ['groups' => 'liste_lieux_par_ville']);
     }

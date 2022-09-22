@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
 use App\Repository\LieuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,12 +12,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LieuRepository::class)]
+#[ApiResource(
+    operations: [new Post()],
+    normalizationContext: ['groups' => ['post:collection']],
+    denormalizationContext: ['groups' => ['post:collection']],
+)]
 class Lieu
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['liste_lieux_par_ville'])]
+    #[Groups(['liste_lieux_par_ville', 'post:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 60)]
@@ -23,7 +30,7 @@ class Lieu
     #[Assert\NotNull]
     #[Assert\Length(max: 60)]
     #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ]+$/')]
-    #[Groups(['liste_lieux_par_ville'])]
+    #[Groups(['liste_lieux_par_ville', 'post:collection'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 100)]
@@ -31,20 +38,20 @@ class Lieu
     #[Assert\NotNull]
     #[Assert\Length(max: 100)]
     #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ]+$/')]
-    #[Groups(['liste_lieux_par_ville'])]
+    #[Groups(['liste_lieux_par_ville', 'post:collection'])]
     private ?string $rue = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['liste_lieux_par_ville'])]
+    #[Groups(['liste_lieux_par_ville', 'post:collection'])]
     private ?float $latitude = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['liste_lieux_par_ville'])]
+    #[Groups(['liste_lieux_par_ville', 'post:collection'])]
     private ?float $longitude = null;
 
     #[ORM\ManyToOne(inversedBy: 'lieus')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['liste_lieux_par_ville'])]
+    #[Groups(['liste_lieux_par_ville', 'post:collection'])]
     private ?Ville $ville = null;
 
     #[ORM\OneToMany(mappedBy: 'lieu', targetEntity: Sortie::class, orphanRemoval: true)]

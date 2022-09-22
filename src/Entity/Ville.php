@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Repository\VilleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,18 +13,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VilleRepository::class)]
+#[ApiResource(
+    operations: [new GetCollection(), new Post()]
+)]
 class Ville
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('post:collection')] // TODO rendre non modifiable via apiplatform
     private ?int $id = null;
 
     #[ORM\Column(length: 60)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(max: 60)]
-    #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ]+$/')]
+    #[Assert\Regex('/^[ 0-9A-Za-zÀ-ÖØ-öø-ÿ\'-]+$/')]
     #[Groups(['liste_lieux_par_ville'])]
     private ?string $nom = null;
 
@@ -30,7 +37,7 @@ class Ville
     #[Assert\NotNull]
     #[Assert\Length(max: 5)]
     #[Assert\Regex('/^[0-9]{5}$/')]
-    #[Groups(['liste_lieux_par_ville'])]
+    #[Groups(['liste_lieux_par_ville', 'post:collection'])]
     private ?string $codePostal = null;
 
     #[ORM\OneToMany(mappedBy: 'ville', targetEntity: Lieu::class, orphanRemoval: true)]
@@ -102,6 +109,6 @@ class Ville
 
     public function __toString(): string
     {
-        return $this->getNom();
+        return $this->getNom().' - '.$this->getCodePostal();
     }
 }
