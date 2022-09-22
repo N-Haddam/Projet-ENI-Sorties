@@ -42,6 +42,7 @@ selectNoms.addEventListener('change', () => {
 })
 
 linkAjouter.addEventListener('click', () => {
+    // TODO ajout vérif cp len 5
     if (selectCodePostal.value !== '' && inputNom.value !== '') {
         window.location.href = `${urlAjouterVille}?nom=${selectNoms.value}&cp=${selectCodePostal.value}`;
     } else {
