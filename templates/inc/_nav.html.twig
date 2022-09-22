@@ -4,7 +4,7 @@
 
             {% if is_granted("ROLE_ADMIN") %}
 
-                <a href="#" title="villes">Villes</a>
+                <a href="{{ path('app_ville_liste') }}" title="villes">Villes</a>
                 <a href="#" title="campus">Campus</a>
                 <a href="{{ path('admin') }}" title="dashboard">Mon tableau de bord</a>
 
