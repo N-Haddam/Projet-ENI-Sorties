@@ -52,11 +52,7 @@ class SortieController extends AbstractController
             } elseif ($form->getClickedButton() && 'publier' === $form->getClickedButton()->getName()) {
                 $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
             }
-//            $sortieRepository->add($sortie, true);
-            $entityManager->persist($sortie);
-//            $archivage->postPersist($sortie);
-//            $activitySubscriber->postPersist($sortie);
-            $entityManager->flush();
+            $sortieRepository->add($sortie, true);
             $this->ajoutParticipant($sortie, $entityManager);
             $this->addFlash('success', 'La nouvelle sortie a bien été enregistrée');
             return $this->redirectToRoute('app_main');
@@ -99,6 +95,7 @@ class SortieController extends AbstractController
         int $i,
         EntityManagerInterface $entityManager,
         SortieRepository $sortieRepository,
+        EtatRepository $etatRepository,
     ): Response
     {
         $sortie = $sortieRepository->find($i);
@@ -123,6 +120,9 @@ class SortieController extends AbstractController
             && ($nbParticipants < $nbPlaces)
             && $sortie->getEtat()->getId() !== 6)
         {
+            if ($nbParticipants+1 === $nbPlaces) {
+                $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Clôturée']));
+            }
             $sortie = $sortieRepository->find($i);
             $i = $sortie->getId();
             $this->ajoutParticipant($sortie, $entityManager);
@@ -151,6 +151,7 @@ class SortieController extends AbstractController
         int $i,
         EntityManagerInterface $entityManager,
         SortieRepository $sortieRepository,
+        EtatRepository $etatRepository
     ): Response
     {
         $sortie = $sortieRepository->find($i);
@@ -166,10 +167,15 @@ class SortieController extends AbstractController
         $userParticipe = $this->userParticipe($user, $sortie);
 
         if ($sortie->getDateHeureDebut() >= new \DateTime('now')) {
+//            if ($sortie->getEtat()->getLibelle() === 'Clôturée') // TODO s'il n'y avait plus de place et que donc la sortie était cloturée, il faut la rouvrir
+            if ($nbPlaces === 0 && $sortie->getEtat()->getLibelle() === 'Annulée' && $sortie->getDateLimiteInscription() > new \DateTime()) {
+                $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
+            }
             $sortie->removeParticipant($user);
             $entityManager->persist($sortie);
             $entityManager->flush();
-            $this->addFlash('warning', 'Vous êtes désinscrit de cette sortie !');
+            $nbPlaces -= 1;
+            $this->addFlash('success', 'Vous êtes désinscrit de cette sortie !');
             return $this->forward('App\Controller\SortieController::detail',  [
                 'i' => $sortie->getId(),
                 'sortie' => $sortie,
@@ -302,7 +308,7 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('app_sortie_detail', ['i' => $i]);
         }
 
-        $villes = $villeRepository->findAll(); // TODO revoir par rapport à ce que disait Philippe surles findAll
+        $villes = $villeRepository->findAll(); // TODO revoir pour afficher dans un ordre précis
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
