@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\ParticipantType;
 use App\Repository\ParticipantRepository;
 use App\Service\FileUploader;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\File;
@@ -23,6 +24,7 @@ class ParticipantController extends AbstractController
         Request $request,
         UserPasswordHasherInterface $hasher,
         FileUploader $fileUploader,
+        EntityManagerInterface $entityManager,
     ): Response
     {
         $participant = $participantRepository->find($i);
@@ -32,7 +34,6 @@ class ParticipantController extends AbstractController
         }
 
         if ($this->getUser()->getUserIdentifier() === $participant->getUserIdentifier()) {
-            $copie_participant = $participant;
             $form = $this->createForm(ParticipantType::class, $participant);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
@@ -50,9 +51,9 @@ class ParticipantController extends AbstractController
                         return $this->redirectToRoute('app_participant_profil',['i' => $participant->getId()]);
                     }
                 }
-                if ($copie_participant->getPictureFileName()) {
-                    $copie_participant->setPictureFileName(
-                        new File($this->getParameter('image_profil_directory').'/'.$copie_participant->getPictureFileName())
+                if ($participant->getPictureFileName()) {
+                    $participant->setPictureFileName(
+                        new File($this->getParameter('image_profil_directory').'/'.$participant->getPictureFileName())
                     );
                 }
                 $imageFile = $form->get('image')->getData();
@@ -62,15 +63,11 @@ class ParticipantController extends AbstractController
                         $participant->setPictureFileName($imageFileName);
                     } catch (FileException $e) {
                         $this->addFlash('danger','Une erreur est survenue : ('.$e->getCode().') '.$e->getMessage()); // TODO revoir le message, surtout pour la prod
-                        return $this->redirectToRoute('app_participant_profil', ['i' => $copie_participant->getId()]);
+                        return $this->redirectToRoute('app_participant_profil', ['i' => $participant->getId()]);
                     }
                 }
-                $participant->setAdministrateur($copie_participant->isAdministrateur()) // TODO vérifier que ce soit nécessaire
-                    ->setPassword($copie_participant->getPassword())
-                    ->setRoles($copie_participant->getRoles())
-                    ->setActif($copie_participant->isActif());
 
-                $participantRepository->add($participant, true);    // TODO add ou update ou autre ?
+                $entityManager->flush();
                 $this->addFlash('success', 'Votre profil a bien été modifié');
                 return $this->redirectToRoute('app_main');
             } else {

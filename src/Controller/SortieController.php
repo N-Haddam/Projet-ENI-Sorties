@@ -283,6 +283,7 @@ class SortieController extends AbstractController
         CampusRepository $campusRepository,
         LieuRepository $lieuRepository,
         EtatRepository $etatRepository,
+        EntityManagerInterface $entityManager,
     ): Response
     {
         $sortie = $sortieRepository->find($i);
@@ -315,11 +316,11 @@ class SortieController extends AbstractController
             $sortie->setSiteOrganisateur($campusRepository->find($_POST['campus']))
                 ->setLieu($lieuRepository->find($_POST['lieu']));
             if ($form->getClickedButton() && 'enregistrer' === $form->getClickedButton()->getName()) {
-                $sortie->setEtat($etatRepository->find(1));
+                $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Créée']));
             } elseif ($form->getClickedButton() && 'publier' === $form->getClickedButton()->getName()) {
-                $sortie->setEtat($etatRepository->find(2));
+                $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
             }
-            $sortieRepository->add($sortie, true);
+            $entityManager->flush();
             $this->addFlash('success', 'La sortie a bien été modfiée');
             return $this->redirectToRoute('app_sortie_detail', ['i' => $sortie->getId()]);
         }
