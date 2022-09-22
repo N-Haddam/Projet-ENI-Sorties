@@ -17,6 +17,7 @@ class Ville
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('post:collection')] // TODO rendre non modifiable via apiplatform
     private ?int $id = null;
 
     #[ORM\Column(length: 60)]
@@ -32,7 +33,7 @@ class Ville
     #[Assert\NotNull]
     #[Assert\Length(max: 5)]
     #[Assert\Regex('/^[0-9]{5}$/')]
-    #[Groups(['liste_lieux_par_ville'])]
+    #[Groups(['liste_lieux_par_ville', 'post:collection'])]
     private ?string $codePostal = null;
 
     #[ORM\OneToMany(mappedBy: 'ville', targetEntity: Lieu::class, orphanRemoval: true)]
