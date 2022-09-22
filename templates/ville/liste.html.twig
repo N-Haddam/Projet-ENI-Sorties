@@ -36,7 +36,8 @@
                         <td>{{ ville.nom }}</td>
                         <td>{{ ville.codePostal }}</td>
                         <td>
-                            <a href="#">Modifier</a> - <a href="#">Supprimer</a>
+                            {# TODO passer l'url en variable d'environnement #}
+                            <a href="{{ path('admin') }}?crudAction=edit&crudControllerFqcn=App%5CController%5CAdmin%5CVilleCrudController&entityId={{ ville.id }}">Modifier</a>
                         </td>
                     </tr>
                 {% endfor %}
