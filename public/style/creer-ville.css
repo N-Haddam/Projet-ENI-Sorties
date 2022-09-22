@@ -33,3 +33,9 @@
     text-decoration: none;
     cursor: pointer;
 }
+
+#map {
+    align-items: center;
+    height: 400px;
+    width: 600px;
+}

@@ -203,11 +203,11 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('app_main');
         }
 
-        if ($sortie->getOrganisateur()->getId() === $user->getId()
-            && $sortie->getEtat()->getId() === 1
+        if ($sortie->getOrganisateur()->getUserIdentifier() === $user->getUserIdentifier()
+            && $sortie->getEtat()->getLibelle() === 'Créée'
             && $sortie->getDateLimiteInscription() > new \DateTime())
         {
-            $etatPubliee = $etatRepository->find(2);
+            $etatPubliee = $etatRepository->findOneBy(['libelle' => 'Ouverte']);
             $sortie->setEtat($etatPubliee);
             $sortieRepository->add($sortie, true);
             $this->addFlash('success', 'Votre sortie est bien publiée');
