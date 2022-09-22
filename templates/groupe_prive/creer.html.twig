@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chuuuuuuut !{% endblock %}
+
+{% block body %}
+    <link href="{{ asset('styles.css') }}" rel="stylesheet" >
+
+    <h2>Ajouter un groupe</h2>
+    <div>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <form name="participants" method="post">
+            <div class="selectBox" id="selectBox">
+                <select id="participants" name="participants" multiple>
+                    <option></option>
+                {% for participant in participants %}
+                    <option id="participant" name="participant" value="{{ participant.id }}">{{ participant.pseudo }}</option>
+                {% endfor %}
+                </select>
+            </div>
+        </form>
+{#        <section>#}
+{#            <h3 class="row">Filtrer les participants</h3>#}
+{#        <form class="row form-inline" method="post">#}
+{#            <label for="portion" class="col-2">Le nom contient :</label>#}
+{#            <input type="text" name="portion" id="portion" class="col-2" required#}
+{#                   {% if params['portion'] is not same as '' %}value="{{ params['portion'] }}" {% endif %}>#}
+{#            <button type="submit" class="btn btn-info col-2">Rechercher</button>#}
+{#        </form>#}
+{#        </section>#}
+{#        {% if pagination %}#}
+{#            <section class="table-responsive">#}
+{#                <table class="table table-striped">#}
+{#                    <thead class="thead-light">#}
+{#                    <tr>#}
+{#                        <th scope="col">Pseudo</th>#}
+{#                        <th scope="col">Mail</th>#}
+{#                        <th scope="col">Actions</th>#}
+{#                    </tr>#}
+{#                    </thead>#}
+{#                    <tbody>#}
+{#                    {% for participant in pagination %}#}
+{#                        <tr>#}
+{#                            <td>{{ participant.nom }}</td>#}
+{#                            <td>{{ participant.pseudo }}</td>#}
+{#                            <td>#}
+{#                                <form method="post" name="participantAjouter" id="participantAjouter">#}
+{#                                    <a href="#">Ajouter</a>#}
+{#                                </form>#}
+{#                            </td>#}
+{#                        </tr>#}
+{#                    {% endfor %}#}
+{#                    </tbody>#}
+{#                </table>#}
+{#            </section>#}
+{#            <div class="navigation">#}
+{#                {{ knp_pagination_render(pagination) }}#}
+{#            </div>#}
+{#        {%  endif %}#}
+
+
+
+
+        <button type="button"><a href="{{ path('app_main') }}">Annuler</a></button>
+
+        {{ form_end(form)}}
+    </div>
+
+{% block javascripts %}
+    <script src="{{ asset('script/groupes-prives.js') }}" defer></script>
+{% endblock %}
+
+{% endblock %}

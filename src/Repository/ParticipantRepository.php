@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Participant;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -65,6 +66,17 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findByRequest(array $params): Query
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->orderBy('p.pseudo', 'ASC');
+        if ($params['portion'] !== '') {
+            $qb->where('LOWER(p.pseudo) LIKE :portion')->setParameter('portion', '%'.strtolower($params['portion']).'%');
+        }
+        return $qb->getQuery();
+    }
+
 
     //fonction pour la fixture de sortie
 //    public function findParticipants($sortie): array
