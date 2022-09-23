@@ -126,7 +126,7 @@ class SortieRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('s')
             ->andWhere('s.dateHeureDebut < :date')
             ->setParameters([
-                'date' =>  new \DateTimeImmutable(-self::DAYS_BEFORE_REMOVAL.' days'),
+                'date' =>  new \DateTime(-self::DAYS_BEFORE_REMOVAL.' days'),
             ])
         ;
     }
@@ -162,7 +162,7 @@ class SortieRepository extends ServiceEntityRepository
         $c = 0;
         for ($i = 0; $i <= sizeof($sorties) - 1; $i++) {
             $dateDebut = $sorties[$i]->getDateHeureDebut();
-            if ($dateDebut < new \DateTimeImmutable('now')) {
+            if ($dateDebut < new \DateTime('now')) {
                 $sorties[$i]->setEtat($etatPasse);
                 $this->add($sorties[$i], true);
                 $c++;
@@ -176,21 +176,14 @@ class SortieRepository extends ServiceEntityRepository
         $sorties = $this->findAll();
 
         $etatEnCours = $this->etatRepository->findOneBy(['libelle'=>'Activité en cours']);
-        $now = (new \DateTimeImmutable('now'));
-        foreach ($sorties as $sortie) {
-            for ($i = 0; $i <= sizeof($sorties) - 1; $i++) {
-                $dateDebut = $sortie->getDateHeureDebut();
-//                dump($now);
-//                dd($dateDebut);
-                if ($dateDebut == $now) {
-                    dd('je suis là');
-                }
+        $now = (new \DateTimeImmutable('now'))->format('Y-m-d');
 
-                if ($dateDebut === $now->format('Y-m-d')) {
-                    dd('je suis ici');
-                    $sorties[$i]->setEtat($etatEnCours);
-                    $this->add($sorties[$i], true);
-                }
+        for ($i = 0; $i <= sizeof($sorties) - 1; $i++) {
+            $dateDebut = $sorties[$i]->getDateHeureDebut()->format('Y-m-d');
+
+            if ($dateDebut == $now) {
+                $sorties[$i]->setEtat($etatEnCours);
+                $this->add($sorties[$i], true);
             }
         }
         return $sorties;

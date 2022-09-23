@@ -38,7 +38,8 @@ class ImportCommand extends Command
                                 UserPasswordHasherInterface $passwordEncoder,
     )
     {
-        //j'ai bindé dans services.yml pour recupérer ici le directory du projet dans $projectDir
+        //J'ai fait un bind dans services.yml pour recupérer ici le directory du projet dans $projectDir
+        //TODO changer l'emplacement du CSV car il est dans public!
         $this->projectDir=$projectDir;
         $this->entityManager=$entityManager;
         $this->passwordEncoder = $passwordEncoder;
