@@ -49,4 +49,11 @@ class VilleRepository extends ServiceEntityRepository
         }
         return $qb->getQuery();
     }
+
+    public function findAllOrderByName()
+    {
+        $qb = $this->createQueryBuilder('v')
+            ->orderBy('v.nom');
+        return $qb->getQuery()->getResult();
+    }
 }
