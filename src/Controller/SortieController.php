@@ -39,7 +39,7 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('app_main');
         }
 
-        $villes = $villeRepository->findAll(); // TODO revoir par rapport à ce que disait Philippe surles findAll
+        $villes = $villeRepository->findAllOrderByName(); // TODO revoir par rapport à ce que disait Philippe surles findAll
         $sortie = new Sortie();
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);

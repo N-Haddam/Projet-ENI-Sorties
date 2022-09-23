@@ -14,7 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VilleRepository::class)]
 #[ApiResource(
-    operations: [new GetCollection(), new Post()]
+    operations: [new GetCollection(), new Post()],
+    order: ['nom' => 'ASC']
 )]
 class Ville
 {
