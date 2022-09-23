@@ -103,32 +103,8 @@
         {{ form_end(form)}}
     </div>
 </div>
-    {# TODO mettre les modales dans des fichiers à inclure #}
-    <modal class="modal" id="modal-ville">
-        <modalcontent class="modal-content">
-            <span class="close" id="close-modal-ville">&times;</span>
-            <h3 class="text-center">Ajouter une ville</h3>
-            <span id="span-messages-ville"></span>
-            <span>Entrez un nom ou une portion de nom </span><input type="text" name="nouveauNom" id="nouveauNom">
-            <select name="noms" id="noms"></select>
-            <select name="nouveauCodePostal" id="nouveauCodePostal"></select>
-            <button type="button" id="ajouterVille">Ajouter</button>
-        </modalcontent>
-    </modal>
-    <modal class="modal" id="modal-lieu">
-        <modalcontent class="modal-content">
-            <span class="close" id="close-modal-lieu">&times;</span>
-            <h3 class="text-center">Ajouter un Lieu</h3>
-            <span id="span-messages-lieu"></span>
-            <span>Ville : </span><select name="select-ville-lieu" id="select-ville-lieu"></select>
-{#            <span>Ville : </span><input type="text" name="select-ville-lieu" id="select-ville-lieu">#}
-            <span>Nom : </span><input type="text" name="nouveauNomLieu" id="nouveauNomLieu">
-            <span>Rue : </span><input type="text" name="nouvelleRue" id="nouvelleRue">
-            <span>Latitude : </span><input type="number" step="any" name="nouvelleLatitude" id="nouvelleLatitude">
-            <span>Longitude : </span><input type="number" step="any" name="nouvelleLongitude" id="nouvelleLongitude">
-            <button type="button" class="btn" id="remplir">Remplir</button>
-            <button type="button" class="btn btn-primary" id="ajouterLieu">Ajouter</button>
-            <div class="container" id="map"></div>
-        </modalcontent>
-    </modal>
+
+{% include 'inc/_modalVille.html.twig' %}
+{% include 'inc/_modalLieu.html.twig' %}
+
 {% endblock %}

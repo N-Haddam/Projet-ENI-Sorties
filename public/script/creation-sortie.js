@@ -60,6 +60,8 @@ selectNoms.addEventListener('change', () => {
 
 /* Version apiplatform */
 btnAjouterVille.addEventListener('click', () => {
+    spanMessagesVille.className = "";
+    sectionMessages.className = "";
     // TODO verif nom non null, cp len 5 et ville n'existe pas déjà
     if (selectNoms.value === '' || selectCodePostal.value.toString().length !== 5) {
         spanMessagesVille.innerText = "Les deux champs sont requis !"
@@ -170,6 +172,8 @@ const modalLieu = document.getElementById('modal-lieu');
 const closeLieu = document.getElementById('close-modal-lieu');
 
 addLieu.addEventListener('click', () => {
+    spanMessagesLieu.className = "";
+    sectionMessages.className = "";
     if (selectVille.value !== '') {
         modalLieu.style.display = "block";
         let idVille = selectVille.value
@@ -253,6 +257,8 @@ const selectVilleLieu = document.getElementById('select-ville-lieu')
 const spanMessagesLieu = document.getElementById('span-messages-lieu');
 
 btnAjouterLieu.addEventListener('click', () => {
+    spanMessagesLieu.className = "";
+    sectionMessages.className = "";
     // TODO vérifier si la rue correspond bien à la ville et au cp
     // TODO vérifier si les coordonnées correspondent bien à la ville et au cp
     // TODO vérifier si le lieu existe déjà
