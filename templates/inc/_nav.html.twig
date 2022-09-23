@@ -7,7 +7,7 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
+        {% if app.user %}
         <section class="collapse navbar-collapse navbar-expand-lg justify-content-end me-4" id="navbarNavDropdown">
             {% if is_granted("ROLE_ADMIN") %}
                 <ul class="navbar-nav">
@@ -35,6 +35,6 @@
                 </li>
             </ul>
         </section>
-
+    {% endif %}
     </div>
 </nav>
