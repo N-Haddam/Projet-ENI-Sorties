@@ -2,16 +2,26 @@
 
 {% block title %}Chuuuuuuut !{% endblock %}
 
-{% block body %}
+{% block stylesheets %}
+    {{ parent() }}
     <link href="{{ asset('styles.css') }}" rel="stylesheet" >
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('script/groupes-prives.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+
 
     <h2>Ajouter un groupe</h2>
     <div>
         {{ form_start(form) }}
         {{ form_widget(form) }}
 
-        <div class="selectBox" id="selectBoxParticipant">
-            <select id="participants" name="participants" >
+        <div class="selectBox">
+            <select id="selectBoxParticipant" name="participants" >
                 <option selected></option>
             {% for participant in participants %}
                 {{ participant.nom }} - {{ participant.id }}
@@ -68,9 +78,6 @@
         {{ form_end(form)}}
     </div>
 
-{% block javascripts %}
-    {{ parent() }}
-    <script src="{{ asset('script/groupes-prives.js') }}" defer></script>
-{% endblock %}
+
 
 {% endblock %}

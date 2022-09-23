@@ -90,7 +90,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $pictureFileName = null;
 
     #[ORM\ManyToMany(targetEntity: GroupePrive::class, mappedBy: 'participants')]
-    private Collection $participants;
+    private Collection $gpPrives;
 
     #[ORM\OneToMany(mappedBy: 'organisateur', targetEntity: GroupePrive::class, orphanRemoval: true)]
     private Collection $groupePrivesOrganises;
