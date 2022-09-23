@@ -18,7 +18,8 @@ class GroupePrive
     #[ORM\Column(length: 150)]
     private ?string $nom = null;
 
-    #[ORM\ManyToMany(targetEntity: Participant::class, inversedBy: 'groupeprives')]
+    #[ORM\ManyToMany(targetEntity: Participant::class, inversedBy: 'gpPrives')]
+    #[ORM\JoinTable(name: 'groupe_prive_participant')]
     private Collection $participants;
 
     #[ORM\ManyToOne(inversedBy: 'groupePrivesOrganises')]
