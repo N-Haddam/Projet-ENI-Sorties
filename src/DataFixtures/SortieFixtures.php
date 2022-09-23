@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Etat;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Repository\CampusRepository;
@@ -17,8 +18,22 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
 {
     private array $listeCampus;
     private int $sizeListeCampus;
-    private array $listeEtats;
-    private int $sizeListeEtats;
+
+    private Etat $etatEnCours;
+    private Etat $etatOuvert;
+    private Etat $etatClot;
+    private Etat $etatAnnu;
+    private Etat $etatCree;
+
+    private array $listeEtatsAvenir;
+    private array $listeEtatsPasses;
+
+    private int $sizeListeEtatsAvenir;
+    private int $sizeListeEtatsPasses;
+
+//    private array $listeEtats;
+//    private int $sizeListeEtats;
+
     private array $listeLieux;
     private int $sizeListeLieux;
     private array $listeVilles;
@@ -46,7 +61,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             ->setNbInscriptionMax(15)
             ->setInfosSortie('Apporter des habits chauds et imperméable, merci de respecter la maille')
             ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-            ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+            ->setEtat($this->listeEtatsAvenir[rand(0,$this->sizeListeEtatsAvenir-1)])
             ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
             ->setOrganisateur($organisateur)
             ->addParticipant($organisateur);
@@ -61,7 +76,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             ->setNbInscriptionMax(25)
             ->setInfosSortie('Prévoir un marteau de géologue, une boussole, une gourde, et de quoi prendre des notes')
             ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-            ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+            ->setEtat($this->listeEtatsAvenir[rand(0,$this->sizeListeEtatsAvenir-1)])
             ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
             ->setOrganisateur($this->listeParticipants[rand(0,$this->sizeListeParticipants-1)])
             ->addParticipant($organisateur);
@@ -76,7 +91,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             ->setNbInscriptionMax(25)
             ->setInfosSortie('Escape game en équipe, venez découvrir les secret de Grigori Rasputin')
             ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-            ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+            ->setEtat($this->listeEtatsAvenir[rand(0,$this->sizeListeEtatsAvenir-1)])
             ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
             ->setOrganisateur($this->listeParticipants[rand(0,$this->sizeListeParticipants-1)])
             ->addParticipant($organisateur);
@@ -95,7 +110,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
                 ->setNbInscriptionMax($nb_inscrit)
                 ->setInfosSortie('Bla bla bla lorem ipsum etc.')
                 ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-                ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+                ->setEtat($this->listeEtatsAvenir[rand(0,$this->sizeListeEtatsAvenir-1)])
                 ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
                 ->setOrganisateur($organisateur)
                 ->addParticipant($organisateur);
@@ -121,7 +136,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
                 ->setNbInscriptionMax($nb_inscrit)
                 ->setInfosSortie('Bla bla bla lorem ipsum etc.')
                 ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-                ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+                ->setEtat($this->etatClot)
                 ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
                 ->setOrganisateur($organisateur)
                 ->addParticipant($organisateur);
@@ -147,7 +162,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
                 ->setNbInscriptionMax($nb_inscrit)
                 ->setInfosSortie('Bla bla bla lorem ipsum etc.')
                 ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-                ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+                ->setEtat($this->etatAnnu)
                 ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
                 ->setOrganisateur($organisateur)
                 ->addParticipant($organisateur);
@@ -174,7 +189,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
                 ->setNbInscriptionMax($nb_inscrit)
                 ->setInfosSortie('Bla bla bla lorem ipsum etc.')
                 ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-                ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+                ->setEtat($this->etatClot)
                 ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
                 ->setOrganisateur($organisateur)
                 ->addParticipant($organisateur);
@@ -200,7 +215,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
                 ->setNbInscriptionMax($nb_inscrit)
                 ->setInfosSortie('Bla bla bla lorem ipsum etc.')
                 ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-                ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+                ->setEtat($this->listeEtatsPasses[rand(0,$this->sizeListeEtatsPasses-1)])
                 ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
                 ->setOrganisateur($organisateur)
                 ->addParticipant($organisateur);
@@ -227,7 +242,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
                 ->setNbInscriptionMax($nb_inscrit)
                 ->setInfosSortie('Bla bla bla lorem ipsum etc.')
                 ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-                ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+                ->setEtat($this->listeEtatsPasses[rand(0,$this->sizeListeEtatsPasses-1)])
                 ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
                 ->setOrganisateur($organisateur)
                 ->addParticipant($organisateur);
@@ -253,7 +268,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
                 ->setNbInscriptionMax($nb_inscrit)
                 ->setInfosSortie('Bla bla bla lorem ipsum etc.')
                 ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-                ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+                ->setEtat($this->listeEtatsPasses[rand(0,$this->sizeListeEtatsPasses-1)])
                 ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
                 ->setOrganisateur($organisateur)
                 ->addParticipant($organisateur);
@@ -279,7 +294,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
                 ->setNbInscriptionMax($nb_inscrit)
                 ->setInfosSortie('Bla bla bla lorem ipsum etc.')
                 ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-                ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+                ->setEtat($this->etatEnCours)
                 ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
                 ->setOrganisateur($organisateur)
                 ->addParticipant($organisateur);
@@ -304,7 +319,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
                 ->setNbInscriptionMax($nb_inscrit)
                 ->setInfosSortie('Bla bla bla lorem ipsum etc.')
                 ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-                ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+                ->setEtat($this->etatEnCours)
                 ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
                 ->setOrganisateur($organisateur)
                 ->addParticipant($organisateur);
@@ -330,7 +345,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
                 ->setNbInscriptionMax($nb_inscrit)
                 ->setInfosSortie('Bla bla bla lorem ipsum etc.')
                 ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-                ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+                ->setEtat($this->etatCree)
                 ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
                 ->setOrganisateur($organisateur)
                 ->addParticipant($organisateur);
@@ -352,7 +367,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
                 ->setNbInscriptionMax($nb_inscrit)
                 ->setInfosSortie('Bla bla bla lorem ipsum etc.')
                 ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-                ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+                ->setEtat($this->etatAnnu)
                 ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
                 ->setOrganisateur($organisateur)
                 ->addParticipant($organisateur);
@@ -378,7 +393,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
                 ->setNbInscriptionMax($nb_inscrit)
                 ->setInfosSortie('Bla bla bla lorem ipsum etc.')
                 ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-                ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+                ->setEtat($this->etatAnnu)
                 ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
                 ->setOrganisateur($organisateur)
                 ->addParticipant($organisateur);
@@ -405,7 +420,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
                 ->setNbInscriptionMax($nb_inscrit)
                 ->setInfosSortie('Bla bla bla lorem ipsum etc.')
                 ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-                ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+                ->setEtat($this->etatAnnu)
                 ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
                 ->setOrganisateur($organisateur)
                 ->addParticipant($organisateur);
@@ -431,7 +446,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
                 ->setNbInscriptionMax($nb_inscrit)
                 ->setInfosSortie('Bla bla bla lorem ipsum etc.')
                 ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-                ->setEtat($this->listeEtats[rand(0,$this->sizeListeEtats-1)])
+                ->setEtat($this->etatAnnu)
                 ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
                 ->setOrganisateur($organisateur)
                 ->addParticipant($organisateur);
@@ -465,15 +480,36 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
             $this->getReference(CampusFixtures::NIORT_CAMPUS_REFERENCE),
         ];
         $this->sizeListeCampus = count($this->listeCampus);
-        $this->listeEtats = [
+
+        $this->etatEnCours = $this->getReference(EtatFixtures::EN_COURS_ETAT_REFERENCE);
+        $this->etatOuvert = $this->getReference(EtatFixtures::OUVERTE_ETAT_REFERENCE);
+        $this->etatClot = $this->getReference(EtatFixtures::CLOTUREE_ETAT_REFERENCE);
+        $this->etatAnnu = $this->getReference(EtatFixtures::ANNULEE_ETAT_REFERENCE);
+        $this->etatCree = $this->getReference(EtatFixtures::CREEE_ETAT_REFERENCE);
+
+        $this->listeEtatsAvenir = [
             $this->getReference(EtatFixtures::CREEE_ETAT_REFERENCE),
             $this->getReference(EtatFixtures::OUVERTE_ETAT_REFERENCE),
             $this->getReference(EtatFixtures::CLOTUREE_ETAT_REFERENCE),
-            $this->getReference(EtatFixtures::EN_COURS_ETAT_REFERENCE),
+        ];
+        $this->sizeListeEtatsAvenir = count($this->listeEtatsAvenir);
+
+        $this->listeEtatsPasses = [
             $this->getReference(EtatFixtures::PASSEE_ETAT_REFERENCE),
             $this->getReference(EtatFixtures::ANNULEE_ETAT_REFERENCE),
         ];
-        $this->sizeListeEtats = count($this->listeEtats);
+        $this->sizeListeEtatsPasses = count($this->listeEtatsPasses);
+
+
+//        $this->listeEtats = [
+//
+//            $this->getReference(EtatFixtures::EN_COURS_ETAT_REFERENCE),
+//
+//        ];
+//        $this->sizeListeEtats = count($this->listeEtats);
+
+
+
         $this->listeLieux = [
             $this->getReference('lieu1-lieu'),
             $this->getReference('lieu2-lieu'),
