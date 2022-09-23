@@ -118,7 +118,7 @@ class SortieController extends AbstractController
 
         if ($sortie->getDateLimiteInscription() >= new \DateTime('now')
             && ($nbParticipants < $nbPlaces)
-            && $sortie->getEtat()->getId() !== 6)
+            && $sortie->getEtat()->getLibelle() !== 'Annulée')
         {
             if ($nbParticipants+1 === $nbPlaces) {
                 $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Clôturée']));
@@ -255,10 +255,10 @@ class SortieController extends AbstractController
                 return $this->redirectToRoute('app_sortie_annuler', ['i' => $i]);
             }
             if ($sortie->getOrganisateur()->getId() === $user->getId()
-                && ($sortie->getEtat()->getId() === 1
-                    || $sortie->getEtat()->getId() === 2))
+                && ($sortie->getEtat()->getLibelle() === 'Créée'
+                    || $sortie->getEtat()->getLibelle() === 'Ouverte'))
             {
-                $etatAnnule = $etatRepository->find(6);
+                $etatAnnule = $etatRepository->findOneBy(['libelle' => 'Annulée']);
                 $sortie->setMotifAnnulation($_POST['motif']);
                 $sortie->setEtat($etatAnnule);
                 $sortieRepository->add($sortie, true);
