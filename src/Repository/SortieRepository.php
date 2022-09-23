@@ -176,18 +176,20 @@ class SortieRepository extends ServiceEntityRepository
         $sorties = $this->findAll();
 
         $etatEnCours = $this->etatRepository->findOneBy(['libelle'=>'Activité en cours']);
-        $now = new \DateTimeImmutable('now');
+        $now = (new \DateTimeImmutable('now'));
         foreach ($sorties as $sortie) {
             for ($i = 0; $i <= sizeof($sorties) - 1; $i++) {
                 $dateDebut = $sortie->getDateHeureDebut();
-                if ($dateDebut == $now->format('Y-m-d')) {
+//                dump($now);
+//                dd($dateDebut);
+                if ($dateDebut == $now) {
                     dd('je suis là');
                 }
 
                 if ($dateDebut === $now->format('Y-m-d')) {
                     dd('je suis ici');
-//                    $sorties[$i]->setEtat($etatEnCours);
-//                    $this->add($sorties[$i], true);
+                    $sorties[$i]->setEtat($etatEnCours);
+                    $this->add($sorties[$i], true);
                 }
             }
         }

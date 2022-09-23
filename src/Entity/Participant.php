@@ -334,25 +334,25 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, GroupePrive>
      */
-    public function getParticipants(): Collection
+    public function getGroup(): Collection
     {
-        return $this->participants;
+        return $this->gpPrives;
     }
 
-    public function addParticipant(GroupePrive $participant): self
+    public function addGroup(GroupePrive $gpPrive): self
     {
-        if (!$this->participants->contains($participant)) {
-            $this->participants->add($participant);
-            $participant->addParticipant($this);
+        if (!$this->gpPrives->contains($gpPrive)) {
+            $this->gpPrives->add($gpPrive);
+            $gpPrive->addParticipant($this);
         }
 
         return $this;
     }
 
-    public function removeParticipant(GroupePrive $participant): self
+    public function removeGroup(GroupePrive $gpPrive): self
     {
-        if ($this->participants->removeElement($participant)) {
-            $participant->removeParticipant($this);
+        if ($this->gpPrives->removeElement($gpPrive)) {
+            $gpPrive->removeParticipant($this);
         }
 
         return $this;
