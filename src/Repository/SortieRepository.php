@@ -141,8 +141,7 @@ class SortieRepository extends ServiceEntityRepository
     {
         $sorties = $this->findAll();
 
-        $etatCloture = $this->etatRepository->find(3);
-
+        $etatCloture = $this->etatRepository->findOneBy(['libelle'=>'Clôturée']);// Todo revoir récupération quand on utilise pas les fixtures?
             for ($i = 0; $i <= sizeof($sorties) - 1; $i++) {
                 $nbParticipants = $sorties[$i]->getParticipants()->count();
                 $nbPlace = $sorties[$i]->getNbInscriptionMax();
@@ -159,7 +158,7 @@ class SortieRepository extends ServiceEntityRepository
     public function sortiesPasse(): array | bool
     {
         $sorties = $this->findNonAnnulee();
-        $etatPasse = $this->etatRepository->find(5);
+        $etatPasse = $this->etatRepository->findOneBy(['libelle'=>'Passée']);
         $c = 0;
         for ($i = 0; $i <= sizeof($sorties) - 1; $i++) {
             $dateDebut = $sorties[$i]->getDateHeureDebut();
@@ -176,15 +175,19 @@ class SortieRepository extends ServiceEntityRepository
     {
         $sorties = $this->findAll();
 
-        $etatPasse = $this->etatRepository->find(5);
-        $c = 0;
+        $etatEnCours = $this->etatRepository->findOneBy(['libelle'=>'Activité en cours']);
+        $now = new \DateTimeImmutable('now');
         foreach ($sorties as $sortie) {
             for ($i = 0; $i <= sizeof($sorties) - 1; $i++) {
                 $dateDebut = $sortie->getDateHeureDebut();
-                if ($dateDebut == new \DateTimeImmutable('now')) {
-                    $sorties[$i]->setEtat($etatPasse);
-                    $this->add($sorties[$i], true);
-                    $c++;
+                if ($dateDebut == $now->format('Y-m-d')) {
+                    dd('je suis là');
+                }
+
+                if ($dateDebut === $now->format('Y-m-d')) {
+                    dd('je suis ici');
+//                    $sorties[$i]->setEtat($etatEnCours);
+//                    $this->add($sorties[$i], true);
                 }
             }
         }

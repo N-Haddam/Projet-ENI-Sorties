@@ -1,10 +1,11 @@
-var div = document.getElementById('selectBox');
+const selectParticipantsGroupe = document.getElementById('selectBoxParticipant')
+const btnAjouterParticipantGroupe = document.getElementById('btnAjouterParticipantGroupe')
 
+btnAjouterParticipantGroupe.addEventListener("click", () => {
 
-div.addEventListener("change", () => {
-
-        console.log(document.getElementById('participant'));
-        document.getElementById('selectBox').appendChild(document.getElementById('participant'))
-
+        console.log(selectParticipantsGroupe.value)
+        let pParticipant = document.createElement('p')
+        pParticipant.innerHTML = selectParticipantsGroupe.value
+        selectParticipantsGroupe.appendChild(pParticipant)
 
 })
