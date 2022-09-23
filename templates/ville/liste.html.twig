@@ -4,7 +4,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('script/ville.js') }}" defer></script>
+    <script src="{{ asset('script/ajouter-ville.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -21,8 +21,8 @@
         </form>
     </section>
     {% if pagination %}
-        <section class="table-responsive">
-            <table class="table table-striped">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">Ville</th>
@@ -36,12 +36,15 @@
                         <td>{{ ville.nom }}</td>
                         <td>{{ ville.codePostal }}</td>
                         <td>
-                            <a href="#">Modifier</a> - <a href="#">Supprimer</a>
+                            {# TODO passer l'url en variable d'environnement #}
+                            <a href="{{ path('admin') }}?crudAction=edit&crudControllerFqcn=App%5CController%5CAdmin%5CVilleCrudController&entityId={{ ville.id }}">Modifier</a>
                         </td>
                     </tr>
                 {% endfor %}
                     {# TODO à n'afficher que sur la dernière page de la pagination #}
                         {# TODO ou seulement si un recherche a été faite au préalable #}
+                {% if pagination.count is not same as (pagination.itemNumberPerPage)
+                    or pagination.totalItemCount <= pagination.itemNumberPerPage %}
                     <tr>
                         <td><em>Recherche une ville : </em>
                             <input type="text" name="nouveauNom" id="nouveauNom">
@@ -50,10 +53,10 @@
                         <td><select name="nouveauCodePostal" id="nouveauCodePostal"></select></td>
                         <td><a href="#" id="ajouterVille">Ajouter</a></td>
                     </tr>
-
+                {% endif %}
                 </tbody>
             </table>
-        </section>
+        </div>
         <div class="navigation">
             {{ knp_pagination_render(pagination) }}
         </div>

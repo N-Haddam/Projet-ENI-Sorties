@@ -4,7 +4,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('style/creer-ville.css') }}" rel="stylesheet">
+    <link href="{{ asset('style/creer-sortie.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
           integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
           crossorigin=""/>
@@ -15,8 +15,8 @@
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
             integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
             crossorigin=""></script>
-    <script src="{{ asset('script/lieu.js') }}" defer></script>
-    <script src="{{ asset('script/creer-sortie-add-ville.js') }}" defer></script>
+    <script src="{{ asset('script/select-lieu.js') }}" defer></script>
+    <script src="{{ asset('script/creation-sortie.js') }}" defer></script>
 
 {% endblock %}
 
@@ -32,84 +32,84 @@
 
     <section id="messages"></section>
 
-    <row class="row">
-        <section class="col-6">
-            {{ form_start(form) }}
-            {{ form_widget(form) }}
-        </section>
-        <section class="col-6">
-            <label for="campus">Campus</label>
-            {% if 'create' in app.request.attributes.get('_route') %}
-                <label for="campus">Campus</label><input type="text" id="campus" name="campus" value="{{ app.user.campus }}" readonly><br>
-            {% elseif 'modifier' in app.request.attributes.get('_route') %}
-                {% include 'inc/_campusModifierSortie.html.twig' %}<br>
-            {% endif %}
+    <div class="row form">
+            <section class="form-group col-6">
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+            </section>
 
-            <label for="ville">Ville</label>
-            <select id="ville" name="ville">
+            <section class="form-group col-6">
                 {% if 'create' in app.request.attributes.get('_route') %}
-                    <option></option>
+                    <label for="campus">Campus</label><input type="text" id="campus" name="campus" value="{{ app.user.campus }}" readonly><br>
+                {% elseif 'modifier' in app.request.attributes.get('_route') %}
+                    {% include 'inc/_campusModifierSortie.html.twig' %}<br>
                 {% endif %}
-                {% for ville in villes %}
-                    {% if sortie is defined and sortie.lieu.ville.id is same as ville.id %}
-                        <option value="{{ ville.id }}" selected>{{ ville.nom }} - {{ ville.codePostal }}</option>
-                    {% else %}
-                        <option value="{{ ville.id }}">{{ ville.nom }} - {{ ville.codePostal }}</option>
-                    {% endif %}
-                {% endfor %}
-            </select><a href="#" id="addVille"><img src="{{ asset('img/add-30px.png') }}"></a><br>
 
-            <label for="lieu">Lieu</label>
-            <select id="lieu" name="lieu">
-                {% if sortie is defined %}
-                    {% for lieu in sortie.lieu.ville.lieus %}
-                        {% if lieu.id is same as sortie.lieu.id %}
-                            <option value="{{ lieu.id }}" selected>{{ lieu.nom }}</option>
+                <label for="ville">Ville</label>
+                <select id="ville" name="ville">
+                    {% if 'create' in app.request.attributes.get('_route') %}
+                        <option></option>
+                    {% endif %}
+                    {% for ville in villes %}
+                        {% if sortie is defined and sortie.lieu.ville.id is same as ville.id %}
+                            <option value="{{ ville.id }}" selected>{{ ville.nom }} - {{ ville.codePostal }}</option>
                         {% else %}
-                            <option value="{{ lieu.id }}">{{ lieu.nom }}</option>
+                            <option value="{{ ville.id }}">{{ ville.nom }} - {{ ville.codePostal }}</option>
                         {% endif %}
                     {% endfor %}
-                {% endif %}
-            </select><a href="#" id="addLieu"><img src="{{ asset('img/add-30px.png') }}"></a><br>
+                </select><a href="#" id="addVille"><img src="{{ asset('img/add-30px.png') }}"></a><br>
 
-{#            <label for="rue">Rue</label>#}
-{#            <input type="text" id="rue" name="rue" value="" readonly><br> #}
-            <span>Rue : </span><span id="rue">
-                {% if sortie is defined %}
-                    {{ sortie.lieu.rue }}
-                {% endif %}
-            </span><br>
+                <label for="lieu">Lieu</label>
+                <select id="lieu" name="lieu">
+                    {% if sortie is defined %}
+                        {% for lieu in sortie.lieu.ville.lieus %}
+                            {% if lieu.id is same as sortie.lieu.id %}
+                                <option value="{{ lieu.id }}" selected>{{ lieu.nom }}</option>
+                            {% else %}
+                                <option value="{{ lieu.id }}">{{ lieu.nom }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </select><a href="#" id="addLieu"><img src="{{ asset('img/add-30px.png') }}"></a><br>
 
-{#            <label for="cp">Code postal</label>#}
-{#            <input type="text" id="cp" name="cp" value="" readonly><br> #}
-            <span>Code postal : </span><span id="cp">
-                {% if sortie is defined %}
-                    {{ sortie.lieu.ville.codePostal }}
-                {% endif %}
-            </span><br>
+    {#            <label for="rue">Rue</label>#}
+    {#            <input type="text" id="rue" name="rue" value="" readonly><br> #}
+                <span>Rue : </span><span id="rue">
+                    {% if sortie is defined %}
+                        {{ sortie.lieu.rue }}
+                    {% endif %}
+                </span><br>
 
-{#            <label for="latitude">Latitude</label>#}
-{#            <input type="text" id="latitude" name="latitude" value="" readonly><br> #}
-            <span>Latitude : </span><span id="latitude">
-                {% if sortie is defined %}
-                    {{ sortie.lieu.latitude }}
-                {% endif %}
-            </span><br>
+    {#            <label for="cp">Code postal</label>#}
+    {#            <input type="text" id="cp" name="cp" value="" readonly><br> #}
+                <span>Code postal : </span><span id="cp">
+                    {% if sortie is defined %}
+                        {{ sortie.lieu.ville.codePostal }}
+                    {% endif %}
+                </span><br>
 
-{#            <label for="longitude">Longitude</label>#}
-{#            <input type="text" id="longitude" name="longitude" value="" readonly><br> #}
-            <span>Longitude : </span><span id="longitude">
-                {% if sortie is defined %}
-                    {{ sortie.lieu.longitude }}
-                {% endif %}
-            </span><br>
-        </section>
-        {% if sortie is defined %}
-            <button type="button"><a href="{{ path('app_sortie_annuler', {'i': sortie.id}) }}">Annuler la sortie</a></button>
-        {% endif %}
-        <button type="button"><a href="{{ path('app_main') }}">Annuler</a></button>
-        {{ form_end(form)}}
-    </row>
+    {#            <label for="latitude">Latitude</label>#}
+    {#            <input type="text" id="latitude" name="latitude" value="" readonly><br> #}
+                <span>Latitude : </span><span id="latitude">
+                    {% if sortie is defined %}
+                        {{ sortie.lieu.latitude }}
+                    {% endif %}
+                </span><br>
+
+    {#            <label for="longitude">Longitude</label>#}
+    {#            <input type="text" id="longitude" name="longitude" value="" readonly><br> #}
+                <span>Longitude : </span><span id="longitude">
+                    {% if sortie is defined %}
+                        {{ sortie.lieu.longitude }}
+                    {% endif %}
+                </span><br>
+            </section>
+            {% if sortie is defined %}
+                <button type="button"><a href="{{ path('app_sortie_annuler', {'i': sortie.id}) }}">Annuler la sortie</a></button>
+            {% endif %}
+            <button type="button"><a href="{{ path('app_main') }}">Annuler</a></button>
+            {{ form_end(form)}}
+    </div>
 </div>
     {# TODO mettre les modales dans des fichiers à inclure #}
     <modal class="modal" id="modal-ville">

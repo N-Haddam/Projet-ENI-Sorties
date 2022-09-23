@@ -24,7 +24,7 @@ class ApiVilleController extends AbstractController
         if ($nom !== '' && strlen($cp) === 5) {
             $test = $villeRepository->findOneBy(['nom' => $nom, 'codePostal' => $cp]);
             if ($test) {
-                // TODO réponse pas d'ajout, la ville existe déjà
+                $reponse = ['422', "La ville existe déjà"];
             }
 
             $nouvelleVille = (new Ville())

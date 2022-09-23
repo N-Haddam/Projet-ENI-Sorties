@@ -1,19 +1,40 @@
-<nav>
-    <div >
-            {% if app.user %}
-
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ path('app_main') }}">
+            <img src="{{ asset('img/logo-small.png') }}" alt="Eni-Sortie" class="d-inline-block m-2" id="logo">
+            Sortir ENI
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        {% if app.user %}
+        <section class="collapse navbar-collapse navbar-expand-lg justify-content-end me-4" id="navbarNavDropdown">
             {% if is_granted("ROLE_ADMIN") %}
-
-                <a href="{{ path('app_ville_liste') }}" title="villes">Villes</a>
-                <a href="#" title="campus">Campus</a>
-                <a href="{{ path('admin') }}" title="dashboard">Mon tableau de bord</a>
-
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Administrer
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="{{ path('app_ville_liste') }}">Villes</a></li>
+                            <li><a class="dropdown-item" href="#">Campus</a></li>
+                            <li><a class="dropdown-item" href="{{ path('admin') }}">Dashboard</a></li>
+                        </ul>
+                    </li>
+                </ul>
             {% endif %}
-
-            <a href="{{ path('app_main') }}" title="Accueil">Accueil</a>
-            <a href="{{ path('app_participant_profil', {'i':app.user.getId}) }}" title="Test">Mon profil</a>
-            <a href="{{ path('app_logout') }}" title="Logout">Se déconnecter</a>
-
-            {% endif %}
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_sortie_create') }}" title="Créer une sortie">Nouvelle sortie</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_participant_profil', {'i':app.user.getId}) }}" title="Voir et éditer mon profil">Mon profil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_logout') }}" title="Logout">Se déconnecter</a>
+                </li>
+            </ul>
+        </section>
+    {% endif %}
     </div>
 </nav>

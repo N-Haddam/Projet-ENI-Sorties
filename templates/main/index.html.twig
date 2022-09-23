@@ -1,92 +1,131 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} {{ parent() }} | Accueil{% endblock %}
+{% block title %}Accueil | {{ parent() }}{% endblock %}
 
 {% block body %}
 
 
-<div class="example-wrapper">
-    <p> Date du jour : {{ "now"|date("d/m/Y") }}</p>
-    <p> Participant : <b>{{ app.user.prenom }} {{ app.user.nom | first }}.</b></p>
+<div class="container-fluid">
+    <aside class="d-flex flex-row-reverse bd-highlight m-2">
+        <p class="p-2 bd-highlight fle"> Date du jour : {{ "now"|date("d/m/Y") }}</p>
+        <p class="p-2 bd-highlight"> Participant : <b>{{ app.user.prenom }} {{ app.user.nom | first }}.</b></p>
+    </aside>
 
-    <div>
-        Filtrer les sorties :
-        <form name="filtre" method="POST">
-            Campus :
-            <select name="campus">
-                {% for campus in listeCampus %}
-                    {% if campus is same as params['campus'] %}
-                        <option selected>{{ campus.nom }}</option>
-                    {% else %}
-                        <option>{{ campus.nom }}</option>
-                    {% endif %}
-                {% endfor %}
-            </select>
-            <br>
-            Le nom de la sortie contient :
-            <input type="text" name="nomSortieContient"
-                    {% if params['nomSortieContient'] is defined %}
-                    value="{{ params['nomSortieContient'] }}"
-                    {% endif %}
-            >
-            <br>
-            Entre <input type="datetime-local" name="dateMin"
-                    {% if params['dateMin'] is defined and params['dateMin'] is not same as '' %}
-                    value="{{ params['dateMin'] }}"
-                    {% endif %}
-            >
-            et <input type="datetime-local" name="dateMax"
-                    {% if params['dateMax'] is defined and params['dateMax'] is not same as '' %}
-                        value="{{ params['dateMax'] }}"
-                    {% endif %}
-            >
-            <br>
+    <div class="container-fluid">
+        <h2>Filtrer les sorties :</h2>
+        <form class="form row" name="filtre" method="POST">
 
-            <input type="checkbox" id="organisateurTrue" name="organisateurTrue"
-                   {% if params['methode'] is same as('get')  %}
-                       checked
-                   {% elseif params['organisateurTrue'] is defined %}
-                       checked
-                   {% endif %}
-            >
-            <label for="organisateurTrue">Sorties dont je suis l'organisateur.trice</label>
+            <div class="col-12 col-xl-5">
+                <div class="container-fluid">
+                    <section class="row align-items-center">
+                        <p class="col-2">
+                            <label for="campus" class="col-form-label">Campus :</label>
+                        </p>
+                        <p class="col-auto">
+                            <select name="campus" id="campus" class="form-control">
+                                {% for campus in listeCampus %}
+                                    {% if campus is same as params['campus'] %}
+                                        <option selected>{{ campus.nom }}</option>
+                                    {% else %}
+                                        <option>{{ campus.nom }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </p>
+                    </section>
+                    <section class="row align-items-center">
+                        <p class="col-5">
+                            <label for="nomSortieContient" class="col-form-label">Le nom de la sortie contient :</label>
+                        </p>
+                        <p class="col-auto">
+                            <input type="text" name="nomSortieContient" id="nomSortieContient" class="form-control"
+                                    {% if params['nomSortieContient'] is defined %}
+                                        value="{{ params['nomSortieContient'] }}"
+                                    {% endif %}
+                            >
+                        </p>
+                    </section>
+                    <section class="row g-3 align-items-center">
+                        <p class="col-auto">
+                            <label for="dateMin" class="col-form-label">Entre</label>
+                        </p>
+                        <p class="col-auto">
+                            <input type="datetime-local" name="dateMin" id="dateMin" class="form-control"
+                                    {% if params['dateMin'] is defined and params['dateMin'] is not same as '' %}
+                                        value="{{ params['dateMin'] }}"
+                                    {% endif %}
+                            >
+                        </p>
+                        <p class="col-auto">
+                            <label for="dateMax" class="col-form-label">et</label>
+                        </p>
+                        <p class="col-auto">
+                            <input type="datetime-local" name="dateMax" id="dateMax" class="form-control"
+                                    {% if params['dateMax'] is defined and params['dateMax'] is not same as '' %}
+                                        value="{{ params['dateMax'] }}"
+                                    {% endif %}
+                            >
+                        </p>
+                    </section>
+                </div>
+            </div>
 
-            <input type="checkbox" name="inscritTrue" id="inscritTrue"
-                    {% if params['methode'] is same as('get')  %}
-                        checked
-                    {% elseif params['inscritTrue'] is defined %}
-                        checked
-                    {% endif %}
-            >
-            <label for="inscritTrue">Sorties auxquelles je suis inscrit.e</label>
+            <div class="col-12 col-xl-5">
+                <div class="container-fluid">
+                    <section class="g-3 form-check">
+                        <input class="form-check-input" type="checkbox" id="organisateurTrue" name="organisateurTrue"
+                                {% if params['methode'] is same as('get')  %}
+                                    checked
+                                {% elseif params['organisateurTrue'] is defined %}
+                                    checked
+                                {% endif %}
+                        >
+                        <label class="form-check-label" for="organisateurTrue">Sorties dont je suis l'organisateur.trice</label>
+                    </section>
+                    <section class="g-3 form-check">
+                        <input class="form-check-input" type="checkbox" name="inscritTrue" id="inscritTrue"
+                                {% if params['methode'] is same as('get')  %}
+                                    checked
+                                {% elseif params['inscritTrue'] is defined %}
+                                    checked
+                                {% endif %}
+                        >
+                        <label class="form-check-label" for="inscritTrue">Sorties auxquelles je suis inscrit.e</label>
+                    </section>
+                    <section class="g-3 form-check">
+                        <input class="form-check-input" type="checkbox" name="inscritFalse" id="inscritFalse"
+                                {% if params['methode'] is same as('get')  %}
+                                    checked
+                                {% elseif params['inscritFalse'] is defined %}
+                                    checked
+                                {% endif %}
+                        >
+                        <label class="form-check-label" for="inscritFalse">Sorties auxquelles je ne suis pas inscrit.e</label>
+                    </section>
+                    <section class="g-3 form-check">
+                        <input class="form-check-input" type="checkbox" name="sortiesPassees" id="sortiesPassees"
+                                {% if params['sortiesPassees'] is defined %}
+                                    checked
+                                {% endif %}
+                        >
+                        <label class="form-check-label" for="sortiesPassees">Sorties passées</label>
+                    </section>
+                </div>
+            </div>
 
+            <div class="col-12 col-xl-2 mt-3">
+                <div class="container-fluid">
+                    <input type="text" name="ok" hidden>
+                    <input type="submit" value="Rechercher" class="btn btn-primary">
+                </div>
+            </div>
 
-            <input type="checkbox" name="inscritFalse" id="inscritFalse"
-                    {% if params['methode'] is same as('get')  %}
-                        checked
-                    {% elseif params['inscritFalse'] is defined %}
-                        checked
-                    {% endif %}
-            >
-            <label for="inscritFalse">Sorties auxquelles je ne suis pas inscrit.e</label>
-
-            <input type="checkbox" name="sortiesPassees" id="sortiesPassees"
-                    {% if params['sortiesPassees'] is defined %}
-                        checked
-                    {% endif %}
-            >
-            <label for="sortiesPassees">Sorties passées</label>
-            <br>
-            <input type="text" name="ok" hidden>
-            <input type="submit" value="Rechercher">
         </form>
-
     </div>
-
-
-    <div  class="table-responsive">
+    <hr>
+    <div class="table-responsive">
         {% if pagination %}
-            <table  class="table table-striped">
+            <table class="table table-striped">
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">Nom de la sortie</th>
@@ -99,43 +138,43 @@
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
+                <tbody>
                 {%  for sortie in pagination %}
-                    <tbody>
-                        <tr {% if loop.index is odd %}class="color"{% endif %}>
-                            <td><a href="{{ path('app_sortie_detail', {'i': sortie.id}) }}">{{ sortie.nom }}</a></td>
-                            <td>{{ sortie.dateHeureDebut |date('d/m/Y h:i') }}</td>
-                            <td>{{ sortie.dateLimiteInscription |date('d/m/Y') }}</td>
-                            <td>{{ sortie.participants.count }}/{{ sortie.nbInscriptionMax }}</td>
-                            <td>{{ sortie.etat.libelle }}</td>
-                            <td>
-                                {% if sortie.participants.contains(app.user) %}
-                                    X
-                                {% endif %}
-                            </td>
-                            <td><a href="{{ path('app_participant_profil', {'i': sortie.organisateur.id}) }}">{{ sortie.organisateur.nom }}</a></td>
-                            <td>
-                                {% if app.user.userIdentifier is same as (sortie.organisateur.userIdentifier)
-                                    and sortie.etat.libelle is same as ('Créée')
-                                    and app.user.actif %}
-                                    <a href="{{ path('app_sortie_modifier', {'i': sortie.id}) }}">Modifier</a> - <a href="{{ path('app_sortie_publier', {'i': sortie.id}) }}">Publier</a>
-                                {% else %}
-                                    <a href="{{ path('app_sortie_detail', {'i': sortie.id}) }}">Afficher</a>
-                                {% endif %}
-                                {% if app.user.userIdentifier is same as (sortie.organisateur.userIdentifier)
-                                    and app.user.actif and sortie.etat.libelle is same as ('Ouverte') %}
-                                    - <a href="{{ path('app_sortie_annuler', {'i': sortie.id}) }}">Annuler</a>
-                                {% elseif app.user in (sortie.participants)
-                                    and sortie.etat.libelle in (['Ouverte', 'Clôturée']) %}
-                                    - <a href="{{ path('app_sortie_desinscription', {'i': sortie.id}) }}">Se désister</a>
-                                {% elseif app.user not in sortie.participants
-                                    and sortie.etat.libelle is same as ('Ouverte')
-                                    and app.user.actif %}
-                                    - <a href="{{ path('app_sortie_sinscrire', {'i': sortie.id}) }}">S'inscrire</a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    </tbody>
+                    <tr {% if loop.index is odd %}class="color"{% endif %}>
+                        <td><a href="{{ path('app_sortie_detail', {'i': sortie.id}) }}">{{ sortie.nom }}</a></td>
+                        <td>{{ sortie.dateHeureDebut |date('d/m/Y h:i') }}</td>
+                        <td>{{ sortie.dateLimiteInscription |date('d/m/Y') }}</td>
+                        <td>{{ sortie.participants.count }}/{{ sortie.nbInscriptionMax }}</td>
+                        <td>{{ sortie.etat.libelle }}</td>
+                        <td>
+                            {% if sortie.participants.contains(app.user) %}
+                                X
+                            {% endif %}
+                        </td>
+                        <td><a href="{{ path('app_participant_profil', {'i': sortie.organisateur.id}) }}">{{ sortie.organisateur.nom }}</a></td>
+                        <td>
+                            {% if app.user.userIdentifier is same as (sortie.organisateur.userIdentifier)
+                                and sortie.etat.libelle is same as ('Créée')
+                                and app.user.actif %}
+                                <a href="{{ path('app_sortie_modifier', {'i': sortie.id}) }}">Modifier</a> - <a href="{{ path('app_sortie_publier', {'i': sortie.id}) }}">Publier</a>
+                            {% else %}
+                                <a href="{{ path('app_sortie_detail', {'i': sortie.id}) }}">Afficher</a>
+                            {% endif %}
+                            {% if app.user.userIdentifier is same as (sortie.organisateur.userIdentifier)
+                                and app.user.actif and sortie.etat.libelle is same as ('Ouverte') %}
+                                - <a href="{{ path('app_sortie_annuler', {'i': sortie.id}) }}">Annuler</a>
+                            {% elseif app.user in (sortie.participants)
+                                and sortie.etat.libelle in (['Ouverte', 'Clôturée']) %}
+                                - <a href="{{ path('app_sortie_desinscription', {'i': sortie.id}) }}">Se désister</a>
+                            {% elseif app.user not in sortie.participants
+                                and sortie.etat.libelle is same as ('Ouverte')
+                                and app.user.actif %}
+                                - <a href="{{ path('app_sortie_sinscrire', {'i': sortie.id}) }}">S'inscrire</a>
+                            {% endif %}
+                        </td>
+                    </tr>
                 {% endfor %}
+                </tbody>
             </table>
             <div class="navigation">
                 {{ knp_pagination_render(pagination) }}
@@ -143,6 +182,9 @@
         {% else %}
             <p>Pas de sorties pour l'instant</p>
         {%  endif %}
+    </div>
+    <div class="container-fluid">
+        <button type="button" class="btn btn-outline-info btn-lg"><a href="{{ path('app_sortie_create') }}" id="creer-sortie">Créer une sortie</a> </button>
     </div>
 </div>
 {% endblock %}
