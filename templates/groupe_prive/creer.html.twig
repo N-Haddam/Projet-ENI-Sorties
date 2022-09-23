@@ -2,23 +2,35 @@
 
 {% block title %}Chuuuuuuut !{% endblock %}
 
-{% block body %}
+{% block stylesheets %}
+    {{ parent() }}
     <link href="{{ asset('styles.css') }}" rel="stylesheet" >
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('script/groupes-prives.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+
 
     <h2>Ajouter un groupe</h2>
     <div>
         {{ form_start(form) }}
         {{ form_widget(form) }}
-        <form name="participants" method="post">
-            <div class="selectBox" id="selectBox">
-                <select id="participants" name="participants" multiple>
-                    <option></option>
-                {% for participant in participants %}
-                    <option id="participant" name="participant" value="{{ participant.id }}">{{ participant.pseudo }}</option>
-                {% endfor %}
-                </select>
-            </div>
-        </form>
+
+        <div class="selectBox">
+            <select id="selectBoxParticipant" name="participants" >
+                <option selected></option>
+            {% for participant in participants %}
+                {{ participant.nom }} - {{ participant.id }}
+                <option id="participant" name="participant" value="{{ participant.id }}">{{ participant.pseudo }}</option>
+            {% endfor %}
+            </select>
+            <button type="button" id="btnAjouterParticipantGroupe">Ajouter participant</button>
+        </div>
+
 {#        <section>#}
 {#            <h3 class="row">Filtrer les participants</h3>#}
 {#        <form class="row form-inline" method="post">#}
@@ -66,8 +78,6 @@
         {{ form_end(form)}}
     </div>
 
-{% block javascripts %}
-    <script src="{{ asset('script/groupes-prives.js') }}" defer></script>
-{% endblock %}
+
 
 {% endblock %}

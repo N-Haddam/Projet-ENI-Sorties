@@ -30,7 +30,6 @@ class GroupePriveController extends AbstractController
 //        } else {
 //            $params = $_POST;
 //        }
-
 //        $query = $participantRepository->findByRequest($params);
 //        $pagination = $paginator->paginate($query, $request->query->getInt('page',1),10);
         $participants = $participantRepository->findAll();
@@ -47,7 +46,6 @@ class GroupePriveController extends AbstractController
             $participants[]= new Participant();
             $participants = $_POST['participant'];
 
-            dd($participants);
 
             $entityManager->persist($groupe);
             $entityManager->flush();

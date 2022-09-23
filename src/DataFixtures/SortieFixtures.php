@@ -294,7 +294,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
                 ->setNbInscriptionMax($nb_inscrit)
                 ->setInfosSortie('Bla bla bla lorem ipsum etc.')
                 ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-                ->setEtat($this->etatEnCours)
+                ->setEtat($this->etatClot)
                 ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
                 ->setOrganisateur($organisateur)
                 ->addParticipant($organisateur);
@@ -319,7 +319,7 @@ class SortieFixtures extends Fixture implements FixtureGroupInterface, OrderedFi
                 ->setNbInscriptionMax($nb_inscrit)
                 ->setInfosSortie('Bla bla bla lorem ipsum etc.')
                 ->setLieu($this->listeLieux[rand(0,$this->sizeListeLieux-1)])
-                ->setEtat($this->etatEnCours)
+                ->setEtat($this->etatOuvert)
                 ->setSiteOrganisateur($this->listeCampus[rand(0,$this->sizeListeCampus-1)])
                 ->setOrganisateur($organisateur)
                 ->addParticipant($organisateur);
