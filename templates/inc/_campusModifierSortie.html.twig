@@ -1,4 +1,4 @@
-<select id="campus" name="campus">
+<select id="campus" name="campus" class="form-label">
     {% for campus in listeCampus %}
         {% if campus.id is same as (sortie.siteOrganisateur.id) %}
             <option selected value="{{ campus.id }}">{{ campus.nom }}</option>
